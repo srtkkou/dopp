@@ -9,7 +9,7 @@ module Dopp
 
   # Application name.
   # アプリケーション名.
-  APPLICATION ||= self.name.freeze
+  APPLICATION ||= self.name.downcase.freeze
 
   # Line feed code.
   # 改行コード.
