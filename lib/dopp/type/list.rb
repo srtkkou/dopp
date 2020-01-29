@@ -12,9 +12,10 @@ module Dopp
       ])
 
       # Initialize.
-      # @params args [Array] Arguments.
-      def initialize(*args)
-        @content = args
+      # @params array [Array] Array Argument.
+      def initialize(array = [])
+        raise(ArgumentError) unless array.is_a?(Array)
+        @content = array
       end
 
       # Render to String.

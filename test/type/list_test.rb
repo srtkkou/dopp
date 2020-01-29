@@ -9,7 +9,8 @@ module Dopp
         # empty?
         assert(List.new.empty?)
         # length, size
-        list = List.new(0, 1, 2, '3', '4')
+        list = List.new(
+          [0, 1, 2, '3', '4'])
         assert_equal(5, list.size)
         assert_equal(5, list.length)
         # [], at
@@ -28,7 +29,8 @@ module Dopp
 
       def test_OK_to_s
         assert_equal('[ ]', List.new.to_s)
-        assert_equal('[1 2 3 4]', List.new(1, 2, 3, 4).to_s)
+        assert_equal('[1 2 3 4]',
+          List.new([1, 2, 3, 4]).to_s)
       end
     end
   end
