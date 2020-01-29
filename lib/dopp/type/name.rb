@@ -3,6 +3,7 @@ module Dopp
   module Type
     class Name
       # Initialize.
+      # @param name [String|Symbol] Name.
       def initialize(name)
         raise(ArgumentError) unless
           [String, Symbol].include?(name.class)
