@@ -24,9 +24,9 @@ module Dopp
         assert_equal(list[-1], 5)
       end
 
-      def test_OK_render
-        assert_equal('[ ]', List.new().render)
-        assert_equal('[1 2 3 4]', List.new(1, 2, 3, 4).render)
+      def test_OK_to_s
+        assert_equal('[ ]', List.new().to_s)
+        assert_equal('[1 2 3 4]', List.new(1, 2, 3, 4).to_s)
       end
     end
   end

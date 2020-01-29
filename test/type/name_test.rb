@@ -9,8 +9,8 @@ module Dopp
         assert_raises(ArgumentError){Name.new(1)}
         assert_raises(ArgumentError){Name.new(3.14)}
         assert_raises(ArgumentError){Name.new(['a', 'b'])}
-        assert('/a', Name.new('a').render)
-        assert('/b', Name.new(:b).render)
+        assert('/a', Name.new('a').to_s)
+        assert('/b', Name.new(:b).to_s)
       end
 
       def test_OK_eql?
@@ -23,9 +23,9 @@ module Dopp
         assert(ex.eql?(Name.new(:test)))
       end
 
-      def test_OK_render
-        assert_equal('/test', Name.new('test').render)
-        assert_equal('/test', Name.new(:test).render)
+      def test_OK_to_s
+        assert_equal('/test', Name.new('test').to_s)
+        assert_equal('/test', Name.new(:test).to_s)
       end
 
       def test_OK_as_Hash_key

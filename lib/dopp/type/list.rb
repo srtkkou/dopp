@@ -17,11 +17,11 @@ module Dopp
         @content = args
       end
 
-      # Rendered content.
+      # Render to String.
       # @return [String] Content.
-      def render
+      def to_s
         return '[ ]' if @content.empty?
-        '[' + @content.join(' ') + ']'
+        '[' + @content.map{|v| v.to_s}.join(' ') + ']'
       end
 
 =begin

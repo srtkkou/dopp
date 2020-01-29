@@ -25,9 +25,9 @@ module Dopp
         (@content.hash == other.hash)
       end
 
-      # Rendered content.
+      # Render to String.
       # @return [String] Content.
-      def render
+      def to_s
         @content
       end
     end
