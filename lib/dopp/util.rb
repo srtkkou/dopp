@@ -21,6 +21,14 @@ module Dopp
       end
     end
 
+    # Camelize text or symbol.
+    # @param obj [String|Symbol] Text.
+    # @return [String] Converted string.
+    def camelize(obj)
+      obj = obj.to_s unless obj.is_a?(String)
+      obj.gsub(/(?:\A|_)(.)/){$1.upcase}
+    end
+
     # Convert millimeters to points.
     # @param mm [Numeric] Millimeters.
     # @return [Numeric] Points.
