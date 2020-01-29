@@ -20,6 +20,24 @@ module Dopp
         arg.freeze unless arg.frozen?
       end
     end
+
+    # Convert millimeters to points.
+    # @param mm [Numeric] Millimeters.
+    # @return [Numeric] Points.
+    def mm_to_pt(mm)
+      raise(ArgumentError) unless mm.is_a?(Numeric)
+      pt = mm * 72.0 / 25.4
+      (pt * 100.0).round / 100.0
+    end
+
+    # Convert points to millimeters.
+    # @param pt [Numeric] Points.
+    # @return [Numeric] Millimeters.
+    def pt_to_mm(pt)
+      raise(ArgumentError) unless pt.is_a?(Numeric)
+      mm = pt * 25.4 / 72.0
+      (mm * 100.0).round / 100.0
+    end
   end
 end
 
