@@ -6,13 +6,13 @@ module Dopp
       def initialize(name)
         raise(ArgumentError) unless
           [String, Symbol].include?(name.class)
-        @name = "/#{name}".freeze
+        @content = "/#{name}".freeze
       end
 
       # Hash value of this object.
       # @return [Integer] Hash value of this object.
       def hash
-        @name.hash
+        @content.hash
       end
 
       # Compare as a key of hash.
@@ -21,13 +21,13 @@ module Dopp
       def eql?(other)
         return false unless
           other.instance_of?(self.class)
-        (@name.hash == other.hash)
+        (@content.hash == other.hash)
       end
 
       # Rendered content.
       # @return [String] Content.
       def render
-        @name
+        @content
       end
     end
   end

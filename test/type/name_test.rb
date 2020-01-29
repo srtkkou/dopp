@@ -4,6 +4,14 @@ require 'test_helper'
 module Dopp
   module Type
     class NameTest < Minitest::Test
+      def test_OK_initialize
+        assert_raises(ArgumentError){Name.new(1)}
+        assert_raises(ArgumentError){Name.new(3.14)}
+        assert_raises(ArgumentError){Name.new(['a', 'b'])}
+        assert('/a', Name.new('a').render)
+        assert('/b', Name.new(:b).render)
+      end
+
       def test_OK_eql?
         ex = Name.new('test')
         # Not equal to String/Symbol.
