@@ -1,5 +1,6 @@
 # frozen_string_literal: false
 require 'test_helper'
+require 'dopp/type'
 
 class UtilTest < Minitest::Test
   include Dopp::Util
@@ -25,7 +26,18 @@ class UtilTest < Minitest::Test
 
   def test_OK_camelize
     assert_equal('CamelCase', camelize('camel_case'))
-    assert_equal('SymbolToCamel', camelize(:symbol_to_camel))
+  end
+
+  def test_NG_camelize
+    assert_raises(ArgumentError){camelize(:symbol_to_camel)}
+  end
+
+  def test_OK_pdf_type?
+    assert(!pdf_type?(1))
+    assert(!pdf_type?(3.14))
+    assert(!pdf_type?('string'))
+    assert(!pdf_type?(:symbol))
+    assert(pdf_type?(Dopp::Type.text('text')))
   end
 end
 
