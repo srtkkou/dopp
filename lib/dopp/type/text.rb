@@ -1,19 +1,19 @@
 # frozen_string_literal: true
 module Dopp
   module Type
-    class TimeStamp
+    # PDF type "Literal String".
+    class Text
       # Initialize.
-      # @param [Time] time Time.
-      def initialize(time)
-        raise(ArgumentError) unless time.is_a?(Time)
-        @time = time
+      # @param [String] text String.
+      def initialize(text)
+        raise(ArgumentError) unless text.is_a?(String)
+        @string = text
       end
 
       # Convert to string.
       # @return [String] Content.
       def to_s
-        String.new('PDF:').concat(
-          @time.strftime('%FT%T%:z'))
+        String.new('PDF:"').concat(@string, '"')
       end
 
       # Detailed description of this object.
@@ -26,9 +26,7 @@ module Dopp
       # Render to string.
       # @return [String] Content.
       def render
-        time_str = @time.strftime('%Y%m%d%H%M%S%:z').
-          sub(/:/, "'")
-        String.new('(D:').concat(time_str, "')")
+        String.new('(').concat(@string, ')')
       end
     end
   end

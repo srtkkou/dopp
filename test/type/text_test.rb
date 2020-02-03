@@ -11,7 +11,11 @@ module Dopp
         assert_raises(ArgumentError){Text.new(3.14)}
         assert_raises(ArgumentError){Text.new(['a', 'b'])}
         assert_raises(ArgumentError){Text.new({a: :b})}
-        assert('(a)', Text.new('a').to_s)
+        assert_equal('PDF:"a"', Text.new('a').to_s)
+      end
+
+      def test_OK_render
+        assert_equal('(a)', Text.new('a').render)
       end
     end
   end

@@ -1,34 +1,48 @@
 # frozen_string_literal: true
 module Dopp
   module Type
+    # PDF type "Name".
     class Name
       # Initialize.
-      # @param name [String|Symbol] Name.
+      # @param [String|Symbol] name Name.
       def initialize(name)
         raise(ArgumentError) unless
-          [String, Symbol].include?(name.class)
-        @content = "/#{name}".freeze
+          (name.is_a?(String) || name.is_a?(Symbol))
+        @sym = "/#{name}".to_sym
       end
 
-      # Hash value of this object.
-      # @return [Integer] Hash value of this object.
+      # Calculate hash.
+      # @return [Integer] Hash.
       def hash
-        @content.hash
+        @sym.hash
       end
 
-      # Compare as a key of hash.
-      # @param other [Other] Other object.
-      # @return [Bool] true=equal, false=not equal.
+      # Compare with other object.
+      # @param [Object] other Other object.
+      # @return [Bool] True=same, false=different.
       def eql?(other)
         return false unless
           other.instance_of?(self.class)
-        (@content.hash == other.hash)
+        self.hash == other.hash
       end
 
-      # Render to String.
+      # Convert to string.
       # @return [String] Content.
       def to_s
-        @content
+        String.new('PDF:').concat(@sym.to_s)
+      end
+
+      # Detailed description of this object.
+      # @return [String] Description.
+      def inspect
+        String.new('#<').concat(self.class.name, ':',
+          self.object_id.to_s, ' ', self.to_s, '>')
+      end
+
+      # Render to string.
+      # @return [String] Content.
+      def render
+        @sym.to_s
       end
     end
   end

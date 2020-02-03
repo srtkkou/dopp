@@ -1,35 +1,50 @@
 # frozen_string_literal: true
 module Dopp
   module Type
+    # PDF type "Hexadecimal String".
     class HexText
-      # Initialize
-      # @param text [String] text
-      def initialize(text)
-        raise(ArgumentError) unless text.is_a?(String)
-        @original = text
-        # Convert UTF-8 string to UTF-16BE.
-        bytes = text.encode(
-          Encoding::UTF_16BE, Encoding::UTF_8
-        ).unpack('C*')
-        bytes.append(0) if (bytes.size % 2 != 0)
-        @content = ('<' +
-          bytes.map{|b| '%02X' % b}.join +
-        '>').freeze
+      class << self
+        # New from UTF-8 string.
+        # @param [String] string UTF-8 string.
+        def new_by_utf8(string)
+          bytes = string.encode(
+            Encoding::UTF_16BE, Encoding::UTF_8
+          ).unpack('C*')
+          self.new(bytes)
+        end
       end
 
-      # Render to String.
+      # Initialize.
+      # @param [Array<Integer>] bytes Bytes.
+      def initialize(bytes)
+        raise(ArgumentError) unless bytes.is_a?(Array)
+        raise(ArgumentError) unless
+          bytes.all?{|b| (0x0 <= b) && (b <= 0xFF)}
+        bytes.append(0x0) if (bytes.size % 2 != 0)
+        @bytes = bytes
+      end
+
+      # Convert to String.
       # @return [String] Content.
       def to_s
-        @content
+        joined = @bytes.map{|b| '%02X' % b}.join(' ')
+        String.new('PDF:<').concat(joined, '>')
       end
 
-      # TODO: Show encoded byte string.
-      #def inspect
-      #end
+      # Detailed description of this object.
+      # @return [String] Description.
+      def inspect
+        String.new('#<').concat(self.class.name, ':',
+          self.object_id.to_s, ' ', self.to_s, '>')
+      end
 
-      # TODO: Parse.
-      #def self.parse(text)
-      #end
+      # Render to string.
+      # @return [String] Content.
+      def render
+        joined = @bytes.map{|b| '%02X' % b}.join
+        String.new('<').concat(joined, '>')
+      end
     end
   end
 end
+
