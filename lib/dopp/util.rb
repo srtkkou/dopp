@@ -4,7 +4,8 @@ module Dopp
   module Util
     module_function
 
-    # Deep freeze.
+    # Freeze all the instances in the object.
+    # @param [Object] arg Object.
     def deep_freeze(arg)
       case arg
       when Hash
@@ -21,17 +22,24 @@ module Dopp
       end
     end
 
-    # Camelize text or symbol.
-    # @param obj [String|Symbol] Text.
+    # Camelize string.
+    # @param [String] str String.
     # @return [String] Converted string.
-    def camelize(obj)
-      obj = obj.to_s unless obj.is_a?(String)
-      obj.gsub(/(?:\A|_)(.)/){$1.upcase}
+    def camelize(str)
+      raise(ArgumentError) unless str.is_a?(String)
+      str.gsub(/(?:\A|_)(.)/){$1.upcase}
+    end
+
+    # Is the class of the object defined under Dopp::Type?
+    # @param [Object] obj Object.
+    # @return [Bool] true=defined, false=not defined.
+    def pdf_type?(obj)
+      obj.class.name.start_with?('Dopp::Type')
     end
 
     # Convert millimeters to points.
     # @param mm [Numeric] Millimeters.
-    # @return [Numeric] Points.
+    # @return [Float] Points.
     def mm_to_pt(mm)
       raise(ArgumentError) unless mm.is_a?(Numeric)
       pt = mm * 72.0 / 25.4
@@ -40,7 +48,7 @@ module Dopp
 
     # Convert points to millimeters.
     # @param pt [Numeric] Points.
-    # @return [Numeric] Millimeters.
+    # @return [Float] Millimeters.
     def pt_to_mm(pt)
       raise(ArgumentError) unless pt.is_a?(Numeric)
       mm = pt * 25.4 / 72.0
