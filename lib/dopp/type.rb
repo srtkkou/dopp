@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'dopp/type/name'
 require 'dopp/type/text'
 require 'dopp/type/hex_text'
@@ -35,9 +36,12 @@ module Dopp
       Dictionary.new(hash)
     end
 
+    def xtext(array)
+      HexText.new(array)
+    end
+
     def utf8_to_xtext(string)
       HexText.new_by_utf8(string)
     end
   end
 end
-
