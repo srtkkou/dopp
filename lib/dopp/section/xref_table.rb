@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'dopp/util'
+require 'dopp/type'
 
 module Dopp
   module Section
