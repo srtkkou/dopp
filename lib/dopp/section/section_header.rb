@@ -2,6 +2,7 @@
 
 require 'dopp/error'
 require 'dopp/type'
+require 'dopp/document'
 
 module Dopp
   module Section
@@ -11,8 +12,9 @@ module Dopp
       attr_reader :revision
 
       # Initialize.
+      # @param [::Dopp::Document] doc PDF document.
       def initialize(doc)
-        @document = doc
+        raise(ArgumentError) unless doc.is_a?(::Dopp::Document)
         @id = doc.unique_section_id
         @revision = 0
       end
