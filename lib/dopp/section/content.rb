@@ -3,12 +3,11 @@
 require 'forwardable'
 require 'dopp/type'
 require 'dopp/section/object_header'
-require 'dopp/section/page'
 
 module Dopp
   module Section
-    # PDF document section "pages".
-    class Pages
+    # PDF document section "content stream".
+    class Content
       extend Forwardable
       include ::Dopp::Type
 
@@ -21,33 +20,21 @@ module Dopp
         @object_header = ObjectHeader.new
         # Initialize attributes.
         @attrs = dict({
-          name(:Type) => name(:Pages),
+          name(:Length) => 0,
         })
-        @pages = []
+        # Initialize stream.
+        @stream = String.new
+@stream << "200 150 m 600 450 l S"
+@attrs[name(:Length)] = @stream.size + 2
       end
-
-      # Append  page.
-      # @return [::Dopp::Section::Page] page Page object.
-      def append_page
-        page = Page.new
-        page.parent = self
-        @pages << page
-        page
-      end
-
-      # TODO
-      #def appned_pages
-      #end
 
       # Render to string.
       # @return [String] Content.
       def render
-        # Update attributes.
-        @attrs[name(:Count)] = @pages.size
-        @attrs[name(:Kids)] = list(@pages.map(&:ref))
-        # Render content.
         @object_header.render.concat(
-          @attrs.render, LF, 'endobj', LF)
+          @attrs.render, LF,
+          'stream', LF, @stream, LF,
+          'endstream', LF, 'endobj', LF)
       end
     end
   end

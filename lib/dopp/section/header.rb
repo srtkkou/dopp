@@ -1,8 +1,10 @@
 # frozen_string_literal: true
+
 require 'dopp/util'
 
 module Dopp
   module Section
+    # PDF document section "header".
     class Header
       # Document identifier.
       DOCUMENT_IDENTIFIER ||= ::Dopp::Util.deep_freeze(
@@ -20,8 +22,8 @@ module Dopp
       # Render to string.
       # @return [String] Rendered string.
       def render
-        String.new('%PDF-').concat(
-          @version, '%', DOCUMENT_IDENTIFIER, LF)
+        String.new('%PDF-').concat(@version, LF,
+          '%', DOCUMENT_IDENTIFIER, LF)
       end
     end
   end

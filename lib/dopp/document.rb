@@ -1,7 +1,9 @@
 # frozen_string_literal: true
+
 require 'dopp/section'
 
 module Dopp
+  # PDF document.
   class Document
     # Initialize.
     def initialize
@@ -21,26 +23,39 @@ module Dopp
       @xref_table = ::Dopp::Section::XrefTable.new
       # Initialize trailer.
       @trailer = ::Dopp::Section::Trailer.new
+      @trailer.info = @info
+      @trailer.root = @catalog
       # Other objects.
       @objects = []
     end
 
-    def append_page(page)
+    # Append page and content.
+    def append_page
+      page = @root.append_page
       page.id = next_object_id
-      @root.append_page(page)
       @objects << page
+      content = page.content_at(0)
+      content.id = next_object_id
+      @objects << content
+      page
     end
+
+    # TODO
+    # def append_page(page)
+    #   page.id = next_object_id
+    #   @root.append_page(page)
+    #   @objects << page
+    # end
 
     # Render to string.
     # @return [String] Content.
     def render
       buffer = @header.render
       # Write info of the document.
-      @trailer.info = @info.ref
       @xref_table.append(buffer.size, 0, 'n')
       buffer << @info.render
       # Write root of pages.
-      @trailer.root = @root.ref
+      @catalog.pages = @root.ref
       @xref_table.append(buffer.size, 0, 'n')
       buffer << @root.render
       # Write objects.

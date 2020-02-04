@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'forwardable'
 require 'dopp/error'
 require 'dopp/util'
@@ -7,6 +8,7 @@ require 'dopp/section/object_header'
 
 module Dopp
   module Section
+    # PDF document section "catalog".
     class Catalog
       extend Forwardable
       include ::Dopp::Type

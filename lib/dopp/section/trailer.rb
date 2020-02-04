@@ -1,10 +1,12 @@
 # frozen_string_literal: true
+
 require 'securerandom'
 require 'dopp/error'
 require 'dopp/type'
 
 module Dopp
   module Section
+    # PDF document section trailer
     class Trailer
       include ::Dopp::Type
 
@@ -12,14 +14,16 @@ module Dopp
       def initialize
         @xref_offset = 0
         # Initialize attributes.
-        doc_id = "<#{SecureRandom.hex(16)}>"
-        rev_id = "<#{SecureRandom.hex(16)}>"
+        bytes = SecureRandom.hex(32).scan(/.{1,2}/).
+          map{|h| Integer(h, 16)}
+        @doc_id = xtext(bytes[0, 16])
+        @rev_id = xtext(bytes[16, 16])
         @attrs = dict({
           name(:Size) => 0,
-          name(:Root) => nil,
-          name(:Info) => nil,
-          name(:ID) => list([doc_id, rev_id])
+          name(:ID) => list([@doc_id, @rev_id])
         })
+        @root = nil
+        @info = nil
       end
 
       # Set offset to cross reference table.
@@ -39,25 +43,28 @@ module Dopp
         @attrs[name(:Size)] = size
       end
 
-      # Set reference to the document catalogue.
-      # @param [::Dopp::Type::Reference] ref Reference.
-      def root=(ref)
+      # Set document catalogue.
+      # @param [::Dopp::Section::Catalog] catalog Document catalog.
+      def root=(catalog)
         raise(ArgumentError) unless
-          ref.is_a?(Type::Reference)
-        @attrs[name(:Root)] = ref
+          catalog.is_a?(::Dopp::Section::Catalog)
+        @root = catalog
       end
 
-      # Set reference to the document information dictionary.
-      # @param [::Dopp::Type::Reference] ref Reference.
-      def info=(ref)
+      # Set document information dictionary.
+      # @param [::Dopp::Section::Info] info Information dictionary.
+      def info=(info)
         raise(ArgumentError) unless
-          ref.is_a?(Type::Reference)
-        @attrs[name(:Info)] = ref
+          info.is_a?(::Dopp::Section::Info)
+        @info = info
       end
 
       # Render to string.
       # @return [String] Content.
       def render
+        # Update attributes.
+        @attrs[name(:Root)] = @root.ref
+        @attrs[name(:Info)] = @info.ref
         #raise(::Dopp::ValidationError) if
         #  (@attrs[name(:Size)] == 0)
         #raise(::Dopp::ValidationError) if
@@ -65,6 +72,7 @@ module Dopp
         #raise(::Dopp::ValidationError) if
         #  @attrs[name(:Info)].nil?
         # Render trailer to string.
+        # Render content.
         String.new('trailer').concat(LF,
           @attrs.render, LF, 'startxref', LF,
           @xref_offset.to_s, LF, '%%EOF', LF)

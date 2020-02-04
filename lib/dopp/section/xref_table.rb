@@ -1,8 +1,10 @@
 # frozen_string_literal: true
+
 require 'dopp/util'
 
 module Dopp
   module Section
+    # PDF document section "cross reference table".
     class XrefTable
       # Initialize.
       def initialize
