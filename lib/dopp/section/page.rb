@@ -13,7 +13,7 @@ module Dopp
       extend Forwardable
       include ::Dopp::Type
 
-      # Delegate methods of ObjectHeader.
+      # Delegate methods of SectionHeader.
       def_delegators :@section_header,
         *%i[ref id revision revision=]
 
