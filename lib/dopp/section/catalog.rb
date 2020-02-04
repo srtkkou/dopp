@@ -4,7 +4,8 @@ require 'forwardable'
 require 'dopp/error'
 require 'dopp/util'
 require 'dopp/type'
-require 'dopp/section/object_header'
+require 'dopp/section/section_header'
+require 'dopp/section/pages'
 
 module Dopp
   module Section
@@ -31,30 +32,32 @@ module Dopp
         :UseAttachments,
       ])
 
-      # Delegate methods of ObjectHeader.
-      def_delegators :@object_header,
-        :ref, :id, :id=, :revision, :revision=
+      # Delegate methods of SectionHeader.
+      def_delegators :@section_header,
+        *%i[ref id revision revision=]
 
       # Initialize.
-      def initialize
-        @object_header = ObjectHeader.new
+      # @param [::Dopp::Document] doc PDF document.
+      def initialize(doc)
+        raise(ArgumentError) unless doc.is_a?(::Dopp::Document)
+        # Set variables.
+        @document = doc
+        @section_header = SectionHeader.new(doc)
         # Initialize attributes.
         @attrs = dict({
           name(:Type) => name(:Catalog),
-          name(:Pages) => nil,
           name(:PageLayout) => name(:SinglePage),
           name(:PageMode) => name(:UseNone),
         })
+        @pages = nil
       end
 
       # Reference to the root "Pages" object.
-      # @param ref 
-      def pages=(ref)
-        unless ref.is_a?(::Dopp::Type::Reference)
-          raise(::Dopp::ValidationError.new(
-            "pages=#{ref} should be a Reference."))
-        end
-        @attrs[name(:Pages)] = ref
+      # @param [;;Dopp::Section;;Pages] pages PDF section pages.
+      def pages=(pages)
+        raise(ArgumentError) unless
+          pages.is_a?(::Dopp::Section::Pages)
+        @pages = pages
       end
 
       def page_layout=(layout)
@@ -78,7 +81,10 @@ module Dopp
       # Render to string.
       # @return [String] Content.
       def render
-        @object_header.render.concat(
+        # Update attributes.
+        @attrs[name(:Pages)] = @pages.ref
+        # Render content.
+        @section_header.render.concat(
           @attrs.render, LF, 'endobj', LF)
       end
     end

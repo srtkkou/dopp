@@ -3,7 +3,7 @@
 require 'forwardable'
 require 'dopp/util'
 require 'dopp/type'
-require 'dopp/section/object_header'
+require 'dopp/section/section_header'
 
 module Dopp
   module Section
@@ -13,22 +13,25 @@ module Dopp
       include ::Dopp::Type
 
       # Delegate methods of ObjectHeader.
-      def_delegators :@object_header,
-        :ref, :id, :id=, :revision, :revision=
+      def_delegators :@section_header,
+        *%i[ref id revision revision=]
 
       # Initialize.
-      def initialize
-        @object_header = ObjectHeader.new
+      # @param [::Dopp::Document] doc PDF document.
+      def initialize(doc)
+        raise(ArgumentError) unless doc.is_a?(::Dopp::Document)
+        # Set variables.
+        @document = doc
+        @section_header = SectionHeader.new(doc)
         # Initialize attributes.
-        app_name = APPLICATION + '-' + VERSION
+        app_name = ::Dopp::APPLICATION.dup.concat(
+          '-', ::Dopp::VERSION)
         now_time = time(Time.now)
         @attrs = dict({
           name(:Creator) => text(app_name),
           name(:Producer) => text(app_name),
           name(:CreationDate) => now_time,
           name(:ModDate) => now_time,
-name(:Author) => text('author'),
-name(:Title) => text('title'),
         })
       end
 
@@ -46,10 +49,9 @@ name(:Title) => text('title'),
       # Render to String.
       # @return [String] Content.
       def render
-        @object_header.render.concat(
+        @section_header.render.concat(
           @attrs.render, LF, 'endobj', LF)
       end
     end
   end
 end
-

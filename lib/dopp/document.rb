@@ -7,36 +7,39 @@ module Dopp
   class Document
     # Initialize.
     def initialize
-      # Initialize sequential object ID.
-      @object_id = 0
+      # Initialize section ID.
+      @section_id = 0
       # Initialize headeer.
-      @header = ::Dopp::Section::Header.new
+      @header = ::Dopp::Section::Header.new(self)
       # Initialize document information dictionray.
-      @info = ::Dopp::Section::Info.new
-      @info.id = next_object_id
-      # Initialize root for pages.
-      @root = ::Dopp::Section::Pages.new
-      @root.id = next_object_id
+      @info = ::Dopp::Section::Info.new(self)
       # Initialize catalog.
-      @catalog = ::Dopp::Section::Catalog.new
+      @catalog = ::Dopp::Section::Catalog.new(self)
+      # Initialize root for pages.
+      @root = ::Dopp::Section::Pages.new(self)
+      @catalog.pages = @root
       # Initialize cross reference table.
-      @xref_table = ::Dopp::Section::XrefTable.new
+      @xref_table = ::Dopp::Section::XrefTable.new(self)
       # Initialize trailer.
-      @trailer = ::Dopp::Section::Trailer.new
+      @trailer = ::Dopp::Section::Trailer.new(self)
       @trailer.info = @info
       @trailer.root = @catalog
-      # Other objects.
-      @objects = []
+      # Other sections.
+      @sections = [@info, @catalog, @root]
+    end
+
+    # Get unique section ID.
+    # Update internal @section_id variable.
+    # @return [Integer] Section ID.
+    def unique_section_id
+      @section_id += 1
     end
 
     # Append page and content.
     def append_page
       page = @root.append_page
-      page.id = next_object_id
-      @objects << page
-      content = page.content_at(0)
-      content.id = next_object_id
-      @objects << content
+      @sections << page
+      @sections += page.contents
       page
     end
 
@@ -44,30 +47,19 @@ module Dopp
     # def append_page(page)
     #   page.id = next_object_id
     #   @root.append_page(page)
-    #   @objects << page
+    #   @sections << page
     # end
 
     # Render to string.
     # @return [String] Content.
     def render
+      @xref_table.clear
       buffer = @header.render
-      # Write info of the document.
-      @xref_table.append(buffer.size, 0, 'n')
-      buffer << @info.render
-      # Write root of pages.
-      @catalog.pages = @root.ref
-      @xref_table.append(buffer.size, 0, 'n')
-      buffer << @root.render
-      # Write objects.
-      @objects.each do |object|
-        @xref_table.append(buffer.size, 0, 'n')
-        buffer << object.render
+      # Render sections.
+      @sections.each do |section|
+        @xref_table.append(buffer.size)
+        buffer << section.render
       end
-      # Write catalog.
-      @catalog.id = (@object_id + 1)
-      @catalog.pages = @root.ref
-      @xref_table.append(buffer.size, 0, 'n')
-      buffer << @catalog.render
       # Write cross reference table.
       @trailer.xref_offset = buffer.size
       buffer << @xref_table.render
@@ -83,14 +75,5 @@ module Dopp
       String.new('#<').concat(self.class.name, ':',
         self.object_id.to_s, ' PDF-', @header.version, '>')
     end
-
-    private
-
-    # Get and update sequential object ID.
-    # @return [Integer] Object ID.
-    def next_object_id
-      @object_id += 1
-    end
   end
 end
-

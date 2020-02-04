@@ -3,6 +3,8 @@
 require 'securerandom'
 require 'dopp/error'
 require 'dopp/type'
+require 'dopp/section/catalog'
+require 'dopp/section/info'
 
 module Dopp
   module Section
@@ -11,13 +13,14 @@ module Dopp
       include ::Dopp::Type
 
       # Initialize.
-      def initialize
+      # @param [::Dopp::Document] doc PDF document.
+      def initialize(doc)
+        raise(ArgumentError) unless doc.is_a?(::Dopp::Document)
+        # Set variables.
+        @document = doc
         @xref_offset = 0
         # Initialize attributes.
-        bytes = SecureRandom.hex(32).scan(/.{1,2}/).
-          map{|h| Integer(h, 16)}
-        @doc_id = xtext(bytes[0, 16])
-        @rev_id = xtext(bytes[16, 16])
+        @doc_id, @rev_id = generate_ids
         @attrs = dict({
           name(:Size) => 0,
           name(:ID) => list([@doc_id, @rev_id])
@@ -65,19 +68,23 @@ module Dopp
         # Update attributes.
         @attrs[name(:Root)] = @root.ref
         @attrs[name(:Info)] = @info.ref
-        #raise(::Dopp::ValidationError) if
-        #  (@attrs[name(:Size)] == 0)
-        #raise(::Dopp::ValidationError) if
-        #  @attrs[name(:Root)].nil?
-        #raise(::Dopp::ValidationError) if
-        #  @attrs[name(:Info)].nil?
-        # Render trailer to string.
         # Render content.
         String.new('trailer').concat(LF,
           @attrs.render, LF, 'startxref', LF,
           @xref_offset.to_s, LF, '%%EOF', LF)
       end
+
+      private
+
+      # Generate document and revision ID.
+      # @return [Array<::Dopp::Type::HexString>] IDs.
+      def generate_ids
+        bytes = SecureRandom.hex(32).scan(/.{1,2}/).
+          map{|h| Integer(h, 16)}
+        doc_id = xtext(bytes[0, 16])
+        rev_id = xtext(bytes[16, 16])
+        [doc_id, rev_id]
+      end
     end
   end
 end
-

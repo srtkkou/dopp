@@ -1,32 +1,26 @@
 # frozen_literal_string: true
+
 require 'dopp/error'
 require 'dopp/type'
 
 module Dopp
   module Section
-    class ObjectHeader
-      include ::Dopp::Type
-
+    # PDF document section header.
+    class SectionHeader
       attr_reader :id
       attr_reader :revision
 
       # Initialize.
-      def initialize
-        @id = 0
+      def initialize(doc)
+        @document = doc
+        @id = doc.unique_section_id
         @revision = 0
       end
 
       # Get reference to this object.
       # @return [::Dopp::Type;;Reference] Reference to this PDF object.
       def ref
-        reference(@id, @revision)
-      end
-
-      # Set id.
-      # @param [Integer] id PDF object ID.
-      def id=(id)
-        validate_id!(id)
-        @id = id
+        ::Dopp::Type.reference(@id, @revision)
       end
 
       # Set revision.
@@ -86,4 +80,3 @@ module Dopp
     end
   end
 end
-

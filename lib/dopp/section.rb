@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'dopp/section/object_header'
+require 'dopp/section/section_header'
 require 'dopp/section/header'
 require 'dopp/section/info'
 require 'dopp/section/pages'
@@ -14,4 +14,3 @@ module Dopp
   module Section
   end
 end
-

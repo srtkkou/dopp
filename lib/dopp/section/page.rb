@@ -2,7 +2,9 @@
 
 require 'forwardable'
 require 'dopp/type'
-require 'dopp/section/object_header'
+require 'dopp/section/section_header'
+require 'dopp/section/pages'
+require 'dopp/section/content'
 
 module Dopp
   module Section
@@ -12,12 +14,18 @@ module Dopp
       include ::Dopp::Type
 
       # Delegate methods of ObjectHeader.
-      def_delegators :@object_header,
-        :ref, :id, :id=, :revision, :revision=
+      def_delegators :@section_header,
+        *%i[ref id revision revision=]
+
+      attr_reader :contents
 
       # Initialize.
-      def initialize
-        @object_header = ObjectHeader.new
+      # @param [::Dopp::Document] doc PDF document.
+      def initialize(doc)
+        raise(ArgumentError) unless doc.is_a?(::Dopp::Document)
+        # Set variables.
+        @document = doc
+        @section_header = SectionHeader.new(doc)
         # Initialize attributes.
         @attrs = dict({
           name(:Type) => name(:Page),
@@ -27,7 +35,8 @@ module Dopp
           name(:Resources) => dict({}),
         })
         @parent = nil
-        @contents = [::Dopp::Section::Content.new]
+        content = ::Dopp::Section::Content.new(doc)
+        @contents = [content]
       end
 
       # Set "Pages" object.
@@ -38,23 +47,17 @@ module Dopp
         @parent = parent
       end
 
-      def content_at(index)
-        content = @contents[index]
-        raise(ArgumentError) if content.nil?
-        content
-      end
-
       # Render to string.
       # @return [String] Content.
       def render
         # Update attributes.
         @attrs[name(:Parent)] = @parent.ref
-        @attrs[name(:Contents)] = list(@contents.map(&:ref))
+        @attrs[name(:Contents)] =
+          list(@contents.map(&:ref))
         # Render contents.
-        @object_header.render.concat(
+        @section_header.render.concat(
           @attrs.render, LF, 'endobj', LF)
       end
     end
   end
 end
-

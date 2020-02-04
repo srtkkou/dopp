@@ -2,7 +2,7 @@
 
 require 'forwardable'
 require 'dopp/type'
-require 'dopp/section/object_header'
+require 'dopp/section/section_header'
 require 'dopp/section/page'
 
 module Dopp
@@ -13,12 +13,16 @@ module Dopp
       include ::Dopp::Type
 
       # Delegate methods of ObjectHeader.
-      def_delegators :@object_header,
-        :ref, :id, :id=, :revision, :revision=
+      def_delegators :@section_header,
+        *%i[ref id revision revision=]
 
       # Initialize.
-      def initialize
-        @object_header = ObjectHeader.new
+      # @param [::Dopp::Document] doc PDF document.
+      def initialize(doc)
+        raise(ArgumentError) unless doc.is_a?(::Dopp::Document)
+        # Set variables.
+        @document = doc
+        @section_header = SectionHeader.new(doc)
         # Initialize attributes.
         @attrs = dict({
           name(:Type) => name(:Pages),
@@ -29,7 +33,7 @@ module Dopp
       # Append  page.
       # @return [::Dopp::Section::Page] page Page object.
       def append_page
-        page = Page.new
+        page = Page.new(@document)
         page.parent = self
         @pages << page
         page
@@ -46,10 +50,9 @@ module Dopp
         @attrs[name(:Count)] = @pages.size
         @attrs[name(:Kids)] = list(@pages.map(&:ref))
         # Render content.
-        @object_header.render.concat(
+        @section_header.render.concat(
           @attrs.render, LF, 'endobj', LF)
       end
     end
   end
 end
-
