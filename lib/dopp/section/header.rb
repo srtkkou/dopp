@@ -6,6 +6,9 @@ module Dopp
   module Section
     # PDF document section "header".
     class Header
+      # Default PDF version.
+      DEFAULT_PDF_VERSION ||= '1.3'
+
       # Document identifier.
       PDF_IDENTIFIER ||= ::Dopp::Util.deep_freeze(
         [0xE2, 0xE3, 0xCF, 0xD3].pack('c*'))
@@ -15,7 +18,7 @@ module Dopp
       # Initialize.
       # @param [::Dopp::Document] doc PDF document.
       # @param [String] version PDF version.
-      def initialize(doc, version = '1.2')
+      def initialize(doc, version = DEFAULT_PDF_VERSION)
         raise(ArcumentError) unless doc.is_a?(::Dopp::Document)
         raise(ArgumentError) unless version.is_a?(String)
         # Set variables.
