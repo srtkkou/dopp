@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Dopp
   module Type
     # PDF type "Hexadecimal String".
@@ -19,7 +20,7 @@ module Dopp
       def initialize(bytes)
         raise(ArgumentError) unless bytes.is_a?(Array)
         raise(ArgumentError) unless
-          bytes.all?{|b| (0x0 <= b) && (b <= 0xFF)}
+          bytes.all?{|b| (0x0 <= b) && (b <= 0xff)}
         bytes.append(0x0) if (bytes.size % 2 != 0)
         @bytes = bytes
       end
@@ -27,7 +28,7 @@ module Dopp
       # Convert to String.
       # @return [String] Content.
       def to_s
-        joined = @bytes.map{|b| '%02X' % b}.join(' ')
+        joined = @bytes.map{|b| '%02x' % b}.join(' ')
         String.new('PDF:<').concat(joined, '>')
       end
 
@@ -41,10 +42,9 @@ module Dopp
       # Render to string.
       # @return [String] Content.
       def render
-        joined = @bytes.map{|b| '%02X' % b}.join
+        joined = @bytes.map{|b| '%02x' % b}.join
         String.new('<').concat(joined, '>')
       end
     end
   end
 end
-
