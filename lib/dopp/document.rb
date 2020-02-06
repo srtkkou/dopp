@@ -39,9 +39,9 @@ module Dopp
       @section_id += 1
     end
 
-    # Get unique font ID.
-    # @return [Integer] Font ID.
-    def unique_font_name
+    # Get unique font alias.
+    # @return [Integer] Font alias.
+    def unique_font_alias
       "F#{@fonts.size}"
     end
 

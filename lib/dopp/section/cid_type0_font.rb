@@ -18,7 +18,7 @@ module Dopp
       # @param [::Dopp::Document] doc PDF document.
       def initialize(doc)
         super(doc)
-        @alias = doc.unique_font_name
+        @alias = doc.unique_font_alias
         # Initialize attributes.
         attributes[name(:Type)] = name(:Font)
         attributes[name(:Subtype)] = name(:Type0)
