@@ -18,11 +18,9 @@ module Dopp
       # Initialize.
       # @param [::Dopp::Document] doc PDF document.
       # @param [String] version PDF version.
-      def initialize(doc, version = DEFAULT_PDF_VERSION)
-        raise(ArcumentError) unless doc.is_a?(::Dopp::Document)
+      def initialize(version = DEFAULT_PDF_VERSION)
         raise(ArgumentError) unless version.is_a?(String)
         # Set variables.
-        @document = doc
         @version = version
       end
 
