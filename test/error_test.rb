@@ -35,5 +35,13 @@ module Dopp
       assert_nil(err.check_gteq!(1, 1))
       assert_raises(err){ err.check_gteq!(1, 2) }
     end
+
+    def test_ok_include!
+      err = ::Dopp::Error
+      assert_nil(err.check_include!(1, [3, 2, 1]))
+      assert_nil(err.check_include!(:key, %i[k ke key]))
+      assert_raises(err){ err.check_include!(1, [4, 3, 2]) }
+      assert_raises(err){ err.check_include!(:key, %i[a b c]) }
+    end
   end
 end

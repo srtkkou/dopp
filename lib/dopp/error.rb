@@ -33,6 +33,15 @@ module Dopp
         raise self, "#{value} should be "\
           "greater than or equal to #{expected}."
       end
+
+      # Check value using "include?" with expected value.
+      # @param [Object] value Value.
+      # @param [Class] expected Expected value.
+      def check_include!(value, expected)
+        return if expected.include?(value)
+
+        raise self, "#{value} should be included in #{expected}."
+      end
     end
   end
 end
