@@ -1,56 +1,46 @@
 # frozen_string_literal: true
 
-require 'forwardable'
-require 'dopp/util'
-require 'dopp/type'
-require 'dopp/section/section_header'
+require 'dopp/error'
+require 'dopp/section/base'
 
 module Dopp
   module Section
     # PDF document section "information dictionary".
-    class Info
-      extend Forwardable
-      include ::Dopp::Type
-
-      # Delegate methods of SectionHeader.
-      def_delegators :@section_header,
-        *%i[ref id revision revision=]
-
+    class Info < Base
       # Initialize.
       # @param [::Dopp::Document] doc PDF document.
-      def initialize(doc)
-        raise(ArgumentError) unless doc.is_a?(::Dopp::Document)
-        # Set variables.
-        @document = doc
-        @section_header = SectionHeader.new(doc)
+      def initialize(doc, attrs = {})
+        super(doc)
         # Initialize attributes.
         app_name = ::Dopp::APPLICATION.dup.concat(
           '-', ::Dopp::VERSION)
         now_time = time(Time.now)
-        @attrs = dict({
-          name(:Creator) => text(app_name),
-          name(:Producer) => text(app_name),
-          name(:CreationDate) => now_time,
-          name(:ModDate) => now_time,
-        })
+        attributes[name(:Creator)] = text(app_name)
+        attributes[name(:Producer)] = text(app_name)
+        attributes[name(:CreationDate)] = now_time
+        attributes[name(:ModDate)] = now_time
+        # Initialize instance variables.
+        @title = nil
       end
 
       # Set title.
       # @param [String] title Title.
       def title=(title)
-        raise(ArgumentError) unless title.is_a?(String)
+        ::Dopp::Error.check_is_a?(title, String)
         if title.ascii_only?
-          @attrs[name(:Title)] = text(title)
+          @title = text(title)
         else
-          @attrs[name(:Title)] = utf8_to_xtext(title)
+          @title = utf8_to_xtext(title)
         end
       end
 
       # Render to String.
       # @return [String] Content.
       def render
-        @section_header.render.concat(
-          @attrs.render, LF, 'endobj', LF)
+        # Update attributes.
+        attributes[name(:Title)] = @title
+        # Render content.
+        super
       end
     end
   end

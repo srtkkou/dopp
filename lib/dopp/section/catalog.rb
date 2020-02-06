@@ -1,19 +1,14 @@
 # frozen_string_literal: true
 
-require 'forwardable'
 require 'dopp/error'
 require 'dopp/util'
-require 'dopp/type'
-require 'dopp/section/section_header'
-require 'dopp/section/pages'
+require 'dopp/section/base'
 
 module Dopp
   module Section
     # PDF document section "catalog".
-    class Catalog
-      extend Forwardable
-      include ::Dopp::Type
-
+    class Catalog < Base
+      # Layouts.
       PAGE_LAYOUTS ||= ::Dopp::Util.deep_freeze([
         :SinglePage,
         :OneColumn,
@@ -23,6 +18,7 @@ module Dopp
         :TwoPageRight,
       ])
 
+      # Modes.
       PAGE_MODES ||= ::Dopp::Util.deep_freeze([
         :UseNone,
         :UseOutlines,
@@ -32,62 +28,48 @@ module Dopp
         :UseAttachments,
       ])
 
-      # Delegate methods of SectionHeader.
-      def_delegators :@section_header,
-        *%i[ref id revision revision=]
-
       # Initialize.
       # @param [::Dopp::Document] doc PDF document.
-      def initialize(doc)
-        raise(ArgumentError) unless doc.is_a?(::Dopp::Document)
-        # Set variables.
-        @document = doc
-        @section_header = SectionHeader.new(doc)
+      def initialize(doc, attrs = {})
+        super(doc)
         # Initialize attributes.
-        @attrs = dict({
-          name(:Type) => name(:Catalog),
-          name(:PageLayout) => name(:SinglePage),
-          name(:PageMode) => name(:UseNone),
-        })
+        attributes[name(:Type)] = name(:Catalog)
+        self.page_layout = attrs[:page_layout] || :SinglePage
+        self.page_mode = attrs[:page_mode] || :UseNone
+        # Initialize instance variables.
         @pages = nil
       end
 
       # Reference to the root "Pages" object.
       # @param [;;Dopp::Section;;Pages] pages PDF section pages.
       def pages=(pages)
-        raise(ArgumentError) unless
-          pages.is_a?(::Dopp::Section::Pages)
+        ::Dopp::Error.check_is_a!(
+          pages, ::Dopp::Section::Pages)
         @pages = pages
       end
 
+      # Set page layout.
+      # @param [Symbol] layout Layout.
       def page_layout=(layout)
-        unless PAGE_LAYOUTS.include?(layout)
-          raise(::Dopp::ValidationError.new(
-            "page_layout=#{layout} should be within " \
-              "[#{PAGE_LAYOUTS.join(', ')}]."))
-        end
-        @attrs[name(:PageLayout)] = name(layout)
+        ::Dopp::Error.check_include!(layout, PAGE_LAYOUTS)
+        attributes[name(:PageLayout)] = name(layout)
       end
 
+      # Set page mode.
+      # @param [Symbol] mode Mode.
       def page_mode=(mode)
-        unless PAGE_MODES.include?(mode)
-          raise(::Dopp::ValidationError.new(
-            "page_mode=#{mode} should be within " \
-              "[#{PAGE_MODES.join(', ')}]."))
-        end
-        @attrs[name(:PageMode)] = name(mode)
+        ::Dopp::Error.check_include!(mode, PAGE_MODES)
+        attributes[name(:PageMode)] = name(mode)
       end
 
       # Render to string.
       # @return [String] Content.
       def render
         # Update attributes.
-        @attrs[name(:Pages)] = @pages.ref
+        attributes[name(:Pages)] = @pages.ref
         # Render content.
-        @section_header.render.concat(
-          @attrs.render, LF, 'endobj', LF)
+        super
       end
     end
   end
 end
-

@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'dopp/section/section_header'
 require 'dopp/section/header'
 require 'dopp/section/info'
 require 'dopp/section/pages'

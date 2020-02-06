@@ -1,62 +1,72 @@
 # frozen_string_literal: true
 
-require 'forwardable'
-require 'dopp/type'
-require 'dopp/section/section_header'
+require 'dopp/error'
+require 'dopp/section/base'
 require 'dopp/section/pages'
 require 'dopp/section/content'
 
 module Dopp
   module Section
     # PDF document section "page".
-    class Page
-      extend Forwardable
-      include ::Dopp::Type
-
-      # Delegate methods of SectionHeader.
-      def_delegators :@section_header,
-        *%i[ref id revision revision=]
-
+    class Page < Base
       attr_reader :contents
 
       # Initialize.
       # @param [::Dopp::Document] doc PDF document.
-      def initialize(doc)
-        raise(ArgumentError) unless doc.is_a?(::Dopp::Document)
-        # Set variables.
-        @document = doc
-        @section_header = SectionHeader.new(doc)
+      def initialize(doc, attrs = {})
+        super(doc)
         # Initialize attributes.
-        @attrs = dict({
-          name(:Type) => name(:Page),
-          name(:MediaBox) =>
-            list([0, 0, 612, 792]),
-          name(:Rotate) => 0,
-          name(:Resources) => dict({}),
-        })
+        attributes[name(:Type)] = name(:Page)
+        attributes[name(:MediaBox)] = list([0, 0, 612, 792])
+        attributes[name(:Rotate)] = 0
+        # Initialize instance variables.
         @parent = nil
         content = ::Dopp::Section::Content.new(doc)
         @contents = [content]
+        @resources = {}
       end
 
       # Set "Pages" object.
       # @param [::Dopp::Section::Pages] parent Pages object.
       def parent=(parent)
-        raise(ArgumentError) unless
-          parent.is_a?(::Dopp::Section::Pages)
+        ::Dopp::Error.check_is_a!(
+          parent, ::Dopp::Section::Pages)
         @parent = parent
+      end
+
+      # TODO: Remove.
+      def set_font(font_name)
+        unless @document.has_font?(font_name)
+          @document.add_font(font_name)
+        end
+        font = @document.get_font(font_name)
+        @resources[name(:Font)] = dict({
+          name(font.font_name) => font.ref,
+        })
+      end
+
+      # TODO: Remove.
+      def add_kozmin
+        font = @document.add_kozmin
+        @resources[name(:Font)] = dict({
+          name(font.alias) => font.ref,
+        })
+      end
+
+      # TODO: Implement.
+      def write(text)
       end
 
       # Render to string.
       # @return [String] Content.
       def render
         # Update attributes.
-        @attrs[name(:Parent)] = @parent.ref
-        @attrs[name(:Contents)] =
+        attributes[name(:Parent)] = @parent.ref
+        attributes[name(:Contents)] =
           list(@contents.map(&:ref))
+        attributes[name(:Resources)] = dict(@resources)
         # Render contents.
-        @section_header.render.concat(
-          @attrs.render, LF, 'endobj', LF)
+        super
       end
     end
   end

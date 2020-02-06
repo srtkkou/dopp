@@ -1,46 +1,47 @@
 # frozen_string_literal: true
 
-require 'forwardable'
-require 'dopp/type'
-require 'dopp/section/section_header'
+require 'dopp/error'
+require 'dopp/section/base'
 
 module Dopp
   module Section
     # PDF document section "content stream".
-    class Content
-      extend Forwardable
-      include ::Dopp::Type
+    class Content < Base
 
-      # Delegate methods of SectionHeader.
-      def_delegators :@section_header,
-        *%i[ref id revision revision=]
+      attr_reader :stream
 
       # Initialize.
       # @param [::Dopp::Document] doc PDF document.
       def initialize(doc)
-        raise(ArgumentError) unless doc.is_a?(::Dopp::Document)
-        # Initialize variables.
-        @document = doc
-        @section_header = SectionHeader.new(doc)
-        # Initialize attributes.
-        @attrs = dict({})
-        # Initialize stream.
+        super(doc)
+        # Initialize instance variables.
         @stream = String.new
       end
 
+      # TODO: Implement real one.
       # Render to string.
       # @return [String] Content.
       def render
         # Update attributes.
-        @stream = '200 150 m 600 450 l S' # TODO: Remove.
+        @stream.concat( # TODO: Remove.
+          '200 150 m 600 450 l S', LF,
+          'BT', LF,
+          '/F0 36. Tf', LF,
+          #'/F0 36. Tf (Hello World!) Tj', LF,
+          utf8_to_xtext('こんにちは').render + ' Tj', LF,
+          'ET')
         # Calculate length (stream bytes + (LF * 2)).
         length = @stream.size + 2
-        @attrs[name(:Length)] = length
+        attributes[name(:Length)] = length
         # Render content.
-        @section_header.render.concat(
-          @attrs.render, LF,
-          'stream', LF, @stream, LF,
-          'endstream', LF, 'endobj', LF)
+        super do |buf|
+          buf.concat('stream', LF, @stream, LF,
+            'endstream', LF)
+        end
+       # @section_header.render.concat(
+       #   @attrs.render, LF,
+       #   'stream', LF, @stream, LF,
+       #   'endstream', LF, 'endobj', LF)
       end
     end
   end

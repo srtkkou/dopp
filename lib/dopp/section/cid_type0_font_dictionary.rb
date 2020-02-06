@@ -1,19 +1,14 @@
 # frozen_string_literal: true
 
-require 'forwardable'
-require 'dopp/type'
-require 'dopp/document'
+require 'dopp/error'
+require 'dopp/section/base'
 require 'dopp/section/cid_type0_font'
 require 'dopp/section/cid_type0_font_descriptor'
 
 module Dopp
   module Section
-    class CidType0FontDictionary
-      extend Forwardable
-      include ::Dopp::Type
-
-      def_delegators :@section_header,
-        *%i[ref id revision revision=]
+    # PDF document section "CID type0 font dictionary".
+    class CidType0FontDictionary < Base
 
       attr_accessor :font
       attr_reader :document
@@ -22,15 +17,18 @@ module Dopp
       attr_accessor :supplement
       attr_accessor :descriptor
 
+      # Initialize.
+      # @param [::Dopp::Section::CidType0Font] font Font section.
       def initialize(font)
+        ::Dopp::Error.check_is_a!(
+          font, ::Dopp::Section::CidType0Font)
         @font = font
-        @document = @font.document
-        @section_header = ::Dopp::Section::SectionHeader.new(@document)
-        @attrs = dict({
-          name(:Type) => name(:Font),
-          name(:Subtype) => name(:CIDFontType0),
-          name(:BaseFont) => name(font.fullname),
-        })
+        super(font.document)
+        # Initialize attributes.
+        attributes[name(:Type)] = name(:Font)
+        attributes[name(:Subtype)] = name(:CIDFontType0)
+        attributes[name(:BaseFont)] = name(font.fullname)
+        # Initialize instance variables.
         @registry = nil
         @ordering = nil
         @supplement = nil
@@ -41,17 +39,18 @@ module Dopp
         @descriptor = CidType0FontDescriptor.new(self)
       end
 
+      # Render to string.
+      # @return [String] Content.
       def render
         # Update attributes.
-        @attrs[name(:CIDSystemInfo)] = dict({
+        attributes[name(:CIDSystemInfo)] = dict({
           name(:Registry) => text(@registry),
           name(:Ordering) => text(@ordering),
           name(:Supplement) => @supplement
         })
-        @attrs[name(:FontDescriptor)] = @descriptor.ref
+        attributes[name(:FontDescriptor)] = @descriptor.ref
         # Render contents.
-        @section_header.render.concat(
-          @attrs.render, LF, 'endobj', LF)
+        super
       end
     end
   end

@@ -1,35 +1,29 @@
 # frozen_string_literal: true
 
-require 'forwardable'
-require 'dopp/type'
-require 'dopp/document'
+require 'dopp/section/base'
 require 'dopp/section/cid_type0_font_dictionary'
 
 module Dopp
   module Section
-    class CidType0Font
-      extend Forwardable
-      include ::Dopp::Type
+    # PDF document section "CID type0 font".
+    class CidType0Font < Base
 
-      def_delegators :@section_header,
-        *%i[ref id revision revision=]
-
-      attr_reader :document
       attr_accessor :fullname
       attr_reader :alias
       attr_accessor :aliases
       attr_accessor :encoding
       attr_accessor :dictionary
 
+      # Initialize.
+      # @param [::Dopp::Document] doc PDF document.
       def initialize(doc)
-        @document = doc
-        @section_header = ::Dopp::Section::SectionHeader.new(doc)
+        super(doc)
         @alias = doc.unique_font_name
-        @attrs = dict({
-          name(:Type) => name(:Font),
-          name(:Subtype) => name(:Type0),
-          name(:Name) => name(@alias),
-        })
+        # Initialize attributes.
+        attributes[name(:Type)] = name(:Font)
+        attributes[name(:Subtype)] = name(:Type0)
+        attributes[name(:Name)] = name(@alias)
+        # Initialize instance variables.
         @fullname = nil
         @encoding = nil
         @dictionary = nil
@@ -39,14 +33,16 @@ module Dopp
         @dictionary = CidType0FontDictionary.new(self)
       end
 
+      # Render to string.
+      # @return [String] Content.
       def render
         # Update attributes.
-        @attrs[name(:BaseFont)] = name(@fullname)
-        @attrs[name(:Encoding)] = name(@encoding)
-        @attrs[name(:DescendantFonts)] = list([@dictionary.ref])
+        attributes[name(:BaseFont)] = name(@fullname)
+        attributes[name(:Encoding)] = name(@encoding)
+        attributes[name(:DescendantFonts)] =
+          list([@dictionary.ref])
         # Render contents.
-        @section_header.render.concat(
-          @attrs.render, LF, 'endobj', LF)
+        super
       end
     end
   end

@@ -15,8 +15,8 @@ module Dopp
       # Initialize.
       # @param [::Dopp::Document] doc PDF document.
       def initialize(doc)
-        raise(ArgumentError) unless doc.is_a?(::Dopp::Document)
-        # Set variables.
+        ::Dopp::Error.check_is_a!(doc, ::Dopp::Document)
+        # Set instance variables.
         @document = doc
         @xref_offset = 0
         # Initialize attributes.
@@ -25,6 +25,7 @@ module Dopp
           name(:Size) => 0,
           name(:ID) => list([@doc_id, @rev_id])
         })
+        # Initialize instance variables.
         @root = nil
         @info = nil
       end
@@ -32,8 +33,7 @@ module Dopp
       # Set offset to cross reference table.
       # @param [Integer] offset Offset.
       def xref_offset=(offset)
-        raise(ArgumentError) unless
-          offset.is_a?(Integer)
+        ::Dopp::Error.check_is_a!(offset, Integer)
         @xref_offset = offset
       end
 
@@ -41,24 +41,23 @@ module Dopp
       # Set size of entries in cross reference table.
       # @param [Integer] size Size of entries.
       def size=(size)
-        raise(ArgumentError) unless
-          size.is_a?(Integer)
+        ::Dopp::Error.check_is_a!(size, Integer)
         @attrs[name(:Size)] = size
       end
 
       # Set document catalogue.
       # @param [::Dopp::Section::Catalog] catalog Document catalog.
       def root=(catalog)
-        raise(ArgumentError) unless
-          catalog.is_a?(::Dopp::Section::Catalog)
+        ::Dopp::Error.check_is_a!(
+          catalog, ::Dopp::Section::Catalog)
         @root = catalog
       end
 
       # Set document information dictionary.
       # @param [::Dopp::Section::Info] info Information dictionary.
       def info=(info)
-        raise(ArgumentError) unless
-          info.is_a?(::Dopp::Section::Info)
+        ::Dopp::Error.check_is_a!(
+          info, ::Dopp::Section::Info)
         @info = info
       end
 

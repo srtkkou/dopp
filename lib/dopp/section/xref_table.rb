@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
+require 'dopp/error'
 require 'dopp/util'
-require 'dopp/type'
 
 module Dopp
   module Section
@@ -23,7 +23,7 @@ module Dopp
       # Initialize.
       # @param [::Dopp::Document] doc PDF document.
       def initialize(doc)
-        raise(ArgumentError) unless doc.is_a?(::Dopp::Document)
+        ::Dopp::Error.check_is_a!(doc, ::Dopp::Document)
         @document = doc
         # Initialize table.
         clear
@@ -40,11 +40,11 @@ module Dopp
       # @param [Integer] generation PDF object generation.
       # @param [String] flag Flag of the entry.
       def append(offset, generation = 0, flag = IN_USE)
-        raise(ArgumentError) unless
-          (offset.is_a?(Integer) && offset > 0)
-        raise(ArgumentError) unless
-          (generation.is_a?(Integer) && generation >= 0)
-        raise(ArgumentError) unless FLAGS.include?(flag)
+        ::Dopp::Error.check_is_a!(offset, Integer)
+        ::Dopp::Error.check_gt!(offset, 0)
+        ::Dopp::Error.check_is_a!(generation, Integer)
+        ::Dopp::Error.check_gteq!(generation, 0)
+        ::Dopp::Error.check_include!(flag, FLAGS)
         entry = Entry.new(offset, generation, flag)
         @entries << entry
       end

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'dopp/section'
+require 'dopp/font/times_roman'
+require 'dopp/font/kozuka_mincho_pr6n_r'
 
 module Dopp
   # PDF document.
@@ -10,7 +12,7 @@ module Dopp
       # Initialize section ID.
       @section_id = 0
       # Initialize headeer.
-      @header = ::Dopp::Section::Header.new(self)
+      @header = ::Dopp::Section::Header.new
       # Initialize document information dictionray.
       @info = ::Dopp::Section::Info.new(self)
       # Initialize catalog.
@@ -26,6 +28,8 @@ module Dopp
       @trailer.root = @catalog
       # Other sections.
       @sections = [@info, @catalog, @root]
+      # Initialize fonts.
+      @fonts = {}
     end
 
     # Get unique section ID.
@@ -33,6 +37,12 @@ module Dopp
     # @return [Integer] Section ID.
     def unique_section_id
       @section_id += 1
+    end
+
+    # Get unique font ID.
+    # @return [Integer] Font ID.
+    def unique_font_name
+      "F#{@fonts.size}"
     end
 
     # Append page and content.
@@ -74,6 +84,35 @@ module Dopp
     def inspect
       String.new('#<').concat(self.class.name, ':',
         self.object_id.to_s, ' PDF-', @header.version, '>')
+    end
+
+    def has_font?(font)
+      @fonts.any?{|k, v|
+        (font == k) || (v.include?(font))
+      }
+    end
+
+    def add_font(font, opts = {})
+      return if has_font?(font)
+      font = ::Dopp::Font::TimesRoman.new(self)
+      @fonts[::Dopp::Font::TimesRoman] = font
+      @sections << font
+      font
+    end
+
+    def add_kozmin
+      font = ::Dopp::Font::KozukaMinchoPr6nR.kozmin(self)
+      @fonts[font.fullname] = font
+      dict = font.dictionary
+      desc = dict.descriptor
+      @sections << font
+      @sections << dict
+      @sections << desc
+      font
+    end
+
+    def get_font(font)
+      @fonts[::Dopp::Font::TimesRoman]
     end
   end
 end
