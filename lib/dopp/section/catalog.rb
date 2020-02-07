@@ -15,7 +15,7 @@ module Dopp
         :TwoColumnLeft,
         :TwoColumnRight,
         :TwoPageLeft,
-        :TwoPageRight,
+        :TwoPageRight
       ])
 
       # Modes.
@@ -25,7 +25,7 @@ module Dopp
         :UseThumbs,
         :FullScreen,
         :UseOC,
-        :UseAttachments,
+        :UseAttachments
       ])
 
       # Initialize.
@@ -44,7 +44,8 @@ module Dopp
       # @param [;;Dopp::Section;;Pages] pages PDF section pages.
       def pages=(pages)
         ::Dopp::Error.check_is_a!(
-          pages, ::Dopp::Section::Pages)
+          pages, ::Dopp::Section::Pages
+        )
         @pages = pages
       end
 

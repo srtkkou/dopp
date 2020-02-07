@@ -7,7 +7,6 @@ module Dopp
   module Section
     # PDF document section "CID type0 font".
     class CidType0Font < Base
-
       attr_accessor :fullname
       attr_reader :alias
       attr_accessor :names

@@ -14,8 +14,7 @@ module Dopp
       FREE ||= 'f'
 
       # Flags.
-      FLAGS ||= ::Dopp::Util.deep_freeze([
-        IN_USE, FREE])
+      FLAGS ||= ::Dopp::Util.deep_freeze([IN_USE, FREE])
 
       # Entry struct.
       Entry = Struct.new(:offset, :generation, :flag)
@@ -51,16 +50,16 @@ module Dopp
 
       # Clear entries.
       def clear
-        first_entry = Entry.new(0, 65535, 'f')
+        first_entry = Entry.new(0, 65_535, 'f')
         @entries = [first_entry]
       end
 
       # Render to string.
       # @return [String] Content.
       def render
-        table = @entries.map{|e|
-          '%010d %05d %s' % e.to_a
-        }.join(LF)
+        table = @entries.map do |e|
+          format('%<offset>010d %<generation>05d %<flag>s', e.to_h)
+        end.join(LF)
         String.new('xref').concat(LF, table, LF)
       end
     end

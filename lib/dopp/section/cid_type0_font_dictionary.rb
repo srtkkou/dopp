@@ -9,7 +9,6 @@ module Dopp
   module Section
     # PDF document section "CID type0 font dictionary".
     class CidType0FontDictionary < Base
-
       attr_accessor :font
       attr_reader :document
       attr_accessor :registry
@@ -21,7 +20,8 @@ module Dopp
       # @param [::Dopp::Section::CidType0Font] font Font section.
       def initialize(font)
         ::Dopp::Error.check_is_a!(
-          font, ::Dopp::Section::CidType0Font)
+          font, ::Dopp::Section::CidType0Font
+        )
         @font = font
         super(font.document)
         # Initialize attributes.

@@ -15,7 +15,7 @@ module Dopp
         end
         arg.freeze
       when Enumerable
-        arg.each{|v| deep_freeze(v)}
+        arg.each{ |v| deep_freeze(v) }
         arg.freeze
       else
         arg.freeze unless arg.frozen?
@@ -27,7 +27,8 @@ module Dopp
     # @return [String] Converted string.
     def camelize(str)
       raise(ArgumentError) unless str.is_a?(String)
-      str.gsub(/(?:\A|_)(.)/){$1.upcase}
+
+      str.gsub(/(?:\A|_)(.)/){ $1.upcase }
     end
 
     # Is the class of the object defined under Dopp::Type?
@@ -42,6 +43,7 @@ module Dopp
     # @return [Float] Points.
     def mm_to_pt(mm)
       raise(ArgumentError) unless mm.is_a?(Numeric)
+
       pt = mm * 72.0 / 25.4
       (pt * 100.0).round / 100.0
     end
@@ -51,9 +53,9 @@ module Dopp
     # @return [Float] Millimeters.
     def pt_to_mm(pt)
       raise(ArgumentError) unless pt.is_a?(Numeric)
+
       mm = pt * 25.4 / 72.0
       (mm * 100.0).round / 100.0
     end
   end
 end
-

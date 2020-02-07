@@ -29,8 +29,8 @@ module Dopp
       end
 
       # TODO: Implement
-      #def appned_pages
-      #end
+      # def appned_pages
+      # end
 
       # Render to string.
       # @return [String] Content.

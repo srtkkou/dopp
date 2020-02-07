@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Dopp
   module Type
     # PDF type "Name".
@@ -7,7 +8,7 @@ module Dopp
       # @param [String|Symbol] name Name.
       def initialize(name)
         raise(ArgumentError) unless
-          (name.is_a?(String) || name.is_a?(Symbol))
+          name.is_a?(String) || name.is_a?(Symbol)
         @sym = "/#{name}".to_sym
       end
 
@@ -35,8 +36,10 @@ module Dopp
       # Detailed description of this object.
       # @return [String] Description.
       def inspect
-        String.new('#<').concat(self.class.name, ':',
-          self.object_id.to_s, ' ', self.to_s, '>')
+        String.new('#<').concat(
+          self.class.name, ':',
+          object_id.to_s, ' ', self.to_s, '>'
+        )
       end
 
       # Render to string.
@@ -47,4 +50,3 @@ module Dopp
     end
   end
 end
-

@@ -1,4 +1,4 @@
-# frozen_literal_string: true
+# frozen_string_literal: true
 
 require 'dopp/error'
 require 'dopp/type'
@@ -46,7 +46,8 @@ module Dopp
       def to_s
         buffer = @id.to_s.concat(
           '-', @revision.to_s, ' ',
-          @attributes.to_s)
+          @attributes.to_s
+        )
         yield(buffer)
         buffer
       end
@@ -54,8 +55,10 @@ module Dopp
       # Detailed description of this object.
       # @return [String] Description.
       def inspect
-        String.new('#<').concat(self.class.name, ':',
-          self.object_id.to_s, ' ', self.to_s, '>')
+        String.new('#<').concat(
+          self.class.name, ':',
+          object_id.to_s, ' ', to_s, '>'
+        )
       end
 
       # Render to string.
@@ -69,11 +72,13 @@ module Dopp
         # Render to buffer.
         buffer = @id.to_s.concat(
           ' ', @revision.to_s, ' obj', LF,
-          @attributes.render, LF)
+          @attributes.render, LF
+        )
         # Add stream if data exists.
         unless @stream.empty?
-          buffer.concat('stream', LF, @stream, LF,
-            'endstream', LF)
+          buffer.concat(
+            'stream', LF, @stream, LF, 'endstream', LF
+          )
         end
         buffer.concat('endobj', LF)
       end

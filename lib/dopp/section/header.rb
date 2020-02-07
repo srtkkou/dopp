@@ -11,7 +11,8 @@ module Dopp
 
       # Document identifier.
       PDF_IDENTIFIER ||= ::Dopp::Util.deep_freeze(
-        [0xE2, 0xE3, 0xCF, 0xD3].pack('c*'))
+        [0xE2, 0xE3, 0xCF, 0xD3].pack('c*')
+      )
 
       attr_reader :version
 
@@ -20,6 +21,7 @@ module Dopp
       # @param [String] version PDF version.
       def initialize(version = DEFAULT_PDF_VERSION)
         raise(ArgumentError) unless version.is_a?(String)
+
         # Set variables.
         @version = version
       end
@@ -28,7 +30,8 @@ module Dopp
       # @return [String] Rendered string.
       def render
         String.new('%PDF-').concat(
-          @version, LF, '%', PDF_IDENTIFIER, LF)
+          @version, LF, '%', PDF_IDENTIFIER, LF
+        )
       end
     end
   end

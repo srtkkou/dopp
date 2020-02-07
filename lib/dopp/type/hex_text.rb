@@ -20,29 +20,31 @@ module Dopp
       def initialize(bytes)
         raise(ArgumentError) unless bytes.is_a?(Array)
         raise(ArgumentError) unless
-          bytes.all?{|b| (0x0 <= b) && (b <= 0xff)}
-        bytes.append(0x0) if (bytes.size % 2 != 0)
+          bytes.all?{ |b| (b >= 0x0) && (b <= 0xff) }
+        bytes.append(0x0) if bytes.size.odd?
         @bytes = bytes
       end
 
       # Convert to String.
       # @return [String] Content.
       def to_s
-        joined = @bytes.map{|b| '%02x' % b}.join(' ')
+        joined = @bytes.map{ |b| format('%02x', b) }.join(' ')
         String.new('PDF:<').concat(joined, '>')
       end
 
       # Detailed description of this object.
       # @return [String] Description.
       def inspect
-        String.new('#<').concat(self.class.name, ':',
-          self.object_id.to_s, ' ', self.to_s, '>')
+        String.new('#<').concat(
+          self.class.name, ':',
+          object_id.to_s, ' ', to_s, '>'
+        )
       end
 
       # Render to string.
       # @return [String] Content.
       def render
-        joined = @bytes.map{|b| '%02x' % b}.join
+        joined = @bytes.map{ |b| format('%02x', b) }.join
         String.new('<').concat(joined, '>')
       end
     end

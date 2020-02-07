@@ -9,6 +9,7 @@ require 'dopp/type/list'
 require 'dopp/type/dictionary'
 
 module Dopp
+  # PDF type.
   module Type
     module_function
 

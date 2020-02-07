@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'forwardable'
 require 'dopp/util'
 
@@ -17,6 +18,7 @@ module Dopp
       # @params [Array] array Array.
       def initialize(array = [])
         raise(ArgumentError) unless array.is_a?(Array)
+
         @array = array
       end
 
@@ -32,21 +34,22 @@ module Dopp
       # Detailed description of this object.
       # @return [String] Description.
       def inspect
-        String.new('#<').concat(self.class.name, ':',
-          self.object_id.to_s, ' ', self.to_s, '>')
+        String.new('#<').concat(
+          self.class.name, ':',
+          object_id.to_s, ' ', self.to_s, '>'
+        )
       end
 
       # Render to string.
       # @return [String] Content.
       def render
         return '[ ]' if @array.empty?
-        # When the array is not empty.
-        joined = @array.map{|v|
+
+        joined = @array.map do |v|
           Dopp::Util.pdf_type?(v) ? v.render : v.to_s
-        }.join(' ')
+        end.join(' ')
         String.new('[').concat(joined, ']')
       end
     end
   end
 end
-

@@ -7,6 +7,7 @@ require 'dopp/section/cid_type0_font'
 
 module Dopp
   module Font
+    # CID font "Kozuka Mincho Pr6N Regular".
     module KozukaMinchoPr6nR
       # Font names.
       NAMES ||= ::Dopp::Util.deep_freeze([
@@ -19,7 +20,7 @@ module Dopp
         ::Dopp::Font::FONT_MODULES[key] = self
       end
 
-      # CID font "Kozuka Mincho Pr6N Regular".
+      # Build font section.
       # @param [::Dopp::Document] doc PDF document.
       # @return [::Dopp::Section::CidType0Font] Font.
       def self.build(doc, opts = {})

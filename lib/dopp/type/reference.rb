@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Dopp
   module Type
     # PDF type "Reference".
@@ -19,23 +20,26 @@ module Dopp
       # @return [String] Content.
       def to_s
         String.new('PDF:').concat(
-          @id.to_s, '-', @revision.to_s, 'R')
+          @id.to_s, '-', @revision.to_s, 'R'
+        )
       end
 
       # Detailed description of this object.
       # @return [String] Description.
       def inspect
-        String.new('#<').concat(self.class.name, ':',
-          self.object_id.to_s, ' ', self.to_s, '>')
+        String.new('#<').concat(
+          self.class.name, ':',
+          self.object_id.to_s, ' ', self.to_s
+       '>')
       end
 
       # Render to string.
       # @return [String] Content.
       def render
-        String.new.concat(@id.to_s, ' ',
-          @revision.to_s, ' R')
+        @id.to_s.concat(
+          ' ', @revision.to_s, ' R'
+        )
       end
     end
   end
 end
-

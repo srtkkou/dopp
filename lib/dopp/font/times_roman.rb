@@ -7,6 +7,7 @@ require 'dopp/section/type1_font'
 
 module Dopp
   module Font
+    # Type1 font "Times-Roman".
     module TimesRoman
       # Font names.
       NAMES ||= ::Dopp::Util.deep_freeze(['Times-Roman'])
@@ -17,7 +18,7 @@ module Dopp
         ::Dopp::Font::FONT_MODULES[key] = self
       end
 
-      # Type1 font "Times-Roman".
+      # Build font section.
       # @param [::Dopp::Document] doc PDF document.
       # @return [::Dopp::Section::Type1Font] Font.
       def self.build(doc, opts = {})
@@ -57,7 +58,8 @@ module Dopp
           722,  722, 556,  500, 444, 444, 444,  444, 444, 444,
           667,  444, 444,  444, 444, 444, 278,  278, 278, 278,
           500,  500, 500,  500, 500, 500, 500,  564, 500, 500,
-          500,  500, 500,  500, 500, 500]
+          500,  500, 500,  500, 500, 500
+        ]
         font.first_char = 0
         font.last_char = font.widths.size
       end

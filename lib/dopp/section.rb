@@ -10,6 +10,7 @@ require 'dopp/section/xref_table'
 require 'dopp/section/trailer'
 
 module Dopp
+  # PDF document section.
   module Section
   end
 end

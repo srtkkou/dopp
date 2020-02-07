@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Dopp
   module Type
     # PDF type "Literal String".
@@ -7,6 +8,7 @@ module Dopp
       # @param [String] text String.
       def initialize(text)
         raise(ArgumentError) unless text.is_a?(String)
+
         @string = text
       end
 
@@ -19,8 +21,10 @@ module Dopp
       # Detailed description of this object.
       # @return [String] Description.
       def inspect
-        String.new('#<').concat(self.class.name, ':',
-          self.object_id.to_s, ' ', self.to_s, '>')
+        String.new('#<').concat(
+          self.class.name, ':',
+          object_id.to_s, ' ', to_s, '>'
+        )
       end
 
       # Render to string.
@@ -31,4 +35,3 @@ module Dopp
     end
   end
 end
-

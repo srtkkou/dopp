@@ -49,7 +49,8 @@ module Dopp
       # @param [::Dopp::Section::Catalog] catalog Document catalog.
       def root=(catalog)
         ::Dopp::Error.check_is_a!(
-          catalog, ::Dopp::Section::Catalog)
+          catalog, ::Dopp::Section::Catalog
+        )
         @root = catalog
       end
 
@@ -57,7 +58,8 @@ module Dopp
       # @param [::Dopp::Section::Info] info Information dictionary.
       def info=(info)
         ::Dopp::Error.check_is_a!(
-          info, ::Dopp::Section::Info)
+          info, ::Dopp::Section::Info
+        )
         @info = info
       end
 
@@ -68,9 +70,10 @@ module Dopp
         @attrs[name(:Root)] = @root.ref
         @attrs[name(:Info)] = @info.ref
         # Render content.
-        String.new('trailer').concat(LF,
-          @attrs.render, LF, 'startxref', LF,
-          @xref_offset.to_s, LF, '%%EOF', LF)
+        String.new('trailer').concat(
+          LF, @attrs.render, LF, 'startxref', LF,
+          @xref_offset.to_s, LF, '%%EOF', LF
+        )
       end
 
       private
@@ -78,8 +81,8 @@ module Dopp
       # Generate document and revision ID.
       # @return [Array<::Dopp::Type::HexString>] IDs.
       def generate_ids
-        bytes = SecureRandom.hex(32).scan(/.{1,2}/).
-          map{|h| Integer(h, 16)}
+        bytes = SecureRandom.hex(32).scan(/.{1,2}/)
+          .map{ |h| Integer(h, 16) }
         doc_id = xtext(bytes[0, 16])
         rev_id = xtext(bytes[16, 16])
         [doc_id, rev_id]

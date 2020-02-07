@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'forwardable'
 require 'dopp/util'
 
@@ -20,6 +21,7 @@ module Dopp
       # @param [Hash] hash Hash argument.
       def initialize(hash = {})
         raise(ArgumentError) unless hash.is_a?(Hash)
+
         @hash = hash
       end
 
@@ -28,9 +30,9 @@ module Dopp
       def to_s
         return 'PDF:{}' if @hash.empty?
         # When the hash is not empty.
-        joined = @hash.map{|k, v|
+        joined = @hash.map do |k, v|
           k.to_s.concat('=>', v.to_s)
-        }.join(', ')
+        end.join(', ')
         String.new('PDF:{').concat(joined, '}')
       end
 
@@ -45,7 +47,7 @@ module Dopp
       # @return [String] Content.
       def render
         return '<< >>' if @hash.empty?
-        # When the hash is not empty
+
         result = String.new('<<' + LF)
         @hash.each do |k, v|
           key = Dopp::Util.pdf_type?(k) ? k.render : k.to_s
@@ -57,4 +59,3 @@ module Dopp
     end
   end
 end
-

@@ -6,7 +6,6 @@ module Dopp
   module Section
     # PDF document section "Type1 font".
     class Type1Font < Base
-
       attr_accessor :fullname
       attr_reader :alias
       attr_accessor :names

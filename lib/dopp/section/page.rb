@@ -30,7 +30,8 @@ module Dopp
       # @param [::Dopp::Section::Pages] parent Pages object.
       def parent=(parent)
         ::Dopp::Error.check_is_a!(
-          parent, ::Dopp::Section::Pages)
+          parent, ::Dopp::Section::Pages
+        )
         @parent = parent
       end
 

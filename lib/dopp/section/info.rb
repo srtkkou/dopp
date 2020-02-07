@@ -13,7 +13,8 @@ module Dopp
         super(doc)
         # Initialize attributes.
         app_name = ::Dopp::APPLICATION.dup.concat(
-          '-', ::Dopp::VERSION)
+          '-', ::Dopp::VERSION
+        )
         now_time = time(Time.now)
         attributes[name(:Creator)] = text(app_name)
         attributes[name(:Producer)] = text(app_name)
