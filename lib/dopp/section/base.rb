@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'zlib'
 require 'dopp/error'
 require 'dopp/type'
 require 'dopp/document'
@@ -26,6 +27,7 @@ module Dopp
         self.revision = 0
         @attributes = dict({})
         @stream = String.new
+        @zlib_deflate = true
       end
 
       # Get reference to this object.
@@ -69,6 +71,14 @@ module Dopp
         check_gt!(@id, 0)
         check_is_a!(@revision, Integer)
         check_gteq!(@revision, 0)
+        # Apply filters.
+        apply_zlib_deflate
+        # Update attributes.
+        unless @stream.empty?
+          # Calculate length. (stream bytes + (LF * 2))
+          length = @stream.size + 2
+          @attributes[kw(:Length)] = length
+        end
         # Render to buffer.
         buffer = @id.to_s.concat(
           ' ', @revision.to_s, ' obj', LF,
@@ -81,6 +91,20 @@ module Dopp
           )
         end
         buffer.concat('endobj', LF)
+      end
+
+      # Deflate stream using zlib.
+      def apply_zlib_deflate
+        return unless @zlib_deflate
+        return if @stream.empty?
+        return if @attributes.key?(kw(:Filter)) &&
+          @attributes[kw(:Filter)].include?(kw(:FlateDecode))
+
+        @attributes[kw(:Filter)] ||= list([])
+        @attributes[kw(:Filter)] << kw(:FlateDecode)
+        @stream = Zlib::Deflate.deflate(
+          @stream, Zlib::BEST_COMPRESSION
+        )
       end
     end
   end
