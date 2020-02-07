@@ -88,12 +88,12 @@ module Dopp
         self.object_id.to_s, ' PDF-', @header.version, '>')
     end
 
-    # Set font. If it is already set, get the instance.
-    # @param [String] font_name Font name.
+    # Specify font to use or initialize it.
+    # @param [String] name Font name.
     # @param [Hash] opts Font options.
     # @return [::Dopp::Section::Base|nil] Font section.
-    def set_font(font_name, opts = {})
-      font_key = font_name.downcase.tr('-_ ', '')
+    def use_font(name, opts = {})
+      font_key = ::Dopp::Font.font_key(name)
       font = @fonts[font_key]
       return font unless font.nil?
 
@@ -102,7 +102,7 @@ module Dopp
       check_is_a!(font, ::Dopp::Section::Base)
       @fonts[font_key] = font
       font.names.each do |name|
-        key = name.downcase.tr('-_ ', '')
+        key = ::Dopp::Font.font_key(name)
         @fonts[key] = font
       end
       @sections += font.sections

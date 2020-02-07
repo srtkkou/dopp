@@ -17,8 +17,8 @@ module Dopp
 
       # Update FONT_CLASSES.
       NAMES.each do |name|
-        key = name.downcase.tr('-_ ', '')
-        ::Dopp::Font::FONT_MODULES[key] = self
+        key = Font.font_key(name)
+        FONT_MODULES[key] = self
       end
 
       module_function

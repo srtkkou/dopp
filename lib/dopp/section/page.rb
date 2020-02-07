@@ -34,11 +34,11 @@ module Dopp
         attributes[kw(:Parent)] = @parent.ref
       end
 
-      # Set font.
-      # @param [String] font_name Font name.
+      # Use font.
+      # @param [String] name Font name.
       # @param [Hash] opts Font options.
-      def set_font(font_name, opts = {})
-        font = @document.set_font(font_name, opts)
+      def use_font(name, opts = {})
+        font = @document.use_font(name, opts)
         attributes[kw(:Resources)][kw(:Font)] ||= dict({})
         attributes[kw(:Resources)][kw(:Font)][kw(font.alias)] = font.ref
         font
