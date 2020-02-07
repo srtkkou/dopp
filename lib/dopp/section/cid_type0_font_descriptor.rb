@@ -24,9 +24,7 @@ module Dopp
       # @param [::Dopp::Section::CIDType0FontDictionary]
       #   dict Font dictionary section.
       def initialize(dict)
-        ::Dopp::Error.check_is_a!(
-          dict, ::Dopp::Section::CidType0FontDictionary
-        )
+        check_is_a!(dict, ::Dopp::Section::CidType0FontDictionary)
         @font_dictionary = dict
         @font = @font_dictionary.font
         super(@font.document)

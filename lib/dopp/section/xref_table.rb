@@ -7,6 +7,8 @@ module Dopp
   module Section
     # PDF document section "cross reference table".
     class XrefTable
+      include ::Dopp::Error
+
       # Used entry flag.
       IN_USE ||= 'n'
 
@@ -22,7 +24,7 @@ module Dopp
       # Initialize.
       # @param [::Dopp::Document] doc PDF document.
       def initialize(doc)
-        ::Dopp::Error.check_is_a!(doc, ::Dopp::Document)
+        check_is_a!(doc, ::Dopp::Document)
         @document = doc
         # Initialize table.
         clear
@@ -39,11 +41,11 @@ module Dopp
       # @param [Integer] generation PDF object generation.
       # @param [String] flag Flag of the entry.
       def append(offset, generation = 0, flag = IN_USE)
-        ::Dopp::Error.check_is_a!(offset, Integer)
-        ::Dopp::Error.check_gt!(offset, 0)
-        ::Dopp::Error.check_is_a!(generation, Integer)
-        ::Dopp::Error.check_gteq!(generation, 0)
-        ::Dopp::Error.check_include!(flag, FLAGS)
+        check_is_a!(offset, Integer)
+        check_gt!(offset, 0)
+        check_is_a!(generation, Integer)
+        check_gteq!(generation, 0)
+        check_include!(flag, FLAGS)
         entry = Entry.new(offset, generation, flag)
         @entries << entry
       end

@@ -29,10 +29,9 @@ module Dopp
       # Set "Pages" object.
       # @param [::Dopp::Section::Pages] parent Pages object.
       def parent=(parent)
-        ::Dopp::Error.check_is_a!(
-          parent, ::Dopp::Section::Pages
-        )
+        check_is_a!(parent, ::Dopp::Section::Pages)
         @parent = parent
+        attributes[kw(:Parent)] = @parent.ref
       end
 
       # Set font.
@@ -52,8 +51,8 @@ module Dopp
       # Render to string.
       # @return [String] Content.
       def render
+        check_is_a!(attributes[kw(:Parent)], ::Dopp::Type::Reference)
         # Update attributes.
-        attributes[kw(:Parent)] = @parent.ref
         attributes[kw(:Contents)] =
           list(@contents.map(&:ref))
         # Render contents.

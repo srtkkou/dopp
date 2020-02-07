@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
+require 'dopp/error'
 require 'dopp/section'
 require 'dopp/font'
 
 module Dopp
   # PDF document.
   class Document
+    include ::Dopp::Error
+
     # Initialize.
     def initialize
       # Initialize section ID.
@@ -96,7 +99,7 @@ module Dopp
 
       mod = ::Dopp::Font::FONT_MODULES[font_key]
       font = mod.build(self, opts)
-      ::Dopp::Error.check_is_a!(font, ::Dopp::Section::Base)
+      check_is_a!(font, ::Dopp::Section::Base)
       @fonts[font_key] = font
       font.names.each do |name|
         key = name.downcase.tr('-_ ', '')

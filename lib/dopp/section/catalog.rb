@@ -43,31 +43,29 @@ module Dopp
       # Reference to the root "Pages" object.
       # @param [;;Dopp::Section;;Pages] pages PDF section pages.
       def pages=(pages)
-        ::Dopp::Error.check_is_a!(
-          pages, ::Dopp::Section::Pages
-        )
+        check_is_a!(pages, ::Dopp::Section::Pages)
         @pages = pages
+        attributes[kw(:Pages)] = @pages.ref
       end
 
       # Set page layout.
       # @param [Symbol] layout Layout.
       def page_layout=(layout)
-        ::Dopp::Error.check_include!(layout, PAGE_LAYOUTS)
+        check_include!(layout, PAGE_LAYOUTS)
         attributes[kw(:PageLayout)] = kw(layout)
       end
 
       # Set page mode.
       # @param [Symbol] mode Mode.
       def page_mode=(mode)
-        ::Dopp::Error.check_include!(mode, PAGE_MODES)
+        check_include!(mode, PAGE_MODES)
         attributes[kw(:PageMode)] = kw(mode)
       end
 
       # Render to string.
       # @return [String] Content.
       def render
-        # Update attributes.
-        attributes[kw(:Pages)] = @pages.ref
+        check_is_a!(attributes[kw(:Pages)], ::Dopp::Type::Reference)
         # Render content.
         super
       end

@@ -19,9 +19,7 @@ module Dopp
       # Initialize.
       # @param [::Dopp::Section::CidType0Font] font Font section.
       def initialize(font)
-        ::Dopp::Error.check_is_a!(
-          font, ::Dopp::Section::CidType0Font
-        )
+        check_is_a!(font, ::Dopp::Section::CidType0Font)
         @font = font
         super(font.document)
         # Initialize attributes.

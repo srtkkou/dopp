@@ -8,6 +8,7 @@ module Dopp
   module Section
     # PDF document section template.
     class Base
+      include ::Dopp::Error
       include ::Dopp::Type
 
       attr_reader :document
@@ -19,7 +20,7 @@ module Dopp
       # Initialize.
       # @param [::Dopp::Document] doc PDF document.
       def initialize(doc)
-        ::Dopp::Error.check_is_a!(doc, ::Dopp::Document)
+        check_is_a!(doc, ::Dopp::Document)
         @document = doc
         @id = doc.unique_section_id
         self.revision = 0
@@ -36,8 +37,8 @@ module Dopp
       # Set revision.
       # @param [Integer] rev PDF object revision.
       def revision=(rev)
-        ::Dopp::Error.check_is_a!(rev, Integer)
-        ::Dopp::Error.check_gteq!(rev, 0)
+        check_is_a!(rev, Integer)
+        check_gteq!(rev, 0)
         @revision = rev
       end
 
@@ -48,7 +49,7 @@ module Dopp
           '-', @revision.to_s, ' ',
           @attributes.to_s
         )
-        yield(buffer)
+        yield(buffer) if block_given?
         buffer
       end
 
@@ -64,11 +65,10 @@ module Dopp
       # Render to string.
       # @return [String] Content.
       def render
-        # Validate values.
-        ::Dopp::Error.check_is_a!(@id, Integer)
-        ::Dopp::Error.check_gt!(@id, 0)
-        ::Dopp::Error.check_is_a!(@revision, Integer)
-        ::Dopp::Error.check_gteq!(@revision, 0)
+        check_is_a!(@id, Integer)
+        check_gt!(@id, 0)
+        check_is_a!(@revision, Integer)
+        check_gteq!(@revision, 0)
         # Render to buffer.
         buffer = @id.to_s.concat(
           ' ', @revision.to_s, ' obj', LF,
