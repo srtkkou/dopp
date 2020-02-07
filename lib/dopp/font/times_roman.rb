@@ -18,14 +18,14 @@ module Dopp
         ::Dopp::Font::FONT_MODULES[key] = self
       end
 
+      module_function
+
       # Build font section.
       # @param [::Dopp::Document] doc PDF document.
       # @return [::Dopp::Section::Type1Font] Font.
-      def self.build(doc, opts = {})
+      def build(doc, opts = {})
         times_roman_normal(doc)
       end
-
-      private
 
       def times_roman_normal(doc)
         font = ::Dopp::Section::Type1Font.new(doc)
@@ -62,6 +62,7 @@ module Dopp
         ]
         font.first_char = 0
         font.last_char = font.widths.size
+        font
       end
 
       def times_roman_bold

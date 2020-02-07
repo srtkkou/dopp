@@ -20,10 +20,12 @@ module Dopp
         ::Dopp::Font::FONT_MODULES[key] = self
       end
 
+      module_function
+
       # Build font section.
       # @param [::Dopp::Document] doc PDF document.
       # @return [::Dopp::Section::CidType0Font] Font.
-      def self.build(doc, opts = {})
+      def build(doc, opts = {})
         # Initialize font.
         font = ::Dopp::Section::CidType0Font.new(doc)
         font.fullname = 'KozMinPr6N-Regular'
