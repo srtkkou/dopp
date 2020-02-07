@@ -16,9 +16,9 @@ module Dopp
       def initialize(doc, attrs = {})
         super(doc)
         # Initialize attributes.
-        attributes[name(:Type)] = name(:Page)
-        attributes[name(:MediaBox)] = list([0, 0, 612, 792])
-        attributes[name(:Rotate)] = 0
+        attributes[kw(:Type)] = kw(:Page)
+        attributes[kw(:MediaBox)] = list([0, 0, 612, 792])
+        attributes[kw(:Rotate)] = 0
         # Initialize instance variables.
         @parent = nil
         content = ::Dopp::Section::Content.new(doc)
@@ -40,8 +40,8 @@ module Dopp
       # @param [Hash] opts Font options.
       def set_font(font_name, opts = {})
         font = @document.set_font(font_name, opts)
-        @resources[name(:Font)] = dict({
-          name(font.alias) => font.ref,
+        @resources[kw(:Font)] = dict({
+          kw(font.alias) => font.ref,
         })
         font
       end
@@ -54,10 +54,10 @@ module Dopp
       # @return [String] Content.
       def render
         # Update attributes.
-        attributes[name(:Parent)] = @parent.ref
-        attributes[name(:Contents)] =
+        attributes[kw(:Parent)] = @parent.ref
+        attributes[kw(:Contents)] =
           list(@contents.map(&:ref))
-        attributes[name(:Resources)] = dict(@resources)
+        attributes[kw(:Resources)] = dict(@resources)
         # Render contents.
         super
       end

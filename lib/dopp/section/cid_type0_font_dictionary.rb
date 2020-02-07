@@ -25,9 +25,9 @@ module Dopp
         @font = font
         super(font.document)
         # Initialize attributes.
-        attributes[name(:Type)] = name(:Font)
-        attributes[name(:Subtype)] = name(:CIDFontType0)
-        attributes[name(:BaseFont)] = name(font.fullname)
+        attributes[kw(:Type)] = kw(:Font)
+        attributes[kw(:Subtype)] = kw(:CIDFontType0)
+        attributes[kw(:BaseFont)] = kw(font.fullname)
         # Initialize instance variables.
         @registry = nil
         @ordering = nil
@@ -48,12 +48,12 @@ module Dopp
       # @return [String] Content.
       def render
         # Update attributes.
-        attributes[name(:CIDSystemInfo)] = dict({
-          name(:Registry) => text(@registry),
-          name(:Ordering) => text(@ordering),
-          name(:Supplement) => @supplement
+        attributes[kw(:CIDSystemInfo)] = dict({
+          kw(:Registry) => text(@registry),
+          kw(:Ordering) => text(@ordering),
+          kw(:Supplement) => @supplement
         })
-        attributes[name(:FontDescriptor)] = @descriptor.ref
+        attributes[kw(:FontDescriptor)] = @descriptor.ref
         # Render contents.
         super
       end

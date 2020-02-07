@@ -31,8 +31,8 @@ module Dopp
         @font = @font_dictionary.font
         super(@font.document)
         # Initialize attributes.
-        attributes[name(:Type)] = name(:FontDescriptor)
-        attributes[name(:FontName)] = name(@font.fullname)
+        attributes[kw(:Type)] = kw(:FontDescriptor)
+        attributes[kw(:FontName)] = kw(@font.fullname)
         # Initialize instance variables.
         @flags = nil
         @b_box = nil
@@ -47,13 +47,13 @@ module Dopp
       # @return [String] Content.
       def render
         # Update attributes.
-        attributes[name(:Flags)] = @flags
-        attributes[name(:FontBBox)] = list(@b_box)
-        attributes[name(:ItalicAngle)] = @italic_angle
-        attributes[name(:Ascent)] = @ascent
-        attributes[name(:Descent)] = @descent
-        attributes[name(:CapHeight)] = @cap_height
-        attributes[name(:StemV)] = @stem_v
+        attributes[kw(:Flags)] = @flags
+        attributes[kw(:FontBBox)] = list(@b_box)
+        attributes[kw(:ItalicAngle)] = @italic_angle
+        attributes[kw(:Ascent)] = @ascent
+        attributes[kw(:Descent)] = @descent
+        attributes[kw(:CapHeight)] = @cap_height
+        attributes[kw(:StemV)] = @stem_v
         # Render contents.
         super
       end

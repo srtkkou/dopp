@@ -13,7 +13,9 @@ module Dopp
   module Type
     module_function
 
-    def name(key)
+    # Initialize KeyWord.
+    # @return [Dopp::Type::KeyWord] KeyWord.
+    def kw(key)
       KeyWord.new(key)
     end
 

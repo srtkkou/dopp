@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'test_helper'
 require 'dopp/type/dictionary'
-require 'dopp/type/name'
+require 'dopp/type/key_word'
 require 'dopp/type/text'
 
 module Dopp
@@ -40,10 +40,10 @@ module Dopp
         assert_equal('PDF:{}',
           Dictionary.new.to_s)
         hash = {
-          Name.new(:One) => 1,
-          Name.new(:Two) => 'b',
-          Name.new(:Three) => Text.new('3'),
-          Name.new(:Four) => Name.new(:Value)}
+          KeyWord.new(:One) => 1,
+          KeyWord.new(:Two) => 'b',
+          KeyWord.new(:Three) => Text.new('3'),
+          KeyWord.new(:Four) => KeyWord.new(:Value)}
         ex = 'PDF:{PDF:/One=>1, PDF:/Two=>b, ' \
           'PDF:/Three=>PDF:"3", PDF:/Four=>PDF:/Value}'
         assert_equal(ex, Dictionary.new(hash).to_s)
@@ -53,10 +53,10 @@ module Dopp
         assert_equal('<< >>',
           Dictionary.new.render)
         hash = {
-          Name.new(:One) => 1,
-          Name.new(:Two) => 'b',
-          Name.new(:Three) => Text.new('3'),
-          Name.new(:Four) => Name.new(:Value)}
+          KeyWord.new(:One) => 1,
+          KeyWord.new(:Two) => 'b',
+          KeyWord.new(:Three) => Text.new('3'),
+          KeyWord.new(:Four) => KeyWord.new(:Value)}
         ex = <<~"EOS"
 <<
 /One 1

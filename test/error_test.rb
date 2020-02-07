@@ -2,7 +2,7 @@
 
 require 'test_helper'
 require 'dopp/error'
-require 'dopp/type/name'
+require 'dopp/type/key_word'
 
 module Dopp
   class ErrorTest < Minitest::Test
@@ -16,9 +16,9 @@ module Dopp
       two = '2'
       assert_nil(err.check_is_a!(two, String))
       assert_raises(err){ err.check_is_a!(two, Integer) }
-      # ::Dopp::Name
-      three = ::Dopp::Type::Name.new('3')
-      assert_nil(err.check_is_a!(three, ::Dopp::Type::Name))
+      # ::Dopp::Type::KeyWord
+      three = ::Dopp::Type::KeyWord.new('3')
+      assert_nil(err.check_is_a!(three, ::Dopp::Type::KeyWord))
       assert_raises(err){ err.check_is_a!(three, String) }
     end
 

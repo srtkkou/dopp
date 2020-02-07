@@ -27,7 +27,7 @@ module Dopp
           'ET')
         # Calculate length (stream bytes + (LF * 2)).
         length = @stream.size + 2
-        attributes[name(:Length)] = length
+        attributes[kw(:Length)] = length
         # Render content.
         super
       end

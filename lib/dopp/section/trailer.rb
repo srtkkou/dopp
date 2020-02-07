@@ -22,8 +22,8 @@ module Dopp
         # Initialize attributes.
         @doc_id, @rev_id = generate_ids
         @attrs = dict({
-          name(:Size) => 0,
-          name(:ID) => list([@doc_id, @rev_id])
+          kw(:Size) => 0,
+          kw(:ID) => list([@doc_id, @rev_id])
         })
         # Initialize instance variables.
         @root = nil
@@ -42,7 +42,7 @@ module Dopp
       # @param [Integer] size Size of entries.
       def size=(size)
         ::Dopp::Error.check_is_a!(size, Integer)
-        @attrs[name(:Size)] = size
+        @attrs[kw(:Size)] = size
       end
 
       # Set document catalogue.
@@ -67,8 +67,8 @@ module Dopp
       # @return [String] Content.
       def render
         # Update attributes.
-        @attrs[name(:Root)] = @root.ref
-        @attrs[name(:Info)] = @info.ref
+        @attrs[kw(:Root)] = @root.ref
+        @attrs[kw(:Info)] = @info.ref
         # Render content.
         String.new('trailer').concat(
           LF, @attrs.render, LF, 'startxref', LF,

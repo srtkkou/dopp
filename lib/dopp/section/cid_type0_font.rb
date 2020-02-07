@@ -20,9 +20,9 @@ module Dopp
         super(doc)
         @alias = doc.unique_font_alias
         # Initialize attributes.
-        attributes[name(:Type)] = name(:Font)
-        attributes[name(:Subtype)] = name(:Type0)
-        attributes[name(:Name)] = name(@alias)
+        attributes[kw(:Type)] = kw(:Font)
+        attributes[kw(:Subtype)] = kw(:Type0)
+        attributes[kw(:Name)] = kw(@alias)
         # Initialize instance variables.
         @sections = [self]
         @fullname = nil
@@ -43,9 +43,9 @@ module Dopp
       # @return [String] Content.
       def render
         # Update attributes.
-        attributes[name(:BaseFont)] = name(@fullname)
-        attributes[name(:Encoding)] = name(@encoding)
-        attributes[name(:DescendantFonts)] =
+        attributes[kw(:BaseFont)] = kw(@fullname)
+        attributes[kw(:Encoding)] = kw(@encoding)
+        attributes[kw(:DescendantFonts)] =
           list([@dictionary.ref])
         # Render contents.
         super

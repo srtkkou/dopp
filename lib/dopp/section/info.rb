@@ -16,12 +16,10 @@ module Dopp
           '-', ::Dopp::VERSION
         )
         now_time = time(Time.now)
-        attributes[name(:Creator)] = text(app_name)
-        attributes[name(:Producer)] = text(app_name)
-        attributes[name(:CreationDate)] = now_time
-        attributes[name(:ModDate)] = now_time
-        # Initialize instance variables.
-        @title = nil
+        attributes[kw(:Creator)] = text(app_name)
+        attributes[kw(:Producer)] = text(app_name)
+        attributes[kw(:CreationDate)] = now_time
+        attributes[kw(:ModDate)] = now_time
       end
 
       # Set title.
@@ -29,17 +27,15 @@ module Dopp
       def title=(title)
         ::Dopp::Error.check_is_a?(title, String)
         if title.ascii_only?
-          @title = text(title)
+          attributes[kw(:Title)] = text(title)
         else
-          @title = utf8_to_xtext(title)
+          attributes[kw(:Title)] = utf8_to_xtext(title)
         end
       end
 
       # Render to String.
       # @return [String] Content.
       def render
-        # Update attributes.
-        attributes[name(:Title)] = @title
         # Render content.
         super
       end
