@@ -96,6 +96,7 @@ module Dopp
 
       mod = ::Dopp::Font::FONT_MODULES[font_key]
       font = mod.build(self, opts)
+      ::Dopp::Error.check_is_a!(font, ::Dopp::Section::Base)
       @fonts[font_key] = font
       font.names.each do |name|
         key = name.downcase.tr('-_ ', '')
