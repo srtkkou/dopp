@@ -1,8 +1,7 @@
 # Dopp
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/TaigaMikami/color_space_converter/blob/master/LICENSE.txt)
-[![Build Status](https://travis-ci.org/TaigaMikami/color_space_converter.svg?branch=master)](https://travis-ci.org/TaigaMikami/color_space_converter)
-[![Gem Version](https://badge.fury.io/rb/color_space_converter.svg)](https://badge.fury.io/rb/color_space_converter)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/srtkkou/dopp/blob/master/LICENSE.txt)
+[![Build Status](https://travis-ci.org/srtkkou/dopp.svg?branch=master)](https://travis-ci.org/srtkkou/dopp)
 
 Still under development.
 
