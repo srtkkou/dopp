@@ -1,11 +1,12 @@
 # frozen_string_literal: true
+
 require 'test_helper'
 require 'dopp/type/time_stamp'
 
 module Dopp
   module Type
     class TimeStampTest < Minitest::Test
-      def test_OK_initialize
+      def test_ok_initialize
         assert_raises(ArgumentError){TimeStamp.new}
         assert_raises(ArgumentError){TimeStamp.new('2020/01/02 15:31:21')}
         assert_raises(ArgumentError){TimeStamp.new(1)}
@@ -17,7 +18,7 @@ module Dopp
           TimeStamp.new(time).to_s)
       end
 
-      def test_OK_render
+      def test_ok_render
         time = Time.new(2006, 1, 2, 15, 4, 5, '+09:00')
         assert_equal("(D:20060102150405+09'00')",
           TimeStamp.new(time).render)
@@ -25,4 +26,3 @@ module Dopp
     end
   end
 end
-

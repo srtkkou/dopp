@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'test_helper'
 require 'dopp/type/dictionary'
 require 'dopp/type/key_word'
@@ -7,7 +8,7 @@ require 'dopp/type/text'
 module Dopp
   module Type
     class DictionaryTest < Minitest::Test
-      def test_OK_delegated
+      def test_ok_delegated
         # empty?
         assert_equal(true, Dictionary.new.empty?)
         # has_key?, key? include?, member?
@@ -36,7 +37,7 @@ module Dopp
         assert_nil(d[:dummy])
       end
 
-      def test_OK_to_s
+      def test_ok_to_s
         assert_equal('PDF:{}',
           Dictionary.new.to_s)
         hash = {
@@ -49,7 +50,7 @@ module Dopp
         assert_equal(ex, Dictionary.new(hash).to_s)
       end
 
-      def test_OK_render
+      def test_ok_render
         assert_equal('<< >>',
           Dictionary.new.render)
         hash = {
@@ -57,17 +58,16 @@ module Dopp
           KeyWord.new(:Two) => 'b',
           KeyWord.new(:Three) => Text.new('3'),
           KeyWord.new(:Four) => KeyWord.new(:Value)}
-        ex = <<~"EOS"
+        ex = <<"EOS"
 <<
 /One 1
 /Two b
 /Three (3)
 /Four /Value
 >>
-        EOS
+EOS
         assert_equal(ex.chomp, Dictionary.new(hash).render)
       end
     end
   end
 end
-

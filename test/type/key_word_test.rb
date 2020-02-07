@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'test_helper'
 require 'dopp/type/key_word'
 require 'dopp/type/text'
@@ -39,4 +40,3 @@ module Dopp
     end
   end
 end
-

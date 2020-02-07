@@ -1,11 +1,12 @@
 # frozen_string_literal: true
+
 require 'test_helper'
 require 'dopp/type/list'
 
 module Dopp
   module Type
     class ListTest < Minitest::Test
-      def test_OK_delegated
+      def test_ok_delegated
         # empty?
         assert(List.new.empty?)
         # length, size
@@ -27,13 +28,13 @@ module Dopp
         assert_equal(5, list[-1])
       end
 
-      def test_OK_to_s
+      def test_ok_to_s
         assert_equal('PDF:[]', List.new.to_s)
         assert_equal('PDF:[1, 2, 3, 4]',
           List.new([1, 2, 3, 4]).to_s)
       end
 
-      def test_OK_render
+      def test_ok_render
         assert_equal('[ ]', List.new.render)
         assert_equal('[1 2 3 4]',
           List.new([1, 2, 3, 4]).render)
@@ -41,4 +42,3 @@ module Dopp
     end
   end
 end
-
