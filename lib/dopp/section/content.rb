@@ -7,15 +7,10 @@ module Dopp
   module Section
     # PDF document section "content stream".
     class Content < Base
-
-      attr_reader :stream
-
       # Initialize.
       # @param [::Dopp::Document] doc PDF document.
       def initialize(doc)
         super(doc)
-        # Initialize instance variables.
-        @stream = String.new
       end
 
       # TODO: Implement real one.
@@ -34,14 +29,7 @@ module Dopp
         length = @stream.size + 2
         attributes[name(:Length)] = length
         # Render content.
-        super do |buf|
-          buf.concat('stream', LF, @stream, LF,
-            'endstream', LF)
-        end
-       # @section_header.render.concat(
-       #   @attrs.render, LF,
-       #   'stream', LF, @stream, LF,
-       #   'endstream', LF, 'endobj', LF)
+        super
       end
     end
   end

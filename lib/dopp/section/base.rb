@@ -14,6 +14,7 @@ module Dopp
       attr_reader :id
       attr_reader :revision
       attr_reader :attributes
+      attr_reader :stream
 
       # Initialize.
       # @param [::Dopp::Document] doc PDF document.
@@ -23,6 +24,7 @@ module Dopp
         @id = doc.unique_section_id
         self.revision = 0
         @attributes = dict({})
+        @stream = String.new
       end
 
       # Get reference to this object.
@@ -42,7 +44,8 @@ module Dopp
       # Convert to string.
       # @return [String] Content.
       def to_s
-        buffer = @id.to_s.concat('-', @revision.to_s, ' ',
+        buffer = @id.to_s.concat(
+          '-', @revision.to_s, ' ',
           @attributes.to_s)
         yield(buffer)
         buffer
@@ -67,7 +70,11 @@ module Dopp
         buffer = @id.to_s.concat(
           ' ', @revision.to_s, ' obj', LF,
           @attributes.render, LF)
-        yield(buffer) if block_given?
+        # Add stream if data exists.
+        unless @stream.empty?
+          buffer.concat('stream', LF, @stream, LF,
+            'endstream', LF)
+        end
         buffer.concat('endobj', LF)
       end
     end
