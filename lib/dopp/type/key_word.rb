@@ -3,7 +3,7 @@
 module Dopp
   module Type
     # PDF type "Name".
-    class Name
+    class KeyWord
       # Initialize.
       # @param [String|Symbol] name Name.
       def initialize(name)

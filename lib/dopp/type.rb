@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'dopp/type/name'
+require 'dopp/type/key_word'
 require 'dopp/type/text'
 require 'dopp/type/hex_text'
 require 'dopp/type/time_stamp'
@@ -13,8 +13,8 @@ module Dopp
   module Type
     module_function
 
-    def name(name)
-      Name.new(name)
+    def name(key)
+      KeyWord.new(key)
     end
 
     def text(string)
