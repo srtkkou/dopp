@@ -1,5 +1,11 @@
 # Dopp
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/TaigaMikami/color_space_converter/blob/master/LICENSE.txt)
+[![Build Status](https://travis-ci.org/TaigaMikami/color_space_converter.svg?branch=master)](https://travis-ci.org/TaigaMikami/color_space_converter)
+[![Gem Version](https://badge.fury.io/rb/color_space_converter.svg)](https://badge.fury.io/rb/color_space_converter)
+
+Still under development.
+
 Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/dopp`. To experiment with that code, run `bin/console` for an interactive prompt.
 
 TODO: Delete this and the text above, and describe your gem
