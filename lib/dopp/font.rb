@@ -4,6 +4,6 @@ module Dopp
   # Font module.
   module Font
     # Available fonts.
-    FONT_MODULES ||= {}.freeze
+    FONT_MODULES ||= {}
   end
 end
