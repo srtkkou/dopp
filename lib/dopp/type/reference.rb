@@ -29,8 +29,8 @@ module Dopp
       def inspect
         String.new('#<').concat(
           self.class.name, ':',
-          self.object_id.to_s, ' ', self.to_s
-       '>')
+          object_id.to_s, ' ', to_s, '>'
+        )
       end
 
       # Render to string.
