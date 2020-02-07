@@ -1,24 +1,33 @@
 # frozen_string_literal: true
 
+require 'dopp/util'
+require 'dopp/font'
 require 'dopp/document'
 require 'dopp/section/cid_type0_font'
 
 module Dopp
   module Font
-    # CID font "Kozuka Mincho Pr6N Regular".
     module KozukaMinchoPr6nR
-      module_function
+      # Font names.
+      NAMES ||= ::Dopp::Util.deep_freeze([
+        '小塚明朝Pr6N-R', 'KozukaMinchoPr6nR'
+      ])
 
-      # Initialize "Kozuka Mincho Pr6N Regular.
+      # Update FONT_CLASSES.
+      NAMES.each do |name|
+        key = name.downcase.tr('-_ ', '')
+        ::Dopp::Font::FONT_MODULES[key] = self
+      end
+
+      # CID font "Kozuka Mincho Pr6N Regular".
       # @param [::Dopp::Document] doc PDF document.
       # @return [::Dopp::Section::CidType0Font] Font.
-      def kozmin(doc)
+      def self.build(doc, opts = {})
         # Initialize font.
         font = ::Dopp::Section::CidType0Font.new(doc)
         font.fullname = 'KozMinPr6N-Regular'
         font.encoding = 'UniJIS-UCS2-H'
-        font.aliases = [
-          '小塚明朝Pr6N-R', 'KozukaMinchoPr6nR']
+        font.names = NAMES
         # Initialize font dictionary.
         dict = font.new_dictionary
         dict.registry = 'Adobe'

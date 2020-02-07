@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 require 'dopp/section'
-require 'dopp/font/times_roman'
-require 'dopp/font/kozuka_mincho_pr6n_r'
+require 'dopp/font'
 
 module Dopp
   # PDF document.
@@ -86,33 +85,24 @@ module Dopp
         self.object_id.to_s, ' PDF-', @header.version, '>')
     end
 
-    def has_font?(font)
-      @fonts.any?{|k, v|
-        (font == k) || (v.include?(font))
-      }
-    end
+    # Set font. If it is already set, get the instance.
+    # @param [String] font_name Font name.
+    # @param [Hash] opts Font options.
+    # @return [::Dopp::Section::Base|nil] Font section.
+    def set_font(font_name, opts = {})
+      font_key = font_name.downcase.tr('-_ ', '')
+      font = @fonts[font_key]
+      return font unless font.nil?
 
-    def add_font(font, opts = {})
-      return if has_font?(font)
-      font = ::Dopp::Font::TimesRoman.new(self)
-      @fonts[::Dopp::Font::TimesRoman] = font
-      @sections << font
+      mod = ::Dopp::Font::FONT_MODULES[font_key]
+      font = mod.build(self, opts)
+      @fonts[font_key] = font
+      font.names.each do |name|
+        key = name.downcase.tr('-_ ', '')
+        @fonts[key] = font
+      end
+      @sections += font.sections
       font
-    end
-
-    def add_kozmin
-      font = ::Dopp::Font::KozukaMinchoPr6nR.kozmin(self)
-      @fonts[font.fullname] = font
-      dict = font.dictionary
-      desc = dict.descriptor
-      @sections << font
-      @sections << dict
-      @sections << desc
-      font
-    end
-
-    def get_font(font)
-      @fonts[::Dopp::Font::TimesRoman]
     end
   end
 end

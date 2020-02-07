@@ -34,28 +34,20 @@ module Dopp
         @parent = parent
       end
 
-      # TODO: Remove.
-      def set_font(font_name)
-        unless @document.has_font?(font_name)
-          @document.add_font(font_name)
-        end
-        font = @document.get_font(font_name)
-        @resources[name(:Font)] = dict({
-          name(font.font_name) => font.ref,
-        })
-      end
-
-      # TODO: Remove.
-      def add_kozmin
-        font = @document.add_kozmin
+      # Set font.
+      # @param [String] font_name Font name.
+      # @param [Hash] opts Font options.
+      def set_font(font_name, opts = {})
+        font = @document.set_font(font_name, opts)
         @resources[name(:Font)] = dict({
           name(font.alias) => font.ref,
         })
+        font
       end
 
       # TODO: Implement.
-      def write(text)
-      end
+      #def write(text)
+      #end
 
       # Render to string.
       # @return [String] Content.

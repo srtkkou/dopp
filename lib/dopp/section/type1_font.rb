@@ -1,19 +1,20 @@
 # frozen_string_literal: true
 
 require 'dopp/section/base'
-require 'dopp/section/cid_type0_font_dictionary'
 
 module Dopp
   module Section
-    # PDF document section "CID type0 font".
-    class CidType0Font < Base
+    # PDF document section "Type1 font".
+    class Type1Font < Base
 
       attr_accessor :fullname
       attr_reader :alias
       attr_accessor :names
-      attr_reader :sections
+      attr_accessor :sections
       attr_accessor :encoding
-      attr_accessor :dictionary
+      attr_accessor :widths
+      attr_accessor :first_char
+      attr_accessor :last_char
 
       # Initialize.
       # @param [::Dopp::Document] doc PDF document.
@@ -22,22 +23,13 @@ module Dopp
         @alias = doc.unique_font_alias
         # Initialize attributes.
         attributes[name(:Type)] = name(:Font)
-        attributes[name(:Subtype)] = name(:Type0)
+        attributes[name(:Subtype)] = name(:Type1)
         attributes[name(:Name)] = name(@alias)
         # Initialize instance variables.
-        @sections = [self]
         @fullname = nil
+        @sections [self]
         @encoding = nil
         @dictionary = nil
-      end
-
-      # Add new font dictionary.
-      # @return [::Dopp::Section::CidType0FontDictionary]
-      #   Font dictionary.
-      def new_dictionary
-        @dictionary = CidType0FontDictionary.new(self)
-        @sections << @dictionary
-        @dictionary
       end
 
       # Render to string.
@@ -46,8 +38,9 @@ module Dopp
         # Update attributes.
         attributes[name(:BaseFont)] = name(@fullname)
         attributes[name(:Encoding)] = name(@encoding)
-        attributes[name(:DescendantFonts)] =
-          list([@dictionary.ref])
+        attributes[name(:Widths)] = list(widths)
+        attributes[name(:FirstChar)] = @first_char
+        attributes[name(:LastChar)] = @last_char
         # Render contents.
         super
       end

@@ -35,8 +35,13 @@ module Dopp
         @descriptor = nil
       end
 
+      # Add new font descriptor.
+      # @return [::Dopp::Section::CidType0FontDescriptor]
+      #   Font descriptor.
       def new_descriptor
         @descriptor = CidType0FontDescriptor.new(self)
+        @font.sections << @descriptor
+        @descriptor
       end
 
       # Render to string.
