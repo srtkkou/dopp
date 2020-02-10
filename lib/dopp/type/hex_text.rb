@@ -21,7 +21,7 @@ module Dopp
         raise(ArgumentError) unless bytes.is_a?(Array)
         raise(ArgumentError) unless
           bytes.all?{ |b| (b >= 0x0) && (b <= 0xff) }
-        bytes.append(0x0) if bytes.size.odd?
+        bytes << 0x0 if bytes.size.odd?
         @bytes = bytes
       end
 
