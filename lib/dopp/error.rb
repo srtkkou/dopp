@@ -6,6 +6,8 @@ module Dopp
     # Application error.
     class ApplicationError < StandardError; end
 
+    module_function
+
     # Check value using "is_a?" with expected class.
     # @param [Object] value Value.
     # @param [Class] expected Expected class.

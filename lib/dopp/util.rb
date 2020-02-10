@@ -5,8 +5,6 @@ require 'dopp/error'
 module Dopp
   # Utilities
   module Util
-    include ::Dopp::Error
-
     module_function
 
     # Freeze all the instances in the object.
@@ -31,7 +29,7 @@ module Dopp
     # @param [String] str String.
     # @return [String] Converted string.
     def camelize(str)
-      check_is_a!(str, String)
+      ::Dopp::Error.check_is_a!(str, String)
       str.gsub(/(?:\A|_)(.)/){ $1.upcase }
     end
 
@@ -46,7 +44,7 @@ module Dopp
     # @param [Numeric] millimeters Millimeters.
     # @return [Float] Points.
     def mm_to_pt(millimeters)
-      check_is_a!(millimeters, Numeric)
+      ::Dopp::Error.check_is_a!(millimeters, Numeric)
       points = millimeters * 72.0 / 25.4
       (points * 100.0).round / 100.0
     end
@@ -55,7 +53,7 @@ module Dopp
     # @param [Numeric] points Points.
     # @return [Float] Millimeters.
     def pt_to_mm(points)
-      check_is_a!(points, Numeric)
+      ::Dopp::Error.check_is_a!(points, Numeric)
       millimeters = points * 25.4 / 72.0
       (points * 100.0).round / 100.0
     end
