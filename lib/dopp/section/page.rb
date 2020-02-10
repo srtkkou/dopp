@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'dopp/error'
+require 'dopp/font'
 require 'dopp/section/base'
 require 'dopp/section/pages'
 require 'dopp/section/content'
@@ -9,6 +10,7 @@ module Dopp
   module Section
     # PDF document section "page".
     class Page < Base
+      attr_reader :content
       attr_reader :contents
 
       # Initialize.
@@ -22,8 +24,11 @@ module Dopp
         attributes[kw(:Resources)] = dict({})
         # Initialize instance variables.
         @parent = nil
-        content = ::Dopp::Section::Content.new(doc)
-        @contents = [content]
+        @content = ::Dopp::Section::Content.new(self)
+        @contents = [@content]
+        attributes[kw(:Contents)] = list(
+          @contents.map(&:ref)
+        )
       end
 
       # Set "Pages" object.
@@ -34,27 +39,17 @@ module Dopp
         attributes[kw(:Parent)] = @parent.ref
       end
 
-      # Use font.
-      # @param [String] name Font name.
-      # @param [Hash] opts Font options.
-      def use_font(name, opts = {})
-        font = @document.use_font(name, opts)
+      # Set font in resources.
+      # @param [::Dopp::Section::Base] font Font section.
+      def set_font(font)
         attributes[kw(:Resources)][kw(:Font)] ||= dict({})
         attributes[kw(:Resources)][kw(:Font)][kw(font.alias)] = font.ref
-        font
       end
-
-      # TODO: Implement.
-      #def write(text)
-      #end
 
       # Render to string.
       # @return [String] Content.
       def render
         check_is_a!(attributes[kw(:Parent)], ::Dopp::Type::Reference)
-        # Update attributes.
-        attributes[kw(:Contents)] =
-          list(@contents.map(&:ref))
         # Render contents.
         super
       end
