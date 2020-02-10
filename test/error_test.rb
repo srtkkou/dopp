@@ -30,6 +30,24 @@ module Dopp
         end
       end
 
+      def test_ok_check_lt!
+        assert_nil(check_lt!(1, 2))
+        assert_raises(ApplicationError) do
+          check_lt!(1, 1)
+        end
+        assert_raises(ApplicationError) do
+          check_lt!(1, 0)
+        end
+      end
+
+      def test_ok_check_lteq!
+        assert_nil(check_lteq!(1, 2))
+        assert_nil(check_lteq!(1, 1))
+        assert_raises(ApplicationError) do
+          check_lteq!(1, 0)
+        end
+      end
+
       def test_ok_check_gt!
         assert_nil(check_gt!(1, 0))
         assert_raises(ApplicationError) do

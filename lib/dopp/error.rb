@@ -19,6 +19,27 @@ module Dopp
       raise ApplicationError, msg
     end
 
+    # Check value using "<" with expected value.
+    # @param [Object] value Value.
+    # @param [Class] expected Expected value.
+    def check_lt!(value, expected)
+      return if value < expected
+
+      msg = "#{value} should be less than #{expected}."
+      raise ApplicationError, msg
+    end
+
+    # Check value using "<=" with expected value.
+    # @param [Object] value Value.
+    # @param [Class] expected Expected value.
+    def check_lteq!(value, expected)
+      return if value <= expected
+
+      msg = "#{value} should be less than "\
+        "or equal to #{expected}."
+      raise ApplicationError, msg
+    end
+
     # Check value using ">" with expected value.
     # @param [Object] value Value.
     # @param [Class] expected Expected value.
