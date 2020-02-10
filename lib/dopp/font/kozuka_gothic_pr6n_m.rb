@@ -11,14 +11,13 @@ module Dopp
     module KozukaGothicPr6nM
       # Font names.
       NAMES ||= ::Dopp::Util.deep_freeze([
-        '小塚ゴシックPr6N-M', 'KozukaGothicPr6nM',
-        '小塚ｺﾞｼｯｸPr6N-M'
+        'ゴシック', '小塚ゴシックPr6N-M',
+        'KozukaGothicPr6nM',
       ])
 
       # Update FONT_CLASSES.
       NAMES.each do |name|
-        key = Font.font_key(name)
-        FONT_MODULES[key] = self
+        STORE.add_font_module(name, self)
       end
 
       module_function

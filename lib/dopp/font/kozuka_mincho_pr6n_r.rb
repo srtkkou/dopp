@@ -11,13 +11,12 @@ module Dopp
     module KozukaMinchoPr6nR
       # Font names.
       NAMES ||= ::Dopp::Util.deep_freeze([
-        '小塚明朝Pr6N-R', 'KozukaMinchoPr6nR'
+        '明朝', '小塚明朝Pr6N-R', 'KozukaMinchoPr6nR'
       ])
 
       # Update FONT_CLASSES.
       NAMES.each do |name|
-        key = Font.font_key(name)
-        FONT_MODULES[key] = self
+        STORE.add_font_module(name, self)
       end
 
       module_function

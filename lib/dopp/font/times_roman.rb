@@ -14,8 +14,7 @@ module Dopp
 
       # Update FONTS_CLASSES.
       NAMES.each do |name|
-        key = Font.font_key(name)
-        FONT_MODULES[key] = self
+        STORE.add_font_module(name, self)
       end
 
       module_function
