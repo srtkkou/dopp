@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-require 'dopp/error'
-require 'dopp/font'
+require 'dopp/util'
 require 'dopp/section/base'
 require 'dopp/section/pages'
 require 'dopp/section/content'
@@ -10,33 +9,37 @@ module Dopp
   module Section
     # PDF document section "page".
     class Page < Base
+
+      # Document sizes (width * height in millimeters).
+      DOCUMENT_SIZES ||= ::Dopp::Util.deep_freeze({
+        A1: [594.0, 841.0], A2: [420.0, 584.0], A3: [297.0, 420.0],
+        A4: [210.0, 297.0], A5: [148.0, 210.0], A6: [105.0, 148.0],
+        B1: [728.0, 1030.0], B2: [515.0, 728.0], B3: [364.0, 515.0],
+        B4: [257.0, 364.0], B5: [182.0, 257.0], B6: [128.0, 182.0],
+        Letter: [215.9, 279.4]
+      })
+
       attr_reader :content
-      attr_reader :contents
 
       # Initialize.
-      # @param [::Dopp::Document] doc PDF document.
-      def initialize(doc, attrs = {})
-        super(doc)
+      # @param [::Dopp::Section::Pages] pages PDF pages.
+      def initialize(pages, attrs = {})
+        check_is_a!(pages, ::Dopp::Section::Pages)
+        @parent = pages
+        super(pages.document)
         # Initialize attributes.
         attributes[kw(:Type)] = kw(:Page)
-        attributes[kw(:MediaBox)] = list([0, 0, 612, 792])
+        attributes[kw(:Parent)] = @parent.ref
+        doc_size = attrs[:size] || :A4
+        attributes[kw(:MediaBox)] =
+          media_box_by_size(doc_size, attrs)
         attributes[kw(:Rotate)] = 0
         attributes[kw(:Resources)] = dict({})
         # Initialize instance variables.
-        @parent = nil
         @content = ::Dopp::Section::Content.new(self)
-        @contents = [@content]
         attributes[kw(:Contents)] = list(
-          @contents.map(&:ref)
+          [@content].map(&:ref)
         )
-      end
-
-      # Set "Pages" object.
-      # @param [::Dopp::Section::Pages] parent Pages object.
-      def parent=(parent)
-        check_is_a!(parent, ::Dopp::Section::Pages)
-        @parent = parent
-        attributes[kw(:Parent)] = @parent.ref
       end
 
       # Set font in resources.
@@ -49,9 +52,23 @@ module Dopp
       # Render to string.
       # @return [String] Content.
       def render
-        check_is_a!(attributes[kw(:Parent)], ::Dopp::Type::Reference)
-        # Render contents.
         super
+      end
+
+      private
+
+      # Calculate media box by document size.
+      # @param [Symbol] name Document size name.
+      # @param [Hash] opts Document size options.
+      def media_box_by_size(name, opts = {})
+        check_include!(name, DOCUMENT_SIZES.keys)
+        mm_width, mm_height = DOCUMENT_SIZES[name]
+        if opts[:landscape]
+          rect = [0.0, 0.0, mm_height, mm_width]
+        else
+          rect = [0.0, 0.0, mm_width, mm_height]
+        end
+        list(rect.map{ |mm| ::Dopp::Util.mm_to_pt(mm) })
       end
     end
   end

@@ -45,7 +45,7 @@ module Dopp
     def append_page
       page = @root.append_page
       @sections << page
-      @sections += page.contents
+      @sections << page.content
       page.content
     end
 

@@ -22,8 +22,7 @@ module Dopp
       # Append  page.
       # @return [::Dopp::Section::Page] page Page object.
       def append_page
-        page = Page.new(@document)
-        page.parent = self
+        page = Page.new(self)
         @pages << page
         page
       end
