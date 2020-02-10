@@ -14,9 +14,20 @@ module Dopp
     module_function
 
     # Initialize KeyWord.
-    # @return [Dopp::Type::KeyWord] KeyWord.
+    # @return [::Dopp::Type::KeyWord] KeyWord.
     def kw(key)
       KeyWord.new(key)
+    end
+
+    # Initialize Text or HexText.
+    # @param [String] string String.
+    # @return [::Dopp::Type::Text|::Dopp::Type::HexText] PDF text.
+    def text(string)
+      if string.ascii_only?
+        Text.new(string)
+      else
+        HexText.new_by_utf8(string)
+      end
     end
 
     def text(string)
@@ -41,10 +52,6 @@ module Dopp
 
     def xtext(array)
       HexText.new(array)
-    end
-
-    def utf8_to_xtext(string)
-      HexText.new_by_utf8(string)
     end
   end
 end

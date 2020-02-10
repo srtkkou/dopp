@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'forwardable'
+require 'dopp/error'
 require 'dopp/util'
 
 module Dopp
@@ -8,6 +9,7 @@ module Dopp
     # PDF object "Array".
     class List
       extend Forwardable
+      include ::Dopp::Error
 
       # Delegate methods of Array.
       def_delegators :@array, *(%i[
@@ -17,8 +19,7 @@ module Dopp
       # Initialize.
       # @params [Array] array Array.
       def initialize(array = [])
-        raise(ArgumentError) unless array.is_a?(Array)
-
+        check_is_a!(array, Array)
         @array = array
       end
 

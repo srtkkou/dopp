@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'test_helper'
+require 'dopp/error'
 require 'dopp/type/key_word'
 require 'dopp/type/text'
 
@@ -8,9 +9,15 @@ module Dopp
   module Type
     class KeyWordTest < Minitest::Test
       def test_ok_initialize
-        assert_raises(ArgumentError){KeyWord.new(1)}
-        assert_raises(ArgumentError){KeyWord.new(3.14)}
-        assert_raises(ArgumentError){KeyWord.new(['a', 'b'])}
+        assert_raises(::Dopp::Error::ApplicationError) do
+          KeyWord.new(1)
+        end
+        assert_raises(::Dopp::Error::ApplicationError) do
+          KeyWord.new(3.14)
+        end
+        assert_raises(::Dopp::Error::ApplicationError) do
+          KeyWord.new(['a', 'b'])
+        end
         assert_equal('PDF:/a', KeyWord.new(:a).to_s)
         assert_equal('PDF:/b', KeyWord.new('b').to_s)
       end

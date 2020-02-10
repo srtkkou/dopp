@@ -1,14 +1,17 @@
 # frozen_string_literal: true
 
+require 'dopp/error'
+
 module Dopp
   module Type
     # PDF type "Literal String".
     class Text
+      include ::Dopp::Error
+
       # Initialize.
       # @param [String] text String.
       def initialize(text)
-        raise(ArgumentError) unless text.is_a?(String)
-
+        check_is_a!(text, String)
         @string = text
       end
 

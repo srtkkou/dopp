@@ -1,14 +1,17 @@
 # frozen_string_literal: true
 
+require 'dopp/error'
+
 module Dopp
   module Type
     # PDF type "Name".
     class KeyWord
+      include ::Dopp::Error
+
       # Initialize.
       # @param [String|Symbol] name Name.
       def initialize(name)
-        raise(ArgumentError) unless
-          name.is_a?(String) || name.is_a?(Symbol)
+        check_include!(name.class, [String, Symbol])
         @sym = "/#{name}".to_sym
       end
 

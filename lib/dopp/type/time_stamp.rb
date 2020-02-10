@@ -1,14 +1,17 @@
 # frozen_string_literal: true
 
+require 'dopp/error'
+
 module Dopp
   module Type
     # PDF type "DateTime"
     class TimeStamp
+      include ::Dopp::Error
+
       # Initialize.
       # @param [Time] time Time.
       def initialize(time)
-        raise(ArgumentError) unless time.is_a?(Time)
-
+        check_is_a!(time, Time)
         @time = time
       end
 
@@ -32,8 +35,8 @@ module Dopp
       # Render to string.
       # @return [String] Content.
       def render
-        time_str = @time.strftime('%Y%m%d%H%M%S%:z')
-          .sub(/:/, "'")
+        time_str = 
+          @time.strftime('%Y%m%d%H%M%S%:z').sub(/:/, "'")
         String.new('(D:').concat(time_str, "')")
       end
     end

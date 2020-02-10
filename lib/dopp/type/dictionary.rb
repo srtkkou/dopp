@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'forwardable'
+require 'dopp/error'
 require 'dopp/util'
 
 module Dopp
@@ -8,6 +9,7 @@ module Dopp
     # PDF type "Dictionary".
     class Dictionary
       extend Forwardable
+      include ::Dopp::Error
 
       # Delegate methods of Hash.
       def_delegators :@hash, *(%i[
@@ -20,8 +22,7 @@ module Dopp
       # Initialize.
       # @param [Hash] hash Hash argument.
       def initialize(hash = {})
-        raise(ArgumentError) unless hash.is_a?(Hash)
-
+        check_is_a!(hash, Hash)
         @hash = hash
       end
 

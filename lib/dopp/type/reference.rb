@@ -1,17 +1,21 @@
 # frozen_string_literal: true
 
+require 'dopp/error'
+
 module Dopp
   module Type
     # PDF type "Reference".
     class Reference
+      include ::Dopp::Error
+
       # Initialize.
       # @param [Integer] id PDF object id.
       # @param [integer] revision PDF object revision.
       def initialize(id, revision = 0)
-        raise(ArgumentError) unless id.is_a?(Integer)
-        raise(ArgumentError) unless id > 0
-        raise(ArgumentError) unless revision.is_a?(Integer)
-        raise(ArgumentError) unless revision >= 0
+        check_is_a!(id, Integer)
+        check_gt!(id, 0)
+        check_is_a!(revision, Integer)
+        check_gteq!(revision, 0)
         @id = id
         @revision = revision
       end

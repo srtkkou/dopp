@@ -1,9 +1,13 @@
 # frozen_string_literal: true
 
+require 'dopp/error'
+
 module Dopp
   module Type
     # PDF type "Hexadecimal String".
     class HexText
+      include ::Dopp::Error
+
       class << self
         # New from UTF-8 string.
         # @param [String] string UTF-8 string.
@@ -18,9 +22,12 @@ module Dopp
       # Initialize.
       # @param [Array<Integer>] bytes Bytes.
       def initialize(bytes)
-        raise(ArgumentError) unless bytes.is_a?(Array)
-        raise(ArgumentError) unless
-          bytes.all?{ |b| (b >= 0x0) && (b <= 0xff) }
+        check_is_a!(bytes, Array)
+        bytes.each do |byte|
+          check_is_a!(byte, Integer)
+          check_gteq!(byte, 0x0)
+          check_lteq!(byte, 0xff)
+        end
         bytes << 0x0 if bytes.size.odd?
         @bytes = bytes
       end
