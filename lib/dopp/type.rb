@@ -30,10 +30,6 @@ module Dopp
       end
     end
 
-    def text(string)
-      Text.new(string)
-    end
-
     def time(time)
       TimeStamp.new(time)
     end

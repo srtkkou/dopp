@@ -25,9 +25,7 @@ module Dopp
       # @param [Object] other Other object.
       # @return [Bool] True=same, false=different.
       def eql?(other)
-        return false unless
-          other.instance_of?(self.class)
-        self.hash == other.hash
+        other.instance_of?(self.class) && hash == other.hash
       end
 
       # Convert to string.
