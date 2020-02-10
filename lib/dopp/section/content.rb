@@ -32,13 +32,11 @@ module Dopp
         @stream.concat('BT', LF)
         @stream.concat(
           kw(@font.alias).render, ' ',
-          @font_size.to_s, ' Tf', LF)
-        str = if string.ascii_only?
-          text(string)
-        else
-          utf8_to_xtext(string)
-        end
-        @stream.concat(str.render, ' Tj', LF, 'ET', LF)
+          @font_size.to_s, ' Tf', LF
+        )
+        @stream.concat(
+          text(string).render, ' Tj', LF, 'ET', LF
+        )
       end
 
       # Render to string.

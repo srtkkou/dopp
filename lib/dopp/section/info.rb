@@ -25,11 +25,7 @@ module Dopp
       # @param [String] title Title.
       def title=(title)
         check_is_a?(title, String)
-        if title.ascii_only?
-          attributes[kw(:Title)] = text(title)
-        else
-          attributes[kw(:Title)] = utf8_to_xtext(title)
-        end
+        attributes[kw(:Title)] = text(title)
       end
     end
   end
