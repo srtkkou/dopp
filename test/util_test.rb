@@ -1,11 +1,13 @@
 # frozen_string_literal: false
+
 require 'test_helper'
+require 'dopp/error'
 require 'dopp/type'
 
 class UtilTest < Minitest::Test
   include Dopp::Util
 
-  def test_OK_deep_freeze_array_and_hash
+  def test_ok_deep_freeze_array_and_hash
     obj = [{a: '1', 'b' => "2", c: [3, 4, {d: '5'}]}, 6]
     assert(!obj.frozen?)
     assert(!obj[0].frozen?)
@@ -24,15 +26,14 @@ class UtilTest < Minitest::Test
     assert(obj[0][:c][2][:d].frozen?)
   end
 
-  def test_OK_camelize
+  def test_ok_camelize
     assert_equal('CamelCase', camelize('camel_case'))
+    assert_raises(::Dopp::Error::ApplicationError) do
+      camelize(:symbol_to_camel)
+    end
   end
 
-  def test_NG_camelize
-    assert_raises(ArgumentError){camelize(:symbol_to_camel)}
-  end
-
-  def test_OK_pdf_type?
+  def test_ok_pdf_type?
     assert(!pdf_type?(1))
     assert(!pdf_type?(3.14))
     assert(!pdf_type?('string'))
