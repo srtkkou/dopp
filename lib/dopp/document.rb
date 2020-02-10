@@ -71,8 +71,10 @@ module Dopp
     # Detailed description of this object.
     # @return [String] Descritption.
     def inspect
-      String.new('#<').concat(self.class.name, ':',
-        self.object_id.to_s, ' PDF-', @header.version, '>')
+      String.new('#<').concat(
+        self.class.name, ':',
+        object_id.to_s, ' PDF-', @header.version, '>'
+      )
     end
 
     # Find or initialize font to use.
