@@ -9,9 +9,10 @@ module Dopp
   module Section
     # PDF document section "page".
     class Page < Base
+      include ::Dopp::Util
 
       # Document sizes (width * height in millimeters).
-      DOCUMENT_SIZES ||= ::Dopp::Util.deep_freeze(
+      MEDIA_SIZES ||= ::Dopp::Util.deep_freeze(
         A1: [594.0, 841.0], A2: [420.0, 584.0], A3: [297.0, 420.0],
         A4: [210.0, 297.0], A5: [148.0, 210.0], A6: [105.0, 148.0],
         B1: [728.0, 1030.0], B2: [515.0, 728.0], B3: [364.0, 515.0],
@@ -19,6 +20,8 @@ module Dopp
         Letter: [215.9, 279.4]
       )
 
+      attr_reader :media_width
+      attr_reader :media_height
       attr_reader :content
 
       # Initialize.
@@ -31,8 +34,10 @@ module Dopp
         attributes[kw(:Type)] = kw(:Page)
         attributes[kw(:Parent)] = @parent.ref
         doc_size = attrs[:size] || :A4
-        attributes[kw(:MediaBox)] =
-          media_box_by_size(doc_size, attrs)
+        media_box = media_box_by_size(doc_size, attrs)
+        @media_width = media_box[2]
+        @media_height = media_box[3]
+        attributes[kw(:MediaBox)] = list(media_box)
         attributes[kw(:Rotate)] = 0
         attributes[kw(:Resources)] = dict({})
         # Initialize instance variables.
@@ -61,14 +66,12 @@ module Dopp
       # @param [Symbol] name Document size name.
       # @param [Hash] opts Document size options.
       def media_box_by_size(name, opts = {})
-        check_include!(name, DOCUMENT_SIZES.keys)
-        mm_width, mm_height = DOCUMENT_SIZES[name]
-        if opts[:landscape]
-          rect = [0.0, 0.0, mm_height, mm_width]
-        else
-          rect = [0.0, 0.0, mm_width, mm_height]
-        end
-        list(rect.map { |mm| ::Dopp::Util.mm_to_pt(mm) })
+        check_include!(name, MEDIA_SIZES.keys)
+        width = mm_to_pt(MEDIA_SIZES[name][0])
+        height = mm_to_pt(MEDIA_SIZES[name][1])
+        return [0.0, 0.0, height, width] if opts[:landscape]
+
+        [0.0, 0.0, width, height]
       end
     end
   end

@@ -46,7 +46,7 @@ module Dopp
       page = @root.append_page
       @sections << page
       @sections << page.content
-      page.content
+      page.content.canvas
     end
 
     # Render to string.
