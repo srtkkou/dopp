@@ -26,42 +26,42 @@ module Dopp
       end
 
       # Update fullname ("BaseFont").
-      # @param [String] name Base font name.
-      def fullname=(name)
-        check_is_a!(name, String)
-        @fullname = name
-        attributes[kw(:BaseFont)] = kw(name)
+      # @param [String] value Base font name.
+      def fullname=(value)
+        check_is_a!(value, String)
+        @fullname = value
+        attributes[kw(:BaseFont)] = kw(value)
       end
 
       # Update "Encoding".
-      # @param [String] name Encoding name.
-      def encoding=(name)
-        check_is_a!(name, String)
-        attributes[kw(:Encoding)] = kw(name)
+      # @param [String] value Encoding name.
+      def encoding=(value)
+        check_is_a!(value, String)
+        attributes[kw(:Encoding)] = kw(value)
       end
 
       # Update "Widths".
       # @param [Array<Integer>] char_widths Widths of chars.
-      def widths=(char_widths)
-        check_is_a!(char_widths, Array)
-        char_widths.all? do |width|
-          check_is_a!(width, Integer)
+      def widths=(values)
+        check_is_a!(values, Array)
+        values.each do |value|
+          check_is_a!(value, Integer)
         end
-        attributes[kw(:Widths)] = list(char_widths)
+        attributes[kw(:Widths)] = list(values)
       end
 
       # Update "FirstChar".
-      # @param [Integer] index Index of first char.
-      def first_char=(index)
-        check_is_a!(index, Integer)
-        attributes[kw(:FirstChar)] = index
+      # @param [Integer] value Index of first char.
+      def first_char=(value)
+        check_is_a!(value, Integer)
+        attributes[kw(:FirstChar)] = value
       end
 
       # Update "LastChar".
-      # @param [Integer] index Index of last char.
-      def last_char=(index)
-        check_is_a!(index, Integer)
-        attributes[kw(:LastChar)] = index
+      # @param [Integer] value Index of last char.
+      def last_char=(value)
+        check_is_a!(value, Integer)
+        attributes[kw(:LastChar)] = value
       end
 
       # Render to string.

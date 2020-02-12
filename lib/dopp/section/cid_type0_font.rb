@@ -29,18 +29,18 @@ module Dopp
       end
 
       # Update fullname ("BaseFont").
-      # @param [String] name Base font name.
-      def fullname=(name)
-        check_is_a!(name, String)
-        @fullname = name
-        attributes[kw(:BaseFont)] = kw(name)
+      # @param [String] value Base font name.
+      def fullname=(value)
+        check_is_a!(value, String)
+        @fullname = value
+        attributes[kw(:BaseFont)] = kw(value)
       end
 
       # Update "Encoding".
-      # @param [String] name Encoding name.
-      def encoding=(name)
-        check_is_a!(name, String)
-        attributes[kw(:Encoding)] = kw(name)
+      # @param [String] value Encoding name.
+      def encoding=(value)
+        check_is_a!(value, String)
+        attributes[kw(:Encoding)] = kw(value)
       end
 
       # Add new font dictionary.

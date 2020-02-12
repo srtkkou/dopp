@@ -11,13 +11,11 @@ module Dopp
     class CidType0FontDictionary < Base
       attr_reader :font
       attr_reader :document
-      attr_accessor :registry
-      attr_accessor :ordering
-      attr_accessor :supplement
-      attr_accessor :descriptor
+      attr_reader :descriptor
 
       # Initialize.
-      # @param [::Dopp::Section::CidType0Font] font Font section.
+      # @param [::Dopp::Section::CidType0Font]
+      #   font Font section.
       def initialize(font)
         check_is_a!(font, ::Dopp::Section::CidType0Font)
         @font = font
@@ -32,27 +30,27 @@ module Dopp
       end
 
       # Update "Registry".
-      # @param [String] reg Font registry.
-      def registry=(reg)
-        check_is_a!(reg, String)
+      # @param [String] value Font registry.
+      def registry=(value)
+        check_is_a!(value, String)
         attributes[kw(:CIDSystemInfo)]
-          .store(kw(:Registry), text(reg))
+          .store(kw(:Registry), text(value))
       end
 
       # Update "Ordering".
-      # @param [String] order Font ordering.
-      def ordering=(order)
-        check_is_a!(order, String)
+      # @param [String] value Font ordering.
+      def ordering=(value)
+        check_is_a!(value, String)
         attributes[kw(:CIDSystemInfo)]
-          .store(kw(:Ordering), text(order))
+          .store(kw(:Ordering), text(value))
       end
 
       # Update "Supplement".
-      # @param [Integer] sup Font supplement.
-      def supplement=(sup)
-        check_is_a!(sup, Integer)
+      # @param [Integer] value Font supplement.
+      def supplement=(value)
+        check_is_a!(value, Integer)
         attributes[kw(:CIDSystemInfo)]
-          .store(kw(:Supplement), sup)
+          .store(kw(:Supplement), value)
       end
 
       # Add new font descriptor.
