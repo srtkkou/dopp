@@ -9,7 +9,7 @@ rvm:
   - 2.7
   - ruby-head
 before_install:
-  - gem install bundler
+  - gem install bundler -v 1.17.2
 install:
   - bundle install
 script:
