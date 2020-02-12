@@ -12,9 +12,11 @@ module Dopp
       include ::Dopp::Error
 
       # Delegate methods of Array.
-      def_delegators :@array, *(%i[
-        << [] at []= empty? length size
-      ])
+      def_delegators(
+        :@array,
+        :<<, :[], :at, :[]=,
+        :empty?, :length, :size
+      )
 
       # Initialize.
       # @params [Array] array Array.
@@ -27,7 +29,7 @@ module Dopp
       # @return [String] Content.
       def to_s
         return 'PDF:[]' if @array.empty?
-        # When the array is not empty.
+
         joined = @array.map(&:to_s).join(', ')
         String.new('PDF:[').concat(joined, ']')
       end
@@ -37,7 +39,7 @@ module Dopp
       def inspect
         String.new('#<').concat(
           self.class.name, ':',
-          object_id.to_s, ' ', self.to_s, '>'
+          object_id.to_s, ' ', to_s, '>'
         )
       end
 

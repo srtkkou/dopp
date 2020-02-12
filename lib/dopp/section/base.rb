@@ -97,7 +97,8 @@ module Dopp
       def apply_zlib_deflate
         return unless @zlib_deflate
         return if @stream.empty?
-        return if @attributes.key?(kw(:Filter)) &&
+        return if
+          @attributes.key?(kw(:Filter)) &&
           @attributes[kw(:Filter)].include?(kw(:FlateDecode))
 
         @attributes[kw(:Filter)] ||= list([])

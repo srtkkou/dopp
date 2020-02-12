@@ -24,10 +24,9 @@ module Dopp
         @info = nil
         # Initialize attributes.
         @doc_id, @rev_id = generate_ids
-        @attrs = dict({
-          kw(:Size) => 0,
-          kw(:ID) => list([@doc_id, @rev_id])
-        })
+        @attrs = dict({})
+        @attrs[kw(:Size)] = 0
+        @attrs[kw(:ID)] = list([@doc_id, @rev_id])
       end
 
       # Set offset to cross reference table.
@@ -84,8 +83,10 @@ module Dopp
       # Generate document and revision ID.
       # @return [Array<::Dopp::Type::HexString>] IDs.
       def generate_ids
-        bytes = SecureRandom.hex(32).scan(/.{1,2}/)
-          .map{ |h| Integer(h, 16) }
+        hex_str = SecureRandom.hex(32)
+        bytes = hex_str.scan(/.{1,2}/).map do |h|
+          Integer(h, 16)
+        end
         doc_id = xtext(bytes[0, 16])
         rev_id = xtext(bytes[16, 16])
         [doc_id, rev_id]

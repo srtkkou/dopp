@@ -10,9 +10,11 @@ module Dopp
     # CID font "Kozuka Mincho Pr6N Regular".
     module KozukaMinchoPr6nR
       # Font names.
-      NAMES ||= ::Dopp::Util.deep_freeze([
-        '明朝', '小塚明朝Pr6N-R', 'KozukaMinchoPr6nR'
-      ])
+      NAMES ||= ::Dopp::Util.deep_freeze(
+        [
+          '明朝', '小塚明朝Pr6N-R', 'KozukaMinchoPr6nR'
+        ]
+      )
 
       # Update FONT_CLASSES.
       NAMES.each do |name|

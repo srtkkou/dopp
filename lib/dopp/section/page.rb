@@ -11,13 +11,13 @@ module Dopp
     class Page < Base
 
       # Document sizes (width * height in millimeters).
-      DOCUMENT_SIZES ||= ::Dopp::Util.deep_freeze({
+      DOCUMENT_SIZES ||= ::Dopp::Util.deep_freeze(
         A1: [594.0, 841.0], A2: [420.0, 584.0], A3: [297.0, 420.0],
         A4: [210.0, 297.0], A5: [148.0, 210.0], A6: [105.0, 148.0],
         B1: [728.0, 1030.0], B2: [515.0, 728.0], B3: [364.0, 515.0],
         B4: [257.0, 364.0], B5: [182.0, 257.0], B6: [128.0, 182.0],
         Letter: [215.9, 279.4]
-      })
+      )
 
       attr_reader :content
 
@@ -42,9 +42,9 @@ module Dopp
         )
       end
 
-      # Set font in resources.
+      # Add font in resources.
       # @param [::Dopp::Section::Base] font Font section.
-      def set_font(font)
+      def add_font(font)
         attributes[kw(:Resources)][kw(:Font)] ||= dict({})
         attributes[kw(:Resources)][kw(:Font)][kw(font.alias)] = font.ref
       end
@@ -68,7 +68,7 @@ module Dopp
         else
           rect = [0.0, 0.0, mm_width, mm_height]
         end
-        list(rect.map{ |mm| ::Dopp::Util.mm_to_pt(mm) })
+        list(rect.map { |mm| ::Dopp::Util.mm_to_pt(mm) })
       end
     end
   end

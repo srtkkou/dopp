@@ -15,7 +15,7 @@ module Dopp
           bytes = string.encode(
             Encoding::UTF_16BE, Encoding::UTF_8
           ).unpack('C*')
-          self.new(bytes)
+          new(bytes)
         end
       end
 
@@ -35,7 +35,9 @@ module Dopp
       # Convert to String.
       # @return [String] Content.
       def to_s
-        joined = @bytes.map{ |b| format('%02x', b) }.join(' ')
+        joined = @bytes.map do |b|
+          format('%<byte>02x', byte: b)
+        end.join(' ')
         String.new('PDF:<').concat(joined, '>')
       end
 
@@ -51,7 +53,9 @@ module Dopp
       # Render to string.
       # @return [String] Content.
       def render
-        joined = @bytes.map{ |b| format('%02x', b) }.join
+        joined = @bytes.map do |b|
+          format('%<byte>02x', byte: b)
+        end.join
         String.new('<').concat(joined, '>')
       end
     end

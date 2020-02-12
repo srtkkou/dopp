@@ -39,7 +39,7 @@ module Dopp
       def inspect
         String.new('#<').concat(
           self.class.name, ':',
-          object_id.to_s, ' ', self.to_s, '>'
+          object_id.to_s, ' ', to_s, '>'
         )
       end
 

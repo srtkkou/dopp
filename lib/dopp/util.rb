@@ -25,11 +25,13 @@ module Dopp
     end
 
     # Camelize string.
-    # @param [String] str String.
+    # @param [String] value String.
     # @return [String] Converted string.
-    def camelize(str)
-      ::Dopp::Error.check_is_a!(str, String)
-      str.gsub(/(?:\A|_)(.)/) { $1.upcase }
+    def camelize(value)
+      ::Dopp::Error.check_is_a!(value, String)
+      value.gsub(/(?:\A|_)(.)/) do |matched|
+        matched[-1].upcase
+      end
     end
 
     # Is the class of the object defined under Dopp::Type?

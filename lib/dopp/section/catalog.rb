@@ -9,24 +9,28 @@ module Dopp
     # PDF document section "catalog".
     class Catalog < Base
       # Layouts.
-      PAGE_LAYOUTS ||= ::Dopp::Util.deep_freeze([
-        :SinglePage,
-        :OneColumn,
-        :TwoColumnLeft,
-        :TwoColumnRight,
-        :TwoPageLeft,
-        :TwoPageRight
-      ])
+      PAGE_LAYOUTS ||= ::Dopp::Util.deep_freeze(
+        [
+          :SinglePage,
+          :OneColumn,
+          :TwoColumnLeft,
+          :TwoColumnRight,
+          :TwoPageLeft,
+          :TwoPageRight
+        ]
+      )
 
       # Modes.
-      PAGE_MODES ||= ::Dopp::Util.deep_freeze([
-        :UseNone,
-        :UseOutlines,
-        :UseThumbs,
-        :FullScreen,
-        :UseOC,
-        :UseAttachments
-      ])
+      PAGE_MODES ||= ::Dopp::Util.deep_freeze(
+        [
+          :UseNone,
+          :UseOutlines,
+          :UseThumbs,
+          :FullScreen,
+          :UseOC,
+          :UseAttachments
+        ]
+      )
 
       # Initialize.
       # @param [::Dopp::Document] doc PDF document.

@@ -35,7 +35,7 @@ module Dopp
       # Render to string.
       # @return [String] Content.
       def render
-        time_str = 
+        time_str =
           @time.strftime('%Y%m%d%H%M%S%:z').sub(/:/, "'")
         String.new('(D:').concat(time_str, "')")
       end

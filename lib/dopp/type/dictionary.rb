@@ -12,12 +12,13 @@ module Dopp
       include ::Dopp::Error
 
       # Delegate methods of Hash.
-      def_delegators :@hash, *(%i[
-        [] []= store each empty?
-        has_key? key? include? member?
-        has_value? value?
-        keys length size merge! update
-      ])
+      def_delegators(
+        :@hash,
+        :[], :[]=, :store, :each, :empty?,
+        :has_key?, :key?, :include?, :member?,
+        :has_value?, :value?,
+        :keys, :length, :size, :merge!, :update
+      )
 
       # Initialize.
       # @param [Hash] hash Hash argument.
@@ -30,7 +31,7 @@ module Dopp
       # @return [String] Content.
       def to_s
         return 'PDF:{}' if @hash.empty?
-        # When the hash is not empty.
+
         joined = @hash.map do |k, v|
           k.to_s.concat('=>', v.to_s)
         end.join(', ')
@@ -40,8 +41,10 @@ module Dopp
       # Detailed description of this object.
       # @return [String] Description.
       def inspect
-        String.new('#<').concat(self.class.name, ':',
-          self.object_id.to_s, ' ', self.to_s, '>')
+        String.new('#<').concat(
+          self.class.name, ':',
+          object_id.to_s, ' ', to_s, '>'
+        )
       end
 
       # Render to string.

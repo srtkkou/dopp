@@ -92,8 +92,8 @@ module Dopp
       @sections += font.sections
       # Register font.
       @fonts[font_key] = font
-      font.names.each do |name|
-        key = ::Dopp::Font::STORE.font_key(name, opts)
+      font.names.each do |font_name|
+        key = ::Dopp::Font::STORE.font_key(font_name, opts)
         @fonts[key] = font
       end
       font

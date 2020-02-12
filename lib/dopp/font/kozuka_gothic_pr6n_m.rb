@@ -10,10 +10,12 @@ module Dopp
     # CID font "Kozuka Gothic Pr6N Medium".
     module KozukaGothicPr6nM
       # Font names.
-      NAMES ||= ::Dopp::Util.deep_freeze([
-        'ゴシック', '小塚ゴシックPr6N-M',
-        'KozukaGothicPr6nM',
-      ])
+      NAMES ||= ::Dopp::Util.deep_freeze(
+        [
+          'ゴシック', '小塚ゴシックPr6N-M',
+          'KozukaGothicPr6nM'
+        ]
+      )
 
       # Update FONT_CLASSES.
       NAMES.each do |name|
