@@ -21,6 +21,7 @@ module Dopp
           deep_freeze(v)
         end
       end
+      arg
     end
 
     # Camelize string.
