@@ -12,13 +12,6 @@ module Dopp
       attr_reader :font_dictionary
       attr_reader :font
       attr_reader :document
-      attr_accessor :flags
-      attr_accessor :b_box
-      attr_accessor :italic_angle
-      attr_accessor :ascent
-      attr_accessor :descent
-      attr_accessor :cap_height
-      attr_accessor :stem_v
 
       # Initialize.
       # @param [::Dopp::Section::CIDType0FontDictionary]
@@ -31,28 +24,63 @@ module Dopp
         # Initialize attributes.
         attributes[kw(:Type)] = kw(:FontDescriptor)
         attributes[kw(:FontName)] = kw(@font.fullname)
-        # Initialize instance variables.
-        @flags = nil
-        @b_box = nil
-        @italic_angle = nil
-        @ascent = nil
-        @descent = nil
-        @cap_height = nil
-        @stem_v = nil
+      end
+
+      # Update "Flags".
+      # @param [Integer] value Font flags.
+      def flags=(value)
+        check_is_a!(value, Integer)
+        attributes[kw(:Flags)] = value
+      end
+
+      # Update "FontBBox".
+      # @param [Array<Integer>] value Font boundary.
+      def b_box=(values)
+        check_is_a!(values, Array)
+        values.all? do |value|
+          check_is_a!(value, Integer)
+        end
+        attributes[kw(:FontBBox)] = list(values)
+      end
+
+      # Update "ItalicAngle".
+      # @param [Integer] value Font italic angle.
+      def italic_angle=(value)
+        check_is_a!(value, Integer)
+        attributes[kw(:ItalicAngle)] = value
+      end
+
+      # Update "Ascent".
+      # @param [Integer] value Font max height of glyph.
+      def ascent=(value)
+        check_is_a!(value, Integer)
+        attributes[kw(:Ascent)] = value
+      end
+
+      # Update "Descent".
+      # @param [Integer] value Font min height of glyph.
+      def descent=(value)
+        check_is_a!(value, Integer)
+        attributes[kw(:Descent)] = value
+      end
+
+      # Update "CapHeight".
+      # @param [Integer] value Font capital height of glyph.
+      def cap_height=(value)
+        check_is_a!(value, Integer)
+        attributes[kw(:CapHeight)] = value
+      end
+
+      # Update "StemV".
+      # @param [Integer] value Font width.
+      def stem_v=(value)
+        check_is_a!(value, Integer)
+        attributes[kw(:StemV)] = value
       end
 
       # Render to string.
       # @return [String] Content.
       def render
-        # Update attributes.
-        attributes[kw(:Flags)] = @flags
-        attributes[kw(:FontBBox)] = list(@b_box)
-        attributes[kw(:ItalicAngle)] = @italic_angle
-        attributes[kw(:Ascent)] = @ascent
-        attributes[kw(:Descent)] = @descent
-        attributes[kw(:CapHeight)] = @cap_height
-        attributes[kw(:StemV)] = @stem_v
-        # Render contents.
         super
       end
     end

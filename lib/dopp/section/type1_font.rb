@@ -6,14 +6,10 @@ module Dopp
   module Section
     # PDF document section "Type1 font".
     class Type1Font < Base
-      attr_accessor :fullname
+      attr_reader :fullname
       attr_reader :alias
       attr_accessor :names
-      attr_accessor :sections
-      attr_accessor :encoding
-      attr_accessor :widths
-      attr_accessor :first_char
-      attr_accessor :last_char
+      attr_reader :sections
 
       # Initialize.
       # @param [::Dopp::Document] doc PDF document.
@@ -27,20 +23,50 @@ module Dopp
         # Initialize instance variables.
         @fullname = nil
         @sections = [self]
-        @encoding = nil
-        @dictionary = nil
+      end
+
+      # Update fullname ("BaseFont").
+      # @param [String] name Base font name.
+      def fullname=(name)
+        check_is_a!(name, String)
+        @fullname = name
+        attributes[kw(:BaseFont)] = kw(name)
+      end
+
+      # Update "Encoding".
+      # @param [String] name Encoding name.
+      def encoding=(name)
+        check_is_a!(name, String)
+        attributes[kw(:Encoding)] = kw(name)
+      end
+
+      # Update "Widths".
+      # @param [Array<Integer>] char_widths Widths of chars.
+      def widths=(char_widths)
+        check_is_a!(char_widths, Array)
+        char_widths.all? do |width|
+          check_is_a!(width, Integer)
+        end
+        attributes[kw(:Widths)] = list(char_widths)
+      end
+
+      # Update "FirstChar".
+      # @param [Integer] index Index of first char.
+      def first_char=(index)
+        check_is_a!(index, Integer)
+        attributes[kw(:FirstChar)] = index
+      end
+
+      # Update "LastChar".
+      # @param [Integer] index Index of last char.
+      def last_char=(index)
+        check_is_a!(index, Integer)
+        attributes[kw(:LastChar)] = index
       end
 
       # Render to string.
       # @return [String] Content.
       def render
-        # Update attributes.
-        attributes[kw(:BaseFont)] = kw(@fullname)
-        attributes[kw(:Encoding)] = kw(@encoding)
-        attributes[kw(:Widths)] = list(widths)
-        attributes[kw(:FirstChar)] = @first_char
-        attributes[kw(:LastChar)] = @last_char
-        # Render contents.
         super
       end
     end

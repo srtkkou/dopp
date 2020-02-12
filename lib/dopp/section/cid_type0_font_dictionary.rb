@@ -9,7 +9,7 @@ module Dopp
   module Section
     # PDF document section "CID type0 font dictionary".
     class CidType0FontDictionary < Base
-      attr_accessor :font
+      attr_reader :font
       attr_reader :document
       attr_accessor :registry
       attr_accessor :ordering
@@ -26,11 +26,33 @@ module Dopp
         attributes[kw(:Type)] = kw(:Font)
         attributes[kw(:Subtype)] = kw(:CIDFontType0)
         attributes[kw(:BaseFont)] = kw(font.fullname)
+        attributes[kw(:CIDSystemInfo)] = dict({})
         # Initialize instance variables.
-        @registry = nil
-        @ordering = nil
-        @supplement = nil
         @descriptor = nil
+      end
+
+      # Update "Registry".
+      # @param [String] reg Font registry.
+      def registry=(reg)
+        check_is_a!(reg, String)
+        attributes[kw(:CIDSystemInfo)]
+          .store(kw(:Registry), text(reg))
+      end
+
+      # Update "Ordering".
+      # @param [String] order Font ordering.
+      def ordering=(order)
+        check_is_a!(order, String)
+        attributes[kw(:CIDSystemInfo)]
+          .store(kw(:Ordering), text(order))
+      end
+
+      # Update "Supplement".
+      # @param [Integer] sup Font supplement.
+      def supplement=(sup)
+        check_is_a!(sup, Integer)
+        attributes[kw(:CIDSystemInfo)]
+          .store(kw(:Supplement), sup)
       end
 
       # Add new font descriptor.
@@ -38,6 +60,7 @@ module Dopp
       #   Font descriptor.
       def new_descriptor
         @descriptor = CidType0FontDescriptor.new(self)
+        attributes[kw(:FontDescriptor)] = @descriptor.ref
         @font.sections << @descriptor
         @descriptor
       end
@@ -45,14 +68,6 @@ module Dopp
       # Render to string.
       # @return [String] Content.
       def render
-        # Update attributes.
-        attributes[kw(:CIDSystemInfo)] = dict({
-          kw(:Registry) => text(@registry),
-          kw(:Ordering) => text(@ordering),
-          kw(:Supplement) => @supplement
-        })
-        attributes[kw(:FontDescriptor)] = @descriptor.ref
-        # Render contents.
         super
       end
     end

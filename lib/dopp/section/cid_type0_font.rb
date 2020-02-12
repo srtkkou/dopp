@@ -7,12 +7,11 @@ module Dopp
   module Section
     # PDF document section "CID type0 font".
     class CidType0Font < Base
-      attr_accessor :fullname
+      attr_reader :fullname
       attr_reader :alias
       attr_accessor :names
       attr_reader :sections
-      attr_accessor :encoding
-      attr_accessor :dictionary
+      attr_reader :dictionary
 
       # Initialize.
       # @param [::Dopp::Document] doc PDF document.
@@ -26,8 +25,22 @@ module Dopp
         # Initialize instance variables.
         @sections = [self]
         @fullname = nil
-        @encoding = nil
         @dictionary = nil
+      end
+
+      # Update fullname ("BaseFont").
+      # @param [String] name Base font name.
+      def fullname=(name)
+        check_is_a!(name, String)
+        @fullname = name
+        attributes[kw(:BaseFont)] = kw(name)
+      end
+
+      # Update "Encoding".
+      # @param [String] name Encoding name.
+      def encoding=(name)
+        check_is_a!(name, String)
+        attributes[kw(:Encoding)] = kw(name)
       end
 
       # Add new font dictionary.
@@ -43,8 +56,6 @@ module Dopp
       # @return [String] Content.
       def render
         # Update attributes.
-        attributes[kw(:BaseFont)] = kw(@fullname)
-        attributes[kw(:Encoding)] = kw(@encoding)
         attributes[kw(:DescendantFonts)] =
           list([@dictionary.ref])
         # Render contents.
