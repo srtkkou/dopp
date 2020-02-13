@@ -17,19 +17,24 @@ module Dopp
       def initialize(doc, attrs = {})
         super(doc)
         # Initialize attributes.
-        now_time = time(Time.now)
-        attributes[kw(:Creator)] = text(APPLICATION_NAME)
-        attributes[kw(:Producer)] = text(APPLICATION_NAME)
-        attributes[kw(:CreationDate)] = now_time
-        attributes[kw(:ModDate)] = now_time
+        attributes[:Creator] = text(APPLICATION_NAME)
+        attributes[:Producer] = text(APPLICATION_NAME)
+        attributes[:CreationDate] = time(Time.now)
         self.title = attrs[:title] if attrs[:title]
       end
 
       # Set title.
-      # @param [String] title Title.
-      def title=(title)
-        check_is_a?(title, String)
-        attributes[kw(:Title)] = text(title)
+      # @param [String] value Title.
+      def title=(value)
+        check_is_a!(value, String)
+        attributes[:Title] = text(value)
+      end
+
+      # Set modification time.
+      # @param [Time] value Modification time.
+      def mod_date=(value)
+        check_is_a!(value, Time)
+        attributes[:ModDate] = time(value)
       end
     end
   end

@@ -24,7 +24,7 @@ module Dopp
         check_is_a!(doc, ::Dopp::Document)
         @document = doc
         @id = doc.unique_section_id
-        self.revision = 0
+        @revision = 0
         @attributes = dict({})
         @stream = String.new
         @zlib_deflate = true
@@ -77,7 +77,7 @@ module Dopp
         unless @stream.empty?
           # Calculate length. (stream bytes + (LF * 2))
           length = @stream.size + 2
-          @attributes[kw(:Length)] = length
+          @attributes[:Length] = length
         end
         # Render to buffer.
         buffer = @id.to_s.concat(
@@ -98,11 +98,10 @@ module Dopp
         return unless @zlib_deflate
         return if @stream.empty?
         return if
-          @attributes.key?(kw(:Filter)) &&
-          @attributes[kw(:Filter)].include?(kw(:FlateDecode))
+          @attributes[:Filter]&.include?(kw(:FlateDecode))
 
-        @attributes[kw(:Filter)] ||= list([])
-        @attributes[kw(:Filter)] << kw(:FlateDecode)
+        @attributes[:Filter] ||= list([])
+        @attributes[:Filter] << kw(:FlateDecode)
         @stream = Zlib::Deflate.deflate(
           @stream, Zlib::BEST_COMPRESSION
         )

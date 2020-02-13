@@ -37,7 +37,7 @@ module Dopp
       def initialize(doc, attrs = {})
         super(doc)
         # Initialize attributes.
-        attributes[kw(:Type)] = kw(:Catalog)
+        attributes[:Type] = :Catalog
         self.page_layout = attrs[:page_layout] || :SinglePage
         self.page_mode = attrs[:page_mode] || :UseNone
         # Initialize instance variables.
@@ -49,27 +49,27 @@ module Dopp
       def pages=(pages)
         check_is_a!(pages, ::Dopp::Section::Pages)
         @pages = pages
-        attributes[kw(:Pages)] = @pages.ref
+        attributes[:Pages] = @pages.ref
       end
 
       # Set page layout.
       # @param [Symbol] layout Layout.
       def page_layout=(layout)
         check_include!(layout, PAGE_LAYOUTS)
-        attributes[kw(:PageLayout)] = kw(layout)
+        attributes[:PageLayout] = layout
       end
 
       # Set page mode.
       # @param [Symbol] mode Mode.
       def page_mode=(mode)
         check_include!(mode, PAGE_MODES)
-        attributes[kw(:PageMode)] = kw(mode)
+        attributes[:PageMode] = mode
       end
 
       # Render to string.
       # @return [String] Content.
       def render
-        check_is_a!(attributes[kw(:Pages)], ::Dopp::Type::Reference)
+        check_is_a!(attributes[:Pages], ::Dopp::Type::Reference)
         # Render content.
         super
       end

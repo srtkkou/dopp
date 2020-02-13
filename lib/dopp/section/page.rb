@@ -31,15 +31,15 @@ module Dopp
         @parent = pages
         super(pages.document)
         # Initialize attributes.
-        attributes[kw(:Type)] = kw(:Page)
-        attributes[kw(:Parent)] = @parent.ref
+        attributes[:Type] = :Page
+        attributes[:Parent] = @parent.ref
         doc_size = attrs[:size] || :A4
         media_box = media_box_by_size(doc_size, attrs)
         @media_width = media_box[2]
         @media_height = media_box[3]
-        attributes[kw(:MediaBox)] = list(media_box)
-        attributes[kw(:Rotate)] = 0
-        attributes[kw(:Resources)] = dict({})
+        attributes[:MediaBox] = list(media_box)
+        attributes[:Rotate] = 0
+        attributes[:Resources] = dict({})
         # Initialize instance variables.
         @content = ::Dopp::Section::Content.new(self)
         attributes[kw(:Contents)] = list(
@@ -50,8 +50,9 @@ module Dopp
       # Add font in resources.
       # @param [::Dopp::Section::Base] font Font section.
       def add_font(font)
-        attributes[kw(:Resources)][kw(:Font)] ||= dict({})
-        attributes[kw(:Resources)][kw(:Font)][kw(font.alias)] = font.ref
+        key = kw(font.alias)
+        attributes[:Resources][:Font] ||= dict({})
+        attributes[:Resources][:Font][key] = font.ref
       end
 
       # Render to string.

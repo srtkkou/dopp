@@ -17,9 +17,9 @@ module Dopp
         super(doc)
         @alias = doc.unique_font_alias
         # Initialize attributes.
-        attributes[kw(:Type)] = kw(:Font)
-        attributes[kw(:Subtype)] = kw(:Type1)
-        attributes[kw(:Name)] = kw(@alias)
+        attributes[:Type] = :Font
+        attributes[:Subtype] = :Type1
+        attributes[:Name] = kw(@alias)
         # Initialize instance variables.
         @fullname = nil
         @sections = [self]
@@ -30,14 +30,14 @@ module Dopp
       def fullname=(value)
         check_is_a!(value, String)
         @fullname = value
-        attributes[kw(:BaseFont)] = kw(value)
+        attributes[:BaseFont] = kw(value)
       end
 
       # Update "Encoding".
       # @param [String] value Encoding name.
       def encoding=(value)
         check_is_a!(value, String)
-        attributes[kw(:Encoding)] = kw(value)
+        attributes[:Encoding] = kw(value)
       end
 
       # Update "Widths".
@@ -47,21 +47,21 @@ module Dopp
         values.each do |value|
           check_is_a!(value, Integer)
         end
-        attributes[kw(:Widths)] = list(values)
+        attributes[:Widths] = list(values)
       end
 
       # Update "FirstChar".
       # @param [Integer] value Index of first char.
       def first_char=(value)
         check_is_a!(value, Integer)
-        attributes[kw(:FirstChar)] = value
+        attributes[:FirstChar] = value
       end
 
       # Update "LastChar".
       # @param [Integer] value Index of last char.
       def last_char=(value)
         check_is_a!(value, Integer)
-        attributes[kw(:LastChar)] = value
+        attributes[:LastChar] = value
       end
 
       # Render to string.

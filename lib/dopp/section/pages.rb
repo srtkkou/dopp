@@ -13,7 +13,7 @@ module Dopp
       def initialize(doc, attrs = {})
         super(doc)
         # Initialize attributes.
-        attributes[kw(:Type)] = kw(:Pages)
+        attributes[:Type] = :Pages
         # Initialize instance variables.
         @pages = []
       end
@@ -35,8 +35,8 @@ module Dopp
       # @return [String] Content.
       def render
         # Update attributes.
-        attributes[kw(:Count)] = @pages.size
-        attributes[kw(:Kids)] = list(@pages.map(&:ref))
+        attributes[:Count] = @pages.size
+        attributes[:Kids] = list(@pages.map(&:ref))
         # Render content.
         super
       end

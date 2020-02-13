@@ -24,9 +24,9 @@ module Dopp
         @info = nil
         # Initialize attributes.
         @doc_id, @rev_id = generate_ids
-        @attrs = dict({})
-        @attrs[kw(:Size)] = 0
-        @attrs[kw(:ID)] = list([@doc_id, @rev_id])
+        @attributes = dict({})
+        @attributes[:Size] = 0
+        @attributes[:ID] = list([@doc_id, @rev_id])
       end
 
       # Set offset to cross reference table.
@@ -43,7 +43,7 @@ module Dopp
       def size=(size)
         check_is_a!(size, Integer)
         check_gt!(size, 0)
-        @attrs[kw(:Size)] = size
+        @attributes[:Size] = size
       end
 
       # Set document catalogue.
@@ -51,7 +51,7 @@ module Dopp
       def root=(catalog)
         check_is_a!(catalog, ::Dopp::Section::Catalog)
         @root = catalog
-        @attrs[kw(:Root)] = @root.ref
+        @attributes[:Root] = @root.ref
       end
 
       # Set document information dictionary.
@@ -59,7 +59,7 @@ module Dopp
       def info=(info)
         check_is_a!(info, ::Dopp::Section::Info)
         @info = info
-        @attrs[kw(:Info)] = @info.ref
+        @attributes[:Info] = @info.ref
       end
 
       # Render to string.
@@ -67,13 +67,13 @@ module Dopp
       def render
         check_is_a!(@xref_offset, Integer)
         check_gt!(@xref_offset, 0)
-        check_is_a!(@attrs[kw(:Root)], ::Dopp::Type::Reference)
-        check_is_a!(@attrs[kw(:Info)], ::Dopp::Type::Reference)
-        check_is_a!(@attrs[kw(:Size)], Integer)
-        check_gt!(@attrs[kw(:Size)], 0)
+        check_is_a!(@attributes[:Root], ::Dopp::Type::Reference)
+        check_is_a!(@attributes[:Info], ::Dopp::Type::Reference)
+        check_is_a!(@attributes[:Size], Integer)
+        check_gt!(@attributes[:Size], 0)
         # Render content.
         String.new('trailer').concat(
-          LF, @attrs.render, LF, 'startxref', LF,
+          LF, @attributes.render, LF, 'startxref', LF,
           @xref_offset.to_s, LF, '%%EOF', LF
         )
       end

@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
+require 'dopp/error'
 require 'dopp/util'
 
 module Dopp
   module Section
     # PDF document section "header".
     class Header
+      include ::Dopp::Error
+
       # Default PDF version.
       DEFAULT_PDF_VERSION ||= '1.3'
 
@@ -20,9 +23,7 @@ module Dopp
       # @param [::Dopp::Document] doc PDF document.
       # @param [String] version PDF version.
       def initialize(version = DEFAULT_PDF_VERSION)
-        raise(ArgumentError) unless version.is_a?(String)
-
-        # Set variables.
+        check_is_a!(version, String)
         @version = version
       end
 

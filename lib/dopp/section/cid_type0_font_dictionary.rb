@@ -21,10 +21,10 @@ module Dopp
         @font = font
         super(font.document)
         # Initialize attributes.
-        attributes[kw(:Type)] = kw(:Font)
-        attributes[kw(:Subtype)] = kw(:CIDFontType0)
-        attributes[kw(:BaseFont)] = kw(font.fullname)
-        attributes[kw(:CIDSystemInfo)] = dict({})
+        attributes[:Type] = :Font
+        attributes[:Subtype] = :CIDFontType0
+        attributes[:BaseFont] = kw(font.fullname)
+        attributes[:CIDSystemInfo] = dict({})
         # Initialize instance variables.
         @descriptor = nil
       end
@@ -33,24 +33,21 @@ module Dopp
       # @param [String] value Font registry.
       def registry=(value)
         check_is_a!(value, String)
-        attributes[kw(:CIDSystemInfo)]
-          .store(kw(:Registry), text(value))
+        attributes[:CIDSystemInfo][:Registry] = text(value)
       end
 
       # Update "Ordering".
       # @param [String] value Font ordering.
       def ordering=(value)
         check_is_a!(value, String)
-        attributes[kw(:CIDSystemInfo)]
-          .store(kw(:Ordering), text(value))
+        attributes[:CIDSystemInfo][:Ordering] = text(value)
       end
 
       # Update "Supplement".
       # @param [Integer] value Font supplement.
       def supplement=(value)
         check_is_a!(value, Integer)
-        attributes[kw(:CIDSystemInfo)]
-          .store(kw(:Supplement), value)
+        attributes[:CIDSystemInfo][:Supplement] = value
       end
 
       # Add new font descriptor.
@@ -58,7 +55,7 @@ module Dopp
       #   Font descriptor.
       def new_descriptor
         @descriptor = CidType0FontDescriptor.new(self)
-        attributes[kw(:FontDescriptor)] = @descriptor.ref
+        attributes[:FontDescriptor] = @descriptor.ref
         @font.sections << @descriptor
         @descriptor
       end
