@@ -3,6 +3,7 @@
 require 'forwardable'
 require 'dopp/error'
 require 'dopp/util'
+require 'dopp/type/key_word'
 
 module Dopp
   module Type
@@ -14,17 +15,36 @@ module Dopp
       # Delegate methods of Hash.
       def_delegators(
         :@hash,
-        :[], :[]=, :store, :each, :empty?,
-        :has_key?, :key?, :include?, :member?,
-        :has_value?, :value?,
-        :keys, :length, :size, :merge!, :update
+        :key?, :value?, :each, :empty?, :include?,
+        :keys, :size, :merge!, :update
       )
 
       # Initialize.
       # @param [Hash] hash Hash argument.
       def initialize(hash = {})
         check_is_a!(hash, Hash)
-        @hash = hash
+        @hash = {}
+        hash.each { |k, v| self[k] = v }
+      end
+
+      # Get value by key.
+      # @param [Object] key Key.
+      #   Symbol key will be converted to KeyWord.
+      # @return [Object] Value.
+      def [](key)
+        key = KeyWord.new(key) if key.is_a?(Symbol)
+        @hash[key]
+      end
+
+      # Store a pair of key and value.
+      # @param [Object] key Key.
+      #   Symbol key will be converted to KeyWord.
+      # @param [Object] value Value.
+      #   Symbol value will be converted to KeyWord.
+      def []=(key, value)
+        key = KeyWord.new(key) if key.is_a?(Symbol)
+        value = KeyWord.new(value) if value.is_a?(Symbol)
+        @hash[key] = value
       end
 
       # Convert to string.
