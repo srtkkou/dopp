@@ -5,6 +5,7 @@ require 'dopp/type'
 require 'dopp/util'
 
 module Dopp
+  # Canvas of the page.
   class Canvas
     include ::Dopp::Error
     include ::Dopp::Type

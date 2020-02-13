@@ -9,6 +9,10 @@
 #
 # See https://github.com/rubocop-hq/rubocop/blob/master/manual/configuration.md
 
+AllCops:
+  # Specify target ruby version.
+  TargetRubyVersion: 2.4
+
 # Allow Japanese comments.
 Style/AsciiComments:
   Enabled: false

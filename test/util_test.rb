@@ -8,7 +8,9 @@ class UtilTest < Minitest::Test
   include Dopp::Util
 
   def test_ok_deep_freeze_array_and_hash
-    obj = [{a: '1', 'b' => "2", c: [3, 4, {d: '5'}]}, 6]
+    obj = [
+      { a: '1', 'b' => '2', c: [3, 4, { d: '5' }] }, 6
+    ]
     assert(!obj.frozen?)
     assert(!obj[0].frozen?)
     assert(!obj[0][:a].frozen?)
@@ -52,7 +54,7 @@ class UtilTest < Minitest::Test
     end
   end
 
-  def test_ok_css_color_to_color
+  def test_ok_rgb_to_color
     assert_equal('0.00 0.00 0.00', rgb_to_color(0, 0, 0))
     assert_equal('1.00 1.00 1.00', rgb_to_color(255.0, 255.0, 255.0))
     assert_raises(::Dopp::Error::ApplicationError) do

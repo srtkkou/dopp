@@ -13,7 +13,8 @@ module Dopp
         assert_equal(true, Dictionary.new.empty?)
         # has_key?, key? include?, member?
         d = Dictionary.new(
-          {a: 0, b: 1, c: '2', d: '3'})
+          a: 0, b: 1, c: '2', d: '3'
+        )
         assert_equal(true, d.has_key?(:a))
         assert_equal(true, d.key?(:b))
         assert_equal(true, d.include?(:c))
@@ -24,7 +25,7 @@ module Dopp
         assert_equal(true, d.value?('2'))
         assert_equal(false, d.value?(:dummy))
         # keys
-        assert_equal([:a, :b, :c, :d], d.keys)
+        assert_equal(%i[a b c d], d.keys)
         # length, size
         assert_equal(4, d.size)
         assert_equal(4, d.length)
@@ -38,26 +39,26 @@ module Dopp
       end
 
       def test_ok_to_s
-        assert_equal('PDF:{}',
-          Dictionary.new.to_s)
+        assert_equal('PDF:{}', Dictionary.new.to_s)
         hash = {
           KeyWord.new(:One) => 1,
           KeyWord.new(:Two) => 'b',
           KeyWord.new(:Three) => Text.new('3'),
-          KeyWord.new(:Four) => KeyWord.new(:Value)}
+          KeyWord.new(:Four) => KeyWord.new(:Value)
+        }
         ex = 'PDF:{PDF:/One=>1, PDF:/Two=>b, ' \
           'PDF:/Three=>PDF:"3", PDF:/Four=>PDF:/Value}'
         assert_equal(ex, Dictionary.new(hash).to_s)
       end
 
       def test_ok_render
-        assert_equal('<< >>',
-          Dictionary.new.render)
+        assert_equal('<< >>', Dictionary.new.render)
         hash = {
           KeyWord.new(:One) => 1,
           KeyWord.new(:Two) => 'b',
           KeyWord.new(:Three) => Text.new('3'),
-          KeyWord.new(:Four) => KeyWord.new(:Value)}
+          KeyWord.new(:Four) => KeyWord.new(:Value)
+        }
         ex = <<"EOS"
 <<
 /One 1

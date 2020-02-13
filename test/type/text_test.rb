@@ -15,10 +15,10 @@ module Dopp
           Text.new(3.14)
         end
         assert_raises(::Dopp::Error::ApplicationError) do
-          Text.new(['a', 'b'])
+          Text.new(%w[a b])
         end
         assert_raises(::Dopp::Error::ApplicationError) do
-          Text.new({a: :b})
+          Text.new(a: :b)
         end
         assert_equal('PDF:"a"', Text.new('a').to_s)
       end

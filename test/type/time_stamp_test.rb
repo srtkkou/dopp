@@ -18,10 +18,10 @@ module Dopp
           TimeStamp.new(3.14)
         end
         assert_raises(::Dopp::Error::ApplicationError) do
-          TimeStamp.new(['a', 'b'])
+          TimeStamp.new(%w[a b])
         end
         assert_raises(::Dopp::Error::ApplicationError) do
-          TimeStamp.new({a: :b})
+          TimeStamp.new(a: :b)
         end
         time = Time.new(2006, 1, 2, 15, 4, 5, '+09:00')
         assert_equal(

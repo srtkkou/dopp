@@ -1,17 +1,16 @@
 # frozen_string_literal: true
 
-require 'dopp/document'
-
 # Global constants.
-#require 'dopp/const'
+# require 'dopp/const'
 
 # Utility functions.
-#require 'dopp/util'
+# require 'dopp/util'
 
 # PDF types.
-#require 'dopp/type'
+# require 'dopp/type'
+
+require 'dopp/document'
 
 module Dopp
   # Your code goes here...
 end
-

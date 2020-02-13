@@ -16,14 +16,14 @@ module Dopp
           KeyWord.new(3.14)
         end
         assert_raises(::Dopp::Error::ApplicationError) do
-          KeyWord.new(['a', 'b'])
+          KeyWord.new(%w[a b])
         end
         assert_equal('PDF:/a', KeyWord.new(:a).to_s)
         assert_equal('PDF:/b', KeyWord.new('b').to_s)
       end
 
       def test_ok_as_hash_key
-        h = {KeyWord.new(:key1) => 1}
+        h = { KeyWord.new(:key1) => 1 }
         assert_equal(true, h.key?(KeyWord.new(:key1)))
         assert_equal(true, h.key?(KeyWord.new('key1')))
         assert_equal(1, h[KeyWord.new(:key1)])
@@ -31,7 +31,7 @@ module Dopp
       end
 
       def test_ng_as_Hash_key
-        h = {KeyWord.new('key2') => 2}
+        h = { KeyWord.new('key2') => 2 }
         assert_equal(false, h.key?(:key2))
         assert_equal(false, h.key?('key2'))
         assert_equal(false, h.key?(Text.new('key2')))
