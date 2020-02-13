@@ -22,6 +22,10 @@ module Dopp
         assert_equal('PDF:/b', KeyWord.new('b').to_s)
       end
 
+      def test_ok_equal
+        assert_equal(KeyWord.new(:a), KeyWord.new(:a))
+      end
+
       def test_ok_as_hash_key
         h = { KeyWord.new(:key1) => 1 }
         assert_equal(true, h.key?(KeyWord.new(:key1)))
@@ -30,7 +34,7 @@ module Dopp
         assert_equal(1, h[KeyWord.new('key1')])
       end
 
-      def test_ng_as_Hash_key
+      def test_ng_as_hash_key
         h = { KeyWord.new('key2') => 2 }
         assert_equal(false, h.key?(:key2))
         assert_equal(false, h.key?('key2'))

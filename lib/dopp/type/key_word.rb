@@ -28,6 +28,13 @@ module Dopp
         other.instance_of?(self.class) && hash == other.hash
       end
 
+      # Compare with other object.
+      # @param [Object] other Other object.
+      # @return [Bool] True=same, false=different.
+      def ==(other)
+        eql?(other)
+      end
+
       # Convert to string.
       # @return [String] Content.
       def to_s
