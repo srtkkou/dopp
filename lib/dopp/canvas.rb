@@ -19,7 +19,7 @@ module Dopp
       keyword_init: true
     )
 
-    attr_accessor :memento
+    attr_writer :memento
 
     def initialize(content)
       check_is_a!(content, ::Dopp::Section::Content)
@@ -36,6 +36,10 @@ module Dopp
         stroke_color: ::Dopp::Shape::Color.new('#000000'),
         fill_color: ::Dopp::Shape::Color.new('#000000')
       )
+    end
+
+    def memento
+      deep_copy(@memento)
     end
 
     def move_to(x, y)

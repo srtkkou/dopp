@@ -24,6 +24,13 @@ module Dopp
       arg
     end
 
+    # Deep copy all values in object.
+    # @param [Object] obj Object.
+    def deep_copy(obj)
+      dumped = Marshal.dump(obj)
+      Marshal.load(dumped)
+    end
+
     # Camelize string.
     # @param [String] value String.
     # @return [String] Converted string.
