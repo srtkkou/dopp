@@ -11,6 +11,7 @@
 
 require 'dopp/document'
 
+# Top level module for gem Dopp.
 module Dopp
   # Your code goes here...
 end
