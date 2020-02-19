@@ -3,23 +3,16 @@
 require 'dopp/error'
 require 'dopp/type'
 require 'dopp/util'
-require 'dopp/shape/color'
 
 module Dopp
   # Canvas of the page.
   class Canvas
     include ::Dopp::Error
     include ::Dopp::Type
-    include ::Dopp::Util
 
-    # Internal state of the canvas.
-    Memento ||= Struct.new(
-      :x, :y, :font_alias, :font_size,
-      :stroke_color, :fill_color,
-      keyword_init: true
-    )
-
-    attr_writer :memento
+    attr_reader :media_width
+    attr_reader :media_height
+    attr_writer :state
 
     def initialize(content)
       check_is_a!(content, ::Dopp::Section::Content)
@@ -27,55 +20,47 @@ module Dopp
       @commands = []
       @media_width = content.page.media_width
       @media_height = content.page.media_height
-      # Initialize memento.
-      @memento = Memento.new(
-        x: mm_to_pt(10),
-        y: @media_height - mm_to_pt(10),
-        font_alias: nil,
-        font_size: 12.0,
-        stroke_color: ::Dopp::Shape::Color.new('#000000'),
-        fill_color: ::Dopp::Shape::Color.new('#000000')
-      )
+      @state = State.new(self)
     end
 
-    def memento
-      deep_copy(@memento)
+    def state
+      deep_copy(@state)
     end
 
-    def move_to(x, y)
-      @memento.x = mm_to_pt(x)
-      @memento.y = @media_height - mm_to_pt(y)
+    def move_to(mm_x, mm_y)
+      @state.cursor_x = mm_x
+      @state.cursor_y = mm_y
     end
 
     def stroke_color=(value)
-      @memento.stroke_color = ::Dopp::Shape::Color.new(value)
+      @state.stroke_color = value
     end
 
     def fill_color=(value)
-      @memento.fill_color = ::Dopp::Shape::Color.new(value)
+      @state.fill_color = value
     end
 
     def use_font(font_name, opts = {})
       font = @content.use_font(font_name, opts)
-      @memento.font_alias = kw(font.alias)
-      @memento.font_size = opts[:size] if opts[:size]
+      @state.font_alias = kw(font.alias)
+      @state.font_size = opts[:size] if opts[:size]
     end
 
-    def grid(values, opts = {})
-    end
+    # def grid(values, opts = {})
+    # end
 
-    def text_box(value, opts = {})
-    end
+    # def text_box(value, opts = {})
+    # end
 
     def write(value)
-      check_is_a!(@memento.font_alias, ::Dopp::Type::KeyWord)
+      check_is_a!(@state.font_alias, ::Dopp::Type::KeyWord)
       @commands << 'q'
-      @commands << cmd_lrlg(@memento.stroke_color)
-      @commands << cmd_rg(@memento.fill_color)
+      @commands << cmd_lrlg(@state.stroke_color)
+      @commands << cmd_rg(@state.fill_color)
       @commands << 'BT'
-      @commands << "1 0 0 1 #{@memento.x} #{@memento.y} Tm"
-      @commands << "#{@memento.font_size} TL"
-      @commands << cmd_ltf(@memento.font_alias, @memento.font_size)
+      @commands << "1 0 0 1 #{@state.x} #{@state.y} Tm"
+      @commands << "#{@state.font_size} TL"
+      @commands << cmd_ltf(@state.font_alias, @state.font_size)
       # Split lines.
       value.each_line do |line|
         @commands << cmd_ltj(line.chomp)
@@ -102,13 +87,13 @@ module Dopp
 
     # Command "rg". Set fill color.
     def cmd_rg(color)
-      check_is_a!(color, ::Dopp::Shape::Color)
+      check_is_a!(color, ::Dopp::Type::Color)
       color.render.concat(' rg')
     end
 
     # Command "RG". Set stroke color.
     def cmd_lrlg(color)
-      check_is_a!(color, ::Dopp::Shape::Color)
+      check_is_a!(color, ::Dopp::Type::Color)
       color.render.concat(' RG')
     end
 
@@ -122,6 +107,45 @@ module Dopp
     # Command "Tj". Write text.
     def cmd_ltj(value)
       text(value).render.concat(' Tj')
+    end
+
+    # Internal state of canvas.
+    class State
+      include ::Dopp::Type
+      include ::Dopp::Util
+
+      attr_reader :x
+      attr_reader :y
+      attr_accessor :font_alias
+      attr_accessor :font_size
+      attr_reader :stroke_color
+      attr_reader :fill_color
+
+      def initialize(canvas)
+        @canvas = canvas
+        self.cursor_x = 10
+        self.cursor_y = 10
+        @font_alias = nil
+        @font_size = 12.0
+        self.fill_color = '#000000'
+        self.stroke_color = '#000000'
+      end
+
+      def cursor_x=(value)
+        @x = mm_to_pt(value)
+      end
+
+      def cursor_y=(value)
+        @y = @canvas.media_height - mm_to_pt(value)
+      end
+
+      def fill_color=(value)
+        @fill_color = color(value)
+      end
+
+      def stroke_color=(value)
+        @stroke_color = color(value)
+      end
     end
   end
 end
