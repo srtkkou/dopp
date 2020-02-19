@@ -3,7 +3,8 @@
 require 'dopp/error'
 
 module Dopp
-  module Shape
+  module Type
+    # PDF color.
     class Color
       include ::Dopp::Error
 
@@ -18,8 +19,17 @@ module Dopp
           .to_a.values_at(1, 2, 3).map { |s| s.to_i(16) }
       end
 
+      # Convert to string.
+      # @return [String] Content.
+      def to_s
+        code = [@red, @green, @blue].map do |v|
+          format('%<value>02x', value: v)
+        end.join
+        String.new('PDF:#').concat(code)
+      end
+
       # Render to string.
-      # @return [String] Rendered string.
+      # @return [String] Content.
       def render
         [@red, @green, @blue].map do |v|
           format('%<value>.2f', value: v / 255.0)

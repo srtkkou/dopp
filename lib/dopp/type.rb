@@ -7,6 +7,7 @@ require 'dopp/type/time_stamp'
 require 'dopp/type/reference'
 require 'dopp/type/list'
 require 'dopp/type/dictionary'
+require 'dopp/type/color'
 
 module Dopp
   # PDF type.
@@ -48,6 +49,10 @@ module Dopp
 
     def xtext(array)
       HexText.new(array)
+    end
+
+    def color(value)
+      Color.new(value)
     end
   end
 end
