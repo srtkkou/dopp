@@ -21,7 +21,7 @@ module Dopp
 
     # Check value using "<" with expected value.
     # @param [Object] value Value.
-    # @param [Class] expected Expected value.
+    # @param [Numeric] expected Expected value.
     def check_lt!(value, expected)
       return if value < expected
 
@@ -31,7 +31,7 @@ module Dopp
 
     # Check value using "<=" with expected value.
     # @param [Object] value Value.
-    # @param [Class] expected Expected value.
+    # @param [Numeric] expected Expected value.
     def check_lteq!(value, expected)
       return if value <= expected
 
@@ -42,7 +42,7 @@ module Dopp
 
     # Check value using ">" with expected value.
     # @param [Object] value Value.
-    # @param [Class] expected Expected value.
+    # @param [Numeric] expected Expected value.
     def check_gt!(value, expected)
       return if value > expected
 
@@ -52,7 +52,7 @@ module Dopp
 
     # Check value using ">=" with expected value.
     # @param [Object] value Value.
-    # @param [Class] expected Expected value.
+    # @param [Numeric] expected Expected value.
     def check_gteq!(value, expected)
       return if value >= expected
 
@@ -63,11 +63,21 @@ module Dopp
 
     # Check value using "include?" with expected value.
     # @param [Object] value Value.
-    # @param [Class] expected Expected value.
+    # @param [Enumerable] expected Expected value.
     def check_include!(value, expected)
       return if expected.include?(value)
 
       msg = "#{value} should be included in #{expected}."
+      raise ApplicationError, msg
+    end
+
+    # Check value using "include?" with expected value.
+    # @param [Object] value Value.
+    # @param [Regexp] expected Expected value.
+    def check_matches!(value, expected)
+      return if expected.match?(value)
+
+      msg = "#{value} should match #{expected}."
       raise ApplicationError, msg
     end
   end
