@@ -23,7 +23,13 @@ module Dopp
         super(@font.document)
         # Initialize attributes.
         attributes[:Type] = :FontDescriptor
-        attributes[:FontName] = kw(@font.fullname)
+      end
+
+      # Update "FontName".
+      # @param [String] value Base font name.
+      def fullname=(value)
+        check_is_a!(value, String)
+        attributes[:FontName] = kw(value)
       end
 
       # Update "Flags".

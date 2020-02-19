@@ -23,10 +23,38 @@ module Dopp
         # Initialize attributes.
         attributes[:Type] = :Font
         attributes[:Subtype] = :CIDFontType0
-        attributes[:BaseFont] = kw(font.fullname)
         attributes[:CIDSystemInfo] = dict({})
         # Initialize instance variables.
         @descriptor = nil
+      end
+
+      # Update "BaseFont".
+      # @param [String] value Base font name.
+      def fullname=(value)
+        check_is_a!(value, String)
+        attributes[:BaseFont] = kw(value)
+      end
+
+      # Update "DW".
+      # @param [Integer] value Default width.
+      def default_width=(value)
+        check_is_a!(value, Integer)
+        attributes[:DW] = value
+      end
+
+      # Update "DW2".
+      # @param [Array<Integer>] values
+      #   Default vertical widths.
+      def default_vertical_widths=(values)
+        check_is_a!(values, Array)
+        attributes[:DW2] = list(values)
+      end
+
+      # Update "MissingWidth".
+      # @param [Integer] value Width for undefined glyphs.
+      def missing_width=(value)
+        check_is_a!(value, Integer)
+        attributes[:MissingWidth] = value
       end
 
       # Update "Registry".
