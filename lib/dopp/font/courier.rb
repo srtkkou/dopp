@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'dopp/error'
 require 'dopp/util'
 require 'dopp/font'
 require 'dopp/document'
@@ -8,53 +9,61 @@ require 'dopp/section/type1_font'
 module Dopp
   module Font
     # Type1 font "Courier".
-    module Courier
+    class Courier
       # Font names.
       NAMES ||= ::Dopp::Util.deep_freeze(['Courier'])
 
-      # Update FONTS_CLASSES.
+      # Add self to font store.
       NAMES.each do |name|
-        STORE.add_font_module(name, self)
+        STORE.add_font_builder(name, self)
       end
 
-      module_function
+      class << self
 
-      # Build font section.
-      # @param [::Dopp::Document] doc PDF document.
-      # @return [::Dopp::Section::Type1Font] Font.
-      def build(doc, opts = {})
-        font = courier_normal(doc)
-        if opts[:bold] && opts[:italic]
-          courier_bold_italic(font)
-        elsif opts[:italic]
-          courier_italic(font)
-        elsif opts[:bold]
-          courier_bold(font)
+        # Build font section.
+        # @param [::Dopp::Document] doc PDF document.
+        # @return [::Dopp::Section::Type1Font] Font.
+        def build(doc, opts = {})
+          ::Dopp::Error.check_is_a!(doc, ::Dopp::Document)
+          return bold_italic(doc) if opts[:bold] && opts[:italic]
+          return italic(doc) if opts[:italic]
+          return bold(doc) if opts[:bold]
+
+          normal(doc)
         end
-        font
-      end
 
-      def courier_normal(doc)
-        font = ::Dopp::Section::Type1Font.new(doc)
-        font.fullname = 'Courier'
-        font.encoding = 'StandardEncoding'
-        font.names = NAMES
-        font
-      end
+        private
 
-      def courier_bold(font)
-        font.fullname = 'Courier-Bold'
-        font
-      end
+        def build_base(doc)
+          font = ::Dopp::Section::Type1Font.new(doc)
+          font.encoding = 'StandardEncoding'
+          font.names = NAMES
+          font
+        end
 
-      def courier_italic(font)
-        font.fullname = 'Courier-Oblique'
-        font
-      end
+        def normal(doc)
+          font = build_base(doc)
+          font.fullname = 'Courier'
+          font
+        end
 
-      def courier_bold_italic(font)
-        font.fullname = 'Courier-BoldOblique'
-        font
+        def bold(doc)
+          font = build_base(doc)
+          font.fullname = 'Courier-Bold'
+          font
+        end
+
+        def italic(font)
+          font = build_base(doc)
+          font.fullname = 'Courier-Oblique'
+          font
+        end
+
+        def bold_italic(font)
+          font = build_base(doc)
+          font.fullname = 'Courier-BoldOblique'
+          font
+        end
       end
     end
   end

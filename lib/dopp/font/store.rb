@@ -13,24 +13,25 @@ module Dopp
 
       # Initialize.
       def initialize
-        @modules = {}
+        @builders = {}
       end
 
-      # Get module to initialize font.
+      # Get class to build font.
       # @param [String] name Font name.
-      def font_module(name)
+      def font_builder(name)
         key = font_key(name)
-        mod = @modules[key]
-        check_is_a!(mod, Module)
-        mod
+        klass = @builders[key]
+        check_is_a!(klass, Class)
+        klass
       end
 
       # Add module to this font store.
       # @param [String] name Font name.
-      # @param [Module] mod Module to add.
-      def add_font_module(name, mod)
+      # @param [Class] klass Builder class to add.
+      def add_font_builder(name, klass)
+        check_is_a!(klass, Class)
         key = font_key(name)
-        @modules[key] = mod
+        @builders[key] = klass
       end
 
       # Generate font key.

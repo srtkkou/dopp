@@ -87,8 +87,8 @@ module Dopp
       return @fonts[font_key] if @fonts.key?(font_key)
 
       # Initialize font.
-      mod = ::Dopp::Font::STORE.font_module(name)
-      font = mod.build(self, opts)
+      builder = ::Dopp::Font::STORE.font_builder(name)
+      font = builder.build(self, opts)
       @sections += font.sections
       # Register font.
       @fonts[font_key] = font

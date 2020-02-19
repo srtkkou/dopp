@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'dopp/error'
 require 'dopp/util'
 require 'dopp/font'
 require 'dopp/document'
@@ -8,7 +9,7 @@ require 'dopp/section/cid_type0_font'
 module Dopp
   module Font
     # CID font "Kozuka Gothic Pr6N Medium".
-    module KozukaGothicPr6nM
+    class KozukaGothicPr6nM
       # Font names.
       NAMES ||= ::Dopp::Util.deep_freeze(
         [
@@ -17,37 +18,44 @@ module Dopp
         ]
       )
 
-      # Update FONT_CLASSES.
+      # Add self to font store.
       NAMES.each do |name|
-        STORE.add_font_module(name, self)
+        STORE.add_font_builder(name, self)
       end
 
-      module_function
+      class << self
+        # Build font section.
+        # @param [::Dopp::Document] doc PDF document.
+        # @return [::Dopp::Section::CidType0Font] Font.
+        def build(doc, opts = {})
+          ::Dopp::Error.check_is_a!(doc, ::Dopp::Document)
+          normal(doc)
+        end
 
-      # Build font section.
-      # @param [::Dopp::Document] doc PDF document.
-      # @return [::Dopp::Section::CidType0Font] Font.
-      def build(doc, opts = {})
-        # Initialize font.
-        font = ::Dopp::Section::CidType0Font.new(doc)
-        font.fullname = 'KozGoPr6N-Medium'
-        font.encoding = 'UniJIS-UCS2-H'
-        font.names = NAMES
-        # Initialize font dictionary.
-        dict = font.new_dictionary
-        dict.registry = 'Adobe'
-        dict.ordering = 'Japan1'
-        dict.supplement = 6
-        # Initialize font descriptor.
-        desc = dict.new_descriptor
-        desc.flags = 4
-        desc.b_box = [-538, -374, 1254, 1418]
-        desc.italic_angle = 0
-        desc.ascent = 1418
-        desc.descent = -374
-        desc.cap_height = 763
-        desc.stem_v = 116
-        font
+        private
+
+        def normal(doc)
+          # Initialize font.
+          font = ::Dopp::Section::CidType0Font.new(doc)
+          font.fullname = 'KozGoPr6N-Medium'
+          font.encoding = 'UniJIS-UCS2-H'
+          font.names = NAMES
+          # Initialize font dictionary.
+          dict = font.new_dictionary
+          dict.registry = 'Adobe'
+          dict.ordering = 'Japan1'
+          dict.supplement = 6
+          # Initialize font descriptor.
+          desc = dict.new_descriptor
+          desc.flags = 4
+          desc.b_box = [-538, -374, 1254, 1418]
+          desc.italic_angle = 0
+          desc.ascent = 1418
+          desc.descent = -374
+          desc.cap_height = 763
+          desc.stem_v = 116
+          font
+        end
       end
     end
   end
