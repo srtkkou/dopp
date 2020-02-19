@@ -33,6 +33,7 @@ module Dopp
       def fullname=(value)
         check_is_a!(value, String)
         attributes[:BaseFont] = kw(value)
+        @descriptor.fullname = value if @descriptor
       end
 
       # Update "DW".

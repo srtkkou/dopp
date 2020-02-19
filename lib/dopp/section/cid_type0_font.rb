@@ -34,6 +34,7 @@ module Dopp
         check_is_a!(value, String)
         @fullname = value
         attributes[:BaseFont] = kw(value)
+        @dictionary.fullname = value if @dictionary
       end
 
       # Update "Encoding".
