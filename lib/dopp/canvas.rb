@@ -3,6 +3,7 @@
 require 'dopp/error'
 require 'dopp/type'
 require 'dopp/util'
+require 'dopp/shape/color'
 
 module Dopp
   # Canvas of the page.
@@ -11,52 +12,66 @@ module Dopp
     include ::Dopp::Type
     include ::Dopp::Util
 
+    # Internal state of the canvas.
+    Memento ||= Struct.new(
+      :x, :y, :font_alias, :font_size,
+      :stroke_color, :fill_color,
+      keyword_init: true
+    )
+
+    attr_accessor :memento
+
     def initialize(content)
       check_is_a!(content, ::Dopp::Section::Content)
       @content = content
-
+      @commands = []
       @media_width = content.page.media_width
       @media_height = content.page.media_height
-
-      @pos_x = mm_to_pt(10)
-      @pos_y = @media_height - mm_to_pt(10)
-
-      @commands = []
-      @shape_queue = ['q']
-      @text_queue = ['BT']
-      @stroke_color = css_color_to_color('#000000')
-      @fill_color = css_color_to_color('#000000')
-      @font = nil
-      @font_size = 12
+      # Initialize memento.
+      @memento = Memento.new(
+        x: mm_to_pt(10),
+        y: @media_height - mm_to_pt(10),
+        font_alias: nil,
+        font_size: 12.0,
+        stroke_color: ::Dopp::Shape::Color.new('#000000'),
+        fill_color: ::Dopp::Shape::Color.new('#000000')
+      )
     end
 
     def move_to(x, y)
-      @pos_x = mm_to_pt(x)
-      @pos_y = @media_height - mm_to_pt(y)
+      @memento.x = mm_to_pt(x)
+      @memento.y = @media_height - mm_to_pt(y)
     end
 
     def stroke_color=(value)
-      @stroke_color = css_color_to_color(value)
+      @memento.stroke_color = ::Dopp::Shape::Color.new(value)
     end
 
     def fill_color=(value)
-      @fill_color = css_color_to_color(value)
+      @memento.fill_color = ::Dopp::Shape::Color.new(value)
     end
 
     def use_font(font_name, opts = {})
-      @font = @content.use_font(font_name, opts)
-      @font_size = opts[:size] if opts[:size]
+      font = @content.use_font(font_name, opts)
+      @memento.font_alias = kw(font.alias)
+      @memento.font_size = opts[:size] if opts[:size]
+    end
+
+    def grid(values, opts = {})
+    end
+
+    def text_box(value, opts = {})
     end
 
     def write(value)
-      check_is_a!(@font, ::Dopp::Section::Base)
+      check_is_a!(@memento.font_alias, ::Dopp::Type::KeyWord)
       @commands << 'q'
-      @commands << cmd_lrlg(@stroke_color)
-      @commands << cmd_rg(@fill_color)
+      @commands << cmd_lrlg(@memento.stroke_color)
+      @commands << cmd_rg(@memento.fill_color)
       @commands << 'BT'
-      @commands << "1 0 0 1 #{@pos_x} #{@pos_y} Tm"
-      @commands << "#{@font_size} TL"
-      @commands << cmd_ltf(@font, @font_size)
+      @commands << "1 0 0 1 #{@memento.x} #{@memento.y} Tm"
+      @commands << "#{@memento.font_size} TL"
+      @commands << cmd_ltf(@memento.font_alias, @memento.font_size)
       # Split lines.
       value.each_line do |line|
         @commands << cmd_ltj(line.chomp)
@@ -83,18 +98,20 @@ module Dopp
 
     # Command "rg". Set fill color.
     def cmd_rg(color)
-      String.new(color).concat(' rg')
+      check_is_a!(color, ::Dopp::Shape::Color)
+      color.render.concat(' rg')
     end
 
     # Command "RG". Set stroke color.
     def cmd_lrlg(color)
-      String.new(color).concat(' RG')
+      check_is_a!(color, ::Dopp::Shape::Color)
+      color.render.concat(' RG')
     end
 
     # Command "Tf". Change font.
-    def cmd_ltf(font, size)
-      kw(font.alias).render.concat(
-        ' ', size.to_s, ' Tf'
+    def cmd_ltf(font_alias, font_size)
+      font_alias.render.concat(
+        ' ', font_size.to_s, ' Tf'
       )
     end
 
