@@ -10,18 +10,12 @@ module Dopp
     # Freeze all the instances in the object.
     # @param [Object] arg Object.
     def deep_freeze(arg)
-      arg.freeze unless arg.frozen?
-      if arg.is_a?(Hash)
-        arg.each do |k, v|
-          deep_freeze(k)
-          deep_freeze(v)
-        end
-      elsif arg.is_a?(Enumerable)
+      if arg.is_a?(Enumerable)
         arg.each do |v|
           deep_freeze(v)
         end
       end
-      arg
+      arg.freeze
     end
 
     # Deep copy all values in object.
@@ -64,31 +58,6 @@ module Dopp
       ::Dopp::Error.check_is_a!(points, Numeric)
       millimeters = points * 25.4 / 72.0
       (millimeters * 100.0).round / 100.0
-    end
-
-    # Convert CSS color code to PDF color code.
-    # @param [String] code CSS color code. (Example: "#FF00FF").
-    # @return [String] PDF color code.
-    def css_color_to_color(code)
-      matched = /\A#?(\h{2})(\h{2})(\h{2})\z/.match(code)
-      ::Dopp::Error.check_is_a!(matched, MatchData)
-      values = matched.captures.map { |s| s.to_i(16) }
-      rgb_to_color(*values)
-    end
-
-    # Convert RGB color code to PDF color code.
-    # @param [Numeric] red Color code for R.
-    # @param [Numeric] green Color code for G.
-    # @param [Numeric] blue Color code for B.
-    # @return [String] PDF color code.
-    def rgb_to_color(red, green, blue)
-      [red, green, blue].map do |value|
-        ::Dopp::Error.check_is_a!(value, Numeric)
-        ::Dopp::Error.check_gteq!(value, 0.0)
-        ::Dopp::Error.check_lteq!(value, 255.0)
-        code = value / 255.0
-        format('%<code>.2f', code: code)
-      end.join(' ')
     end
   end
 end
