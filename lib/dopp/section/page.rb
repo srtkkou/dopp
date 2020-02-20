@@ -12,13 +12,13 @@ module Dopp
       include ::Dopp::Util
 
       # Document sizes (width * height in millimeters).
-      MEDIA_SIZES ||= ::Dopp::Util.deep_freeze(
+      MEDIA_SIZES ||= {
         A1: [594.0, 841.0], A2: [420.0, 584.0], A3: [297.0, 420.0],
         A4: [210.0, 297.0], A5: [148.0, 210.0], A6: [105.0, 148.0],
         B1: [728.0, 1030.0], B2: [515.0, 728.0], B3: [364.0, 515.0],
         B4: [257.0, 364.0], B5: [182.0, 257.0], B6: [128.0, 182.0],
         Letter: [215.9, 279.4]
-      )
+      }.tap { |v| ::Dopp::Util.deep_freeze(v) }
 
       attr_reader :media_width
       attr_reader :media_height
@@ -33,13 +33,10 @@ module Dopp
         # Initialize attributes.
         attributes[:Type] = :Page
         attributes[:Parent] = @parent.ref
-        doc_size = attrs[:size] || :A4
-        media_box = media_box_by_size(doc_size, attrs)
-        @media_width = media_box[2]
-        @media_height = media_box[3]
-        attributes[:MediaBox] = list(media_box)
         attributes[:Rotate] = 0
         attributes[:Resources] = dict({})
+        doc_size = attrs[:size] || :A4
+        media_box_by_size(doc_size, attrs[:landscape])
         # Initialize instance variables.
         @content = ::Dopp::Section::Content.new(self)
         attributes[kw(:Contents)] = list(
@@ -65,14 +62,16 @@ module Dopp
 
       # Calculate media box by document size.
       # @param [Symbol] name Document size name.
-      # @param [Hash] opts Document size options.
-      def media_box_by_size(name, opts = {})
+      # @param [Bool] landscape Landscape flag.
+      def media_box_by_size(name, landscape = false)
         check_include!(name, MEDIA_SIZES.keys)
-        width = mm_to_pt(MEDIA_SIZES[name][0])
-        height = mm_to_pt(MEDIA_SIZES[name][1])
-        return [0.0, 0.0, height, width] if opts[:landscape]
-
-        [0.0, 0.0, width, height]
+        mm_x, mm_y = MEDIA_SIZES[name]
+        # Swap x, y when landscape is true.
+        mm_x, mm_y = mm_y, mm_x if landscape
+        @media_width = mm_to_pt(mm_x)
+        @media_height = mm_to_pt(mm_y)
+        box = [0.0, 0.0, @media_width, @media_height]
+        attributes[:MediaBox] = list(box)
       end
     end
   end
