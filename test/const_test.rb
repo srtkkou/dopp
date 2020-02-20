@@ -2,10 +2,24 @@
 
 require 'test_helper'
 
-class ConstTest < Minitest::Test
-  def test_ok_constants
-    refute_nil(::Dopp::VERSION)
-    assert_equal('dopp', ::Dopp::APPLICATION)
-    assert_equal("\n", ::Dopp::LF)
+module Dopp
+  class ConstTest < Minitest::Test
+    def test_ok_version
+      refute_nil(VERSION)
+      assert_includes(::Dopp.constants, :VERSION)
+      assert_equal(true, VERSION.frozen?)
+    end
+
+    def test_ok_application
+      assert_equal('dopp', APPLICATION)
+      assert_includes(::Dopp.constants, :APPLICATION)
+      assert_equal(true, APPLICATION.frozen?)
+    end
+
+    def test_ok_lf
+      assert_equal("\n", LF)
+      assert_includes(::Dopp.constants, :LF)
+      assert_equal(true, LF.frozen?)
+    end
   end
 end
