@@ -15,14 +15,14 @@ module Dopp
       # Initialize color.
       def initialize(code)
         check_matches!(code, CODE_FORMAT)
-        @red, @green, @blue = CODE_FORMAT.match(code)
-          .to_a.values_at(1, 2, 3).map { |s| s.to_i(16) }
+        hex_digits = CODE_FORMAT.match(code).captures
+        @rgb = hex_digits.map { |s| s.to_i(16) }
       end
 
       # Convert to string.
       # @return [String] Content.
       def to_s
-        code = [@red, @green, @blue].map do |v|
+        code = @rgb.map do |v|
           format('%<value>02x', value: v)
         end.join
         String.new('PDF:#').concat(code)
@@ -31,7 +31,7 @@ module Dopp
       # Render to string.
       # @return [String] Content.
       def render
-        [@red, @green, @blue].map do |v|
+        @rgb.map do |v|
           format('%<value>.2f', value: v / 255.0)
         end.join(' ')
       end

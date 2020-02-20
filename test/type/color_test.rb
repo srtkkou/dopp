@@ -25,6 +25,6 @@ module Dopp
         assert_equal('0.40 0.40 0.40', Color.new('666666').render)
         assert_equal('1.00 1.00 1.00', Color.new('FFFFFF').render)
       end
-     end
+    end
   end
 end
