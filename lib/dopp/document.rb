@@ -88,7 +88,7 @@ module Dopp
 
       # Initialize font.
       builder = ::Dopp::Font::STORE.font_builder(name)
-      font = builder.build(self, opts)
+      font = builder.new(self, opts).build
       @sections += font.sections
       # Register font.
       @fonts[font_key] = font

@@ -11,59 +11,69 @@ module Dopp
     # Type1 font "Courier".
     class Courier
       # Font names.
-      NAMES ||= ::Dopp::Util.deep_freeze(['Courier'])
+      NAMES ||= %w[
+        Courier
+      ].tap { |v| ::Dopp::Util.deep_freeze(v) }
 
       # Add self to font store.
       NAMES.each do |name|
         STORE.add_font_builder(name, self)
       end
 
-      class << self
+      # Initialize.
+      # @param [::Dopp::Document] doc PDF document.
+      def initialize(doc, opts = {})
+        ::Dopp::Error.check_is_a!(doc, ::Dopp::Document)
+        @document = doc
+        @opts = opts
+        @font = ::Dopp::Section::Type1Font.new(doc)
+      end
 
-        # Build font section.
-        # @param [::Dopp::Document] doc PDF document.
-        # @return [::Dopp::Section::Type1Font] Font.
-        def build(doc, opts = {})
-          ::Dopp::Error.check_is_a!(doc, ::Dopp::Document)
-          return bold_italic(doc) if opts[:bold] && opts[:italic]
-          return italic(doc) if opts[:italic]
-          return bold(doc) if opts[:bold]
+      # Build font section.
+      # @return [::Dopp::Section::Type1Font] Font section.
+      def build
+        build_common
+        return bold_italic if @opts[:bold] && @opts[:italic]
+        return italic if @opts[:italic]
+        return bold if @opts[:bold]
 
-          normal(doc)
-        end
+        normal
+      end
 
-        private
+      private
 
-        def build_base(doc)
-          font = ::Dopp::Section::Type1Font.new(doc)
-          font.encoding = 'StandardEncoding'
-          font.names = NAMES
-          font
-        end
+      # Build common part of this font.
+      def build_common
+        @font.encoding = 'StandardEncoding'
+        @font.names = NAMES
+      end
 
-        def normal(doc)
-          font = build_base(doc)
-          font.fullname = 'Courier'
-          font
-        end
+      # Build normal font.
+      # @return [::Dopp::Section::Type1Font] Font section.
+      def normal
+        @font.fullname = 'Courier'
+        @font
+      end
 
-        def bold(doc)
-          font = build_base(doc)
-          font.fullname = 'Courier-Bold'
-          font
-        end
+      # Build bold font.
+      # @return [::Dopp::Section::Type1Font] Font section.
+      def bold
+        @font.fullname = 'Courier-Bold'
+        @font
+      end
 
-        def italic(font)
-          font = build_base(doc)
-          font.fullname = 'Courier-Oblique'
-          font
-        end
+      # Build italic font.
+      # @return [::Dopp::Section::Type1Font] Font section.
+      def italic
+        @font.fullname = 'Courier-Oblique'
+        @font
+      end
 
-        def bold_italic(font)
-          font = build_base(doc)
-          font.fullname = 'Courier-BoldOblique'
-          font
-        end
+      # Build bold italic font.
+      # @return [::Dopp::Section::Type1Font] Font section.
+      def bold_italic
+        @font.fullname = 'Courier-BoldOblique'
+        @font
       end
     end
   end
