@@ -8,14 +8,14 @@ module Dopp
     module_function
 
     # Freeze all the instances in the object.
-    # @param [Object] arg Object.
-    def deep_freeze(arg)
-      if arg.is_a?(Enumerable)
-        arg.each do |v|
+    # @param [Object] obj Object.
+    def deep_freeze(obj)
+      if obj.is_a?(Enumerable)
+        obj.each do |v|
           deep_freeze(v)
         end
       end
-      arg.freeze
+      obj.freeze
     end
 
     # Deep copy all values in object.
