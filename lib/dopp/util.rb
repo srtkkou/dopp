@@ -48,7 +48,7 @@ module Dopp
     def mm_to_pt(millimeters)
       ::Dopp::Error.check_is_a!(millimeters, Numeric)
       points = millimeters * 72.0 / 25.4
-      (points * 100.0).round / 100.0
+      (points * 100.0).floor / 100.0
     end
 
     # Convert points to millimeters.
@@ -57,7 +57,7 @@ module Dopp
     def pt_to_mm(points)
       ::Dopp::Error.check_is_a!(points, Numeric)
       millimeters = points * 25.4 / 72.0
-      (millimeters * 100.0).round / 100.0
+      (millimeters * 100.0).floor / 100.0
     end
   end
 end
