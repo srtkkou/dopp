@@ -17,3 +17,12 @@ AllCops:
 Style/AsciiComments:
   Enabled: false
 
+Metrics/MethodLength:
+  # Exclude tests from method length check.
+  Exclude:
+    - 'test/**/*'
+
+Metrics/AbcSize:
+  # Exclude tests from abc size check.
+  Exclude:
+    - 'test/**/*'
