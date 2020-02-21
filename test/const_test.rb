@@ -20,7 +20,7 @@ module Dopp
     end
 
     def test_ok_default_pdf_version
-      assert_equal("1.4", ::Dopp::DEFAULT_PDF_VERSION)
+      assert_equal('1.4', ::Dopp::DEFAULT_PDF_VERSION)
       assert_equal(true, DEFAULT_PDF_VERSION.frozen?)
     end
 

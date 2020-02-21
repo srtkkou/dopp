@@ -39,4 +39,3 @@ module Dopp
     end
   end
 end
-

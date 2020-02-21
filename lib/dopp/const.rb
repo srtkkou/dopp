@@ -24,5 +24,5 @@ module Dopp
     B3: [364.0, 515.0], B4: [257.0, 364.0],
     B5: [182.0, 257.0], B6: [128.0, 182.0],
     Letter: [215.9, 279.4]
-  }.freeze.each_value { |v| v.freeze }
+  }.freeze.each_value(&:freeze)
 end
