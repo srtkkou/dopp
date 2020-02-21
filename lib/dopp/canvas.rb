@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'forwardable'
 require 'dopp/error'
 require 'dopp/type'
 require 'dopp/util'
@@ -7,8 +8,15 @@ require 'dopp/util'
 module Dopp
   # Canvas of the page.
   class Canvas
+    extend Forwardable
     include ::Dopp::Error
     include ::Dopp::Type
+
+    # Delegate methods of State.
+    def_delegators(
+      :@state,
+      :fill_color=, :stroke_color=
+    )
 
     attr_reader :media_width
     attr_reader :media_height
@@ -30,14 +38,6 @@ module Dopp
     def move_to(mm_x, mm_y)
       @state.cursor_x = mm_x
       @state.cursor_y = mm_y
-    end
-
-    def stroke_color=(value)
-      @state.stroke_color = value
-    end
-
-    def fill_color=(value)
-      @state.fill_color = value
     end
 
     def use_font(font_name, opts = {})
@@ -70,9 +70,30 @@ module Dopp
       @commands << 'Q'
     end
 
+    def col(value)
+      @commands << 'q'
+      @commands << cmd_lrlg(@state.stroke_color)
+      @commands << cmd_rg(@state.fill_color)
+      @commands << "#{@state.x} #{@state.y} 100 200 re"
+      @commands << 's'
+      @commands << "#{@state.x} #{@state.y} m"
+      @commands << 'BT'
+      @commands << "1 0 0 1 #{@state.x} #{@state.y} Tm"
+      @commands << "#{@state.font_size} TL"
+      @commands << cmd_ltf(@state.font_alias, @state.font_size)
+      # Split lines.
+      value.each_line do |line|
+        @commands << cmd_ltj(line.chomp)
+        @commands << 'T*'
+      end
+      @commands << 'ET'
+      @commands << 'Q'
+    end
+
     # Render to stream.
     def render
       stream = @commands.join(LF).concat(LF)
+puts stream
       stream
     end
 
