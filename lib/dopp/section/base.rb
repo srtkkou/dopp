@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 require 'zlib'
-require 'dopp/error'
+require 'dopp'
 require 'dopp/type'
-require 'dopp/document'
 
 module Dopp
   module Section
@@ -12,18 +11,19 @@ module Dopp
       include ::Dopp::Error
       include ::Dopp::Type
 
-      attr_reader :document
+      attr_reader :structure
       attr_reader :id
       attr_reader :revision
       attr_reader :attributes
       attr_reader :stream
 
       # Initialize.
-      # @param [::Dopp::Document] doc PDF document.
-      def initialize(doc)
-        check_is_a!(doc, ::Dopp::Document)
-        @document = doc
-        @id = doc.unique_section_id
+      # @param [::Dopp::Document::Structure]
+      #   structure PDF document structure.
+      def initialize(structure)
+        check_is_a!(structure, ::Dopp::Document::Structure)
+        @structure = structure
+        @id = @structure.unique_section_id
         @revision = 0
         @attributes = dict({})
         @stream = String.new

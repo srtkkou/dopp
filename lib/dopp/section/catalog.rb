@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'dopp/error'
-require 'dopp/util'
 require 'dopp/section/base'
 
 module Dopp
@@ -22,9 +20,10 @@ module Dopp
       ].tap { |v| ::Dopp::Util.deep_freeze(v) }
 
       # Initialize.
-      # @param [::Dopp::Document] doc PDF document.
-      def initialize(doc, attrs = {})
-        super(doc)
+      # @param [::Dopp::Document]
+      #   structure PDF document structure.
+      def initialize(structure, attrs = {})
+        super(structure)
         # Initialize attributes.
         attributes[:Type] = :Catalog
         self.page_layout = attrs[:page_layout] || :SinglePage

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-require 'dopp/error'
-require 'dopp/util'
+require 'dopp'
 
 module Dopp
   module Section
@@ -22,10 +21,11 @@ module Dopp
       Entry = Struct.new(:offset, :generation, :flag)
 
       # Initialize.
-      # @param [::Dopp::Document] doc PDF document.
-      def initialize(doc)
-        check_is_a!(doc, ::Dopp::Document)
-        @document = doc
+      # @param [::Dopp::Document::Structure]
+      #   structure PDF document structure.
+      def initialize(structure)
+        check_is_a!(structure, ::Dopp::Document::Structure)
+        @structure = structure
         # Initialize table.
         clear
       end

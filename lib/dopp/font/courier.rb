@@ -1,15 +1,14 @@
 # frozen_string_literal: true
 
-require 'dopp/error'
-require 'dopp/util'
-require 'dopp/font'
-require 'dopp/document'
+require 'dopp'
 require 'dopp/section/type1_font'
 
 module Dopp
   module Font
     # Type1 font "Courier".
     class Courier
+      include ::Dopp::Error
+
       # Font names.
       NAMES ||= %w[
         Courier
@@ -21,12 +20,12 @@ module Dopp
       end
 
       # Initialize.
-      # @param [::Dopp::Document] doc PDF document.
-      def initialize(doc, opts = {})
-        ::Dopp::Error.check_is_a!(doc, ::Dopp::Document)
-        @document = doc
+      # @param [::Dopp::Document::Structure]
+      #   structure PDF document structure.
+      def initialize(structure, opts = {})
+        check_is_a!(structure, ::Dopp::Document::Structure)
         @opts = opts
-        @font = ::Dopp::Section::Type1Font.new(doc)
+        @font = ::Dopp::Section::Type1Font.new(structure)
       end
 
       # Build font section.

@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'dopp/error'
 require 'dopp/section/base'
 require 'dopp/section/cid_type0_font'
 require 'dopp/section/cid_type0_font_descriptor'
@@ -10,7 +9,6 @@ module Dopp
     # PDF document section "CID type0 font dictionary".
     class CidType0FontDictionary < Base
       attr_reader :font
-      attr_reader :document
       attr_reader :descriptor
 
       # Initialize.
@@ -19,7 +17,7 @@ module Dopp
       def initialize(font)
         check_is_a!(font, ::Dopp::Section::CidType0Font)
         @font = font
-        super(font.document)
+        super(font.structure)
         # Initialize attributes.
         attributes[:Type] = :Font
         attributes[:Subtype] = :CIDFontType0

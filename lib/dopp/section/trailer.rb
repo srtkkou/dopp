@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 require 'securerandom'
-require 'dopp/error'
-require 'dopp/type'
 require 'dopp/section/catalog'
 require 'dopp/section/info'
 
@@ -13,12 +11,15 @@ module Dopp
       include ::Dopp::Error
       include ::Dopp::Type
 
+      attr_reader :structure
+
       # Initialize.
-      # @param [::Dopp::Document] doc PDF document.
-      def initialize(doc)
-        check_is_a!(doc, ::Dopp::Document)
+      # @param [::Dopp::Document::Structure]
+      #   structure PDF document structure.
+      def initialize(structure)
+        check_is_a!(structure, ::Dopp::Document::Structure)
         # Set instance variables.
-        @document = doc
+        @structure = structure
         @xref_offset = 0
         @root = nil
         @info = nil

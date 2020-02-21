@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'dopp/util'
 require 'dopp/section/base'
 
 module Dopp
@@ -8,17 +7,16 @@ module Dopp
     # PDF document section "information dictionary".
     class Info < Base
       # Application name.
-      APPLICATION_NAME ||= ::Dopp::Util.deep_freeze(
-        ::Dopp::APPLICATION.dup.concat('-', ::Dopp::VERSION)
-      )
+      CREATOR ||= [APP_NAME, VERSION].join('-').freeze
 
       # Initialize.
-      # @param [::Dopp::Document] doc PDF document.
-      def initialize(doc, attrs = {})
-        super(doc)
+      # @param [::Dopp::Document::Structure]
+      #   structure PDF document structure.
+      def initialize(structure, attrs = {})
+        super(structure)
         # Initialize attributes.
-        attributes[:Creator] = text(APPLICATION_NAME)
-        attributes[:Producer] = text(APPLICATION_NAME)
+        attributes[:Creator] = text(CREATOR)
+        attributes[:Producer] = text(CREATOR)
         attributes[:CreationDate] = time(Time.now)
         self.title = attrs[:title] if attrs[:title]
       end

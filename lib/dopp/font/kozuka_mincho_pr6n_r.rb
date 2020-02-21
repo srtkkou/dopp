@@ -1,15 +1,13 @@
 # frozen_string_literal: true
 
-require 'dopp/error'
-require 'dopp/util'
-require 'dopp/font'
-require 'dopp/document'
+require 'dopp'
 require 'dopp/section/cid_type0_font'
 
 module Dopp
   module Font
     # CID font "Kozuka Mincho Pr6N Regular".
     class KozukaMinchoPr6nR
+      include ::Dopp::Error
       include ::Dopp::Font
 
       # Font names.
@@ -24,12 +22,12 @@ module Dopp
       end
 
       # Initialize.
-      # @param [::Dopp::Document] doc PDF document.
-      def initialize(doc, opts = {})
-        ::Dopp::Error.check_is_a!(doc, ::Dopp::Document)
-        @document = doc
+      # @param [::Dopp::Document::Structure]
+      #   structure PDF document structure.
+      def initialize(structure, opts = {})
+        check_is_a!(structure, ::Dopp::Document::Structure)
         @opts = opts
-        @font = ::Dopp::Section::CidType0Font.new(doc)
+        @font = ::Dopp::Section::CidType0Font.new(structure)
         @dict = @font.new_dictionary
         @desc = @dict.new_descriptor
         @desc_flags = { serif: true, symbolic: true }

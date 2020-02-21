@@ -1,21 +1,18 @@
 # frozen_string_literal: true
 
-require 'dopp/error'
-require 'dopp/util'
-require 'dopp/font'
-require 'dopp/document'
+require 'dopp'
 require 'dopp/section/type1_font'
 
 module Dopp
   module Font
     # Type1 font "Times-Roman".
     class TimesRoman
-      extend ::Dopp::Util
+      include ::Dopp::Error
 
       # Font names.
       NAMES ||= %w[
         Times-Roman
-      ].tap { |v| deep_freeze(v) }
+      ].tap { |v| ::Dopp::Util.deep_freeze(v) }
 
       # Update FONTS_CLASSES.
       NAMES.each do |name|
@@ -50,15 +47,15 @@ module Dopp
         667,  444, 444,  444, 444, 444, 278,  278, 278, 278,
         500,  500, 500,  500, 500, 500, 500,  564, 500, 500,
         500,  500, 500,  500, 500, 500
-      ].tap { |v| deep_freeze(v) }
+      ].tap { |v| ::Dopp::Util.deep_freeze(v) }
 
       # Initialize.
-      # @param [::Dopp::Document] doc PDF document.
-      def initialize(doc, opts = {})
-        ::Dopp::Error.check_is_a!(doc, ::Dopp::Document)
-        @document = doc
+      # @param [::Dopp::Document::Structure]
+      #   structure PDF document structure.
+      def initialize(structure, opts = {})
+        check_is_a!(structure, ::Dopp::Document::Structure)
         @opts = opts
-        @font = ::Dopp::Section::Type1Font.new(doc)
+        @font = ::Dopp::Section::Type1Font.new(structure)
       end
 
       # Build font section.

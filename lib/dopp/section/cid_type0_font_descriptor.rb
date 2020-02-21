@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'dopp/error'
 require 'dopp/section/base'
 require 'dopp/section/cid_type0_font'
 require 'dopp/section/cid_type0_font_dictionary'
@@ -11,7 +10,6 @@ module Dopp
     class CidType0FontDescriptor < Base
       attr_reader :font_dictionary
       attr_reader :font
-      attr_reader :document
 
       # Initialize.
       # @param [::Dopp::Section::CIDType0FontDictionary]
@@ -20,7 +18,7 @@ module Dopp
         check_is_a!(dict, ::Dopp::Section::CidType0FontDictionary)
         @font_dictionary = dict
         @font = @font_dictionary.font
-        super(@font.document)
+        super(@font.structure)
         # Initialize attributes.
         attributes[:Type] = :FontDescriptor
       end

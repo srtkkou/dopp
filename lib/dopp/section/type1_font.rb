@@ -12,10 +12,11 @@ module Dopp
       attr_reader :sections
 
       # Initialize.
-      # @param [::Dopp::Document] doc PDF document.
-      def initialize(doc)
-        super(doc)
-        @alias = doc.unique_font_alias
+      # @param [::Dopp::Document::Structure]
+      #   structure PDF document structure.
+      def initialize(structure)
+        super(structure)
+        @alias = structure.unique_font_alias
         # Initialize attributes.
         attributes[:Type] = :Font
         attributes[:Subtype] = :Type1

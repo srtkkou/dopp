@@ -11,10 +11,10 @@ module Dopp
       attr_reader :canvas
 
       # Initialize.
-      # @param [::Dopp::Document] doc PDF document.
+      # @param [::Dopp::Section::Page] page PDF page.
       def initialize(page)
         @page = page
-        super(@page.document)
+        super(@page.structure)
         # Initialize instance variables.
         @canvas = ::Dopp::Canvas.new(self)
         @font = nil
@@ -24,7 +24,7 @@ module Dopp
       # @param [String] name Font name.
       # @param [Hash] opts Font options.
       def use_font(name, opts = {})
-        @font = @document.find_or_initialize_font(name, opts)
+        @font = @structure.find_or_initialize_font(name, opts)
         @page.add_font(@font)
         @font
       end
