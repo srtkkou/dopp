@@ -21,7 +21,7 @@ module Dopp
         @section_id = 0
         @fonts = {}
         # Initialize top sections.
-        @header = ::Dopp::Section::Header.new(self)
+        @header = ::Dopp::Section::Header.new
         @info = ::Dopp::Section::Info.new(self)
         @catalog = ::Dopp::Section::Catalog.new(self)
         @root = ::Dopp::Section::Pages.new(self)

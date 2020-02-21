@@ -13,17 +13,12 @@ module Dopp
         [0xE2, 0xE3, 0xCF, 0xD3].pack('c*')
       )
 
-      attr_reader :structure
       attr_reader :version
 
       # Initialize.
-      # @param [::Dopp::Document::Structure]
-      #   structure PDF document structure.
       # @param [String] version PDF version.
-      def initialize(structure, version = ::Dopp::DEFAULT_PDF_VERSION)
-        check_is_a!(structure, ::Dopp::Document::Structure)
+      def initialize(version = DEFAULT_PDF_VERSION)
         check_matches!(version, /\A1\.\d+\z/)
-        @structure = structure
         @version = version
       end
 
