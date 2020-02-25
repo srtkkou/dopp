@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'zlib'
 require 'dopp'
 require 'dopp/type'
+require 'dopp/section/stream'
 
 module Dopp
   module Section
@@ -26,8 +26,8 @@ module Dopp
         @id = @structure.unique_section_id
         @revision = 0
         @attributes = dict({})
-        @stream = String.new
-        @zlib_deflate = true
+        @stream = ::Dopp::Section::Stream.new
+        @stream.flate_decode = true
       end
 
       # Get reference to this object.
@@ -71,13 +71,11 @@ module Dopp
         check_gt!(@id, 0)
         check_is_a!(@revision, Integer)
         check_gteq!(@revision, 0)
-        # Apply filters.
-        apply_zlib_deflate
-        # Update attributes.
-        unless @stream.empty?
-          # Calculate length. (stream bytes + (LF * 2))
-          length = @stream.size + 2
-          @attributes[:Length] = length
+        # Render stream.
+        stream_bytes = @stream.render
+        unless stream_bytes.empty?
+          @attributes[:Length] = stream_bytes.size
+          add_filter(:FlateDecode) if stream.flate_decode
         end
         # Render to buffer.
         buffer = @id.to_s.concat(
@@ -85,26 +83,21 @@ module Dopp
           @attributes.render, LF
         )
         # Add stream if data exists.
-        unless @stream.empty?
-          buffer.concat(
-            'stream', LF, @stream, LF, 'endstream', LF
-          )
+        unless stream_bytes.empty?
+          buffer.concat('stream', stream_bytes, 'endstream', LF)
         end
         buffer.concat('endobj', LF)
       end
 
-      # Deflate stream using zlib.
-      def apply_zlib_deflate
-        return unless @zlib_deflate
-        return if @stream.empty?
-        return if
-          @attributes[:Filter]&.include?(kw(:FlateDecode))
+      private
 
+      # Add filter attribute.
+      def add_filter(filter)
+        filter = kw(filter) if filter.is_a?(Symbol)
         @attributes[:Filter] ||= list([])
-        @attributes[:Filter] << kw(:FlateDecode)
-        @stream = Zlib::Deflate.deflate(
-          @stream, Zlib::BEST_COMPRESSION
-        )
+        return if @attributes[:Filter].include?(filter)
+
+        @attributes[:Filter] << filter
       end
     end
   end
