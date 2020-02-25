@@ -25,6 +25,11 @@ module Dopp
         # <<
         list << 5
         assert_equal(5, list[-1])
+        # include?
+        assert_equal(true, list.include?(1))
+        assert_equal(true, list.include?('NEW2'))
+        assert_equal(true, list.include?(5))
+        assert_equal(false, list.include?(6))
       end
 
       def test_ok_to_s

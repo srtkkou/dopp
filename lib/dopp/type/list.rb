@@ -14,7 +14,7 @@ module Dopp
       # Delegate methods of Array.
       def_delegators(
         :@array,
-        :<<, :[], :at, :[]=,
+        :<<, :[], :at, :[]=, :include?,
         :empty?, :length, :size
       )
 
