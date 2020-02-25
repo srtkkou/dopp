@@ -11,23 +11,11 @@ module Dopp
       include ::Dopp::Error
       include ::Dopp::Type
 
-      attr_reader :structure
-
       # Initialize.
-      # @param [::Dopp::Document::Structure]
-      #   structure PDF document structure.
-      def initialize(structure)
-        check_is_a!(structure, ::Dopp::Document::Structure)
-        # Set instance variables.
-        @structure = structure
+      def initialize
         @xref_offset = 0
-        @root = nil
-        @info = nil
-        # Initialize attributes.
-        @doc_id, @rev_id = generate_ids
-        @attributes = dict({})
-        @attributes[:Size] = 0
-        @attributes[:ID] = list([@doc_id, @rev_id])
+        @attributes = dict(Size: 0)
+        generate_ids
       end
 
       # Set offset to cross reference table.
@@ -38,7 +26,6 @@ module Dopp
         @xref_offset = offset
       end
 
-      # Set reference to the document catalogue.
       # Set size of entries in cross reference table.
       # @param [Integer] size Size of entries.
       def size=(size)
@@ -49,18 +36,16 @@ module Dopp
 
       # Set document catalogue.
       # @param [::Dopp::Section::Catalog] catalog Document catalog.
-      def root=(catalog)
+      def catalog=(catalog)
         check_is_a!(catalog, ::Dopp::Section::Catalog)
-        @root = catalog
-        @attributes[:Root] = @root.ref
+        @attributes[:Root] = catalog.ref
       end
 
       # Set document information dictionary.
       # @param [::Dopp::Section::Info] info Information dictionary.
       def info=(info)
         check_is_a!(info, ::Dopp::Section::Info)
-        @info = info
-        @attributes[:Info] = @info.ref
+        @attributes[:Info] = info.ref
       end
 
       # Render to string.
@@ -88,9 +73,9 @@ module Dopp
         bytes = hex_str.scan(/.{1,2}/).map do |h|
           Integer(h, 16)
         end
-        doc_id = xtext(bytes[0, 16])
-        rev_id = xtext(bytes[16, 16])
-        [doc_id, rev_id]
+        @doc_id = xtext(bytes[0, 16])
+        @rev_id = xtext(bytes[16, 16])
+        @attributes[:ID] = list([@doc_id, @rev_id])
       end
     end
   end

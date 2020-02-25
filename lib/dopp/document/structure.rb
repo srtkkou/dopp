@@ -27,11 +27,6 @@ module Dopp
         @root = ::Dopp::Section::Pages.new(self)
         @catalog.pages = @root
         @sections = [@info, @catalog, @root]
-        # Initialize bottom sections.
-        @xref_table = ::Dopp::Section::XrefTable.new(self)
-        @trailer = ::Dopp::Section::Trailer.new(self)
-        @trailer.info = @info
-        @trailer.root = @catalog
       end
 
       # Get unique section ID.
@@ -58,19 +53,23 @@ module Dopp
       # Render to string.
       # @return [String] Content.
       def render
-        @xref_table.clear
-        buffer = @header.render
+        # Initialize bottom sections.
+        xref_table = ::Dopp::Section::XrefTable.new
+        trailer = ::Dopp::Section::Trailer.new
+        trailer.info = @info
+        trailer.catalog = @catalog
         # Render sections.
+        buffer = @header.render
         @sections.each do |section|
-          @xref_table.append(buffer.size)
+          xref_table.append(buffer.size)
           buffer << section.render
         end
-        # Write cross reference table.
-        @trailer.xref_offset = buffer.size
-        buffer << @xref_table.render
-        # Write trailer.
-        @trailer.size = @xref_table.entry_size
-        buffer += @trailer.render
+        # Render cross reference table.
+        trailer.xref_offset = buffer.size
+        buffer << xref_table.render
+        # Render trailer.
+        trailer.size = xref_table.entry_size
+        buffer += trailer.render
         buffer
       end
 
