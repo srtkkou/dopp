@@ -36,5 +36,13 @@ module Dopp
       end
       assert_equal(true, PAGE_SIZES.frozen?)
     end
+
+    def test_ok_colors
+      COLORS.each do |name, value|
+        assert_match(/\A\h{6}\z/, value)
+        assert_equal(true, value.frozen?)
+      end
+      assert_equal(true, COLORS.frozen?)
+    end
   end
 end
