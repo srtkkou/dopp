@@ -32,6 +32,19 @@ module Dopp
     Letter: [215.9, 279.4]
   }.freeze.each_value(&:freeze)
 
+  # Page Layouts.
+  PAGE_LAYOUTS ||= %i[
+    SinglePage OneColumn
+    TwoColumnLeft TwoColumnRight
+    TwoPageLeft TwoPageRight
+  ].freeze
+
+  # Page modes.
+  PAGE_MODES ||= %i[
+    UseNone UseOutlines UseThumbs
+    FullScreen UseOC UseAttachments
+  ].freeze
+
   # Available colors.
   COLORS ||= {
     AliceBlue: 'f0f8ff',
