@@ -18,10 +18,10 @@ module Dopp
         @pages = []
       end
 
-      # Append  page.
+      # Add new page.
       # @return [::Dopp::Section::Page] page Page object.
-      def append_page
-        page = Page.new(self)
+      def add_page(opts = {})
+        page = Page.new(self, opts)
         @pages << page
         page
       end

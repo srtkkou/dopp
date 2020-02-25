@@ -14,7 +14,7 @@ module Dopp
 
       # Initialize.
       # @param [::Dopp::Section::Pages] pages PDF pages.
-      def initialize(pages, attrs = {})
+      def initialize(pages, opts = {})
         check_is_a!(pages, ::Dopp::Section::Pages)
         @parent = pages
         super(pages.structure)
@@ -23,8 +23,8 @@ module Dopp
         attributes[:Parent] = @parent.ref
         attributes[:Rotate] = 0
         attributes[:Resources] = dict({})
-        doc_size = attrs[:size] || :A4
-        media_box_by_size(doc_size, attrs[:landscape])
+        doc_size = opts[:page_size] || :A4
+        media_box_by_size(doc_size, opts[:landscape])
         # Initialize instance variables.
         @content = ::Dopp::Section::Content.new(self)
         attributes[kw(:Contents)] = list(

@@ -11,9 +11,9 @@ module Dopp
       @structure = Structure.new(self, opts)
     end
 
-    # Append page and content.
-    def append_page
-      @structure.append_page
+    # Add new page.
+    def add_page(opts = {})
+      @structure.add_page(opts)
     end
 
     # Render to string.

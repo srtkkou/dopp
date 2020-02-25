@@ -42,9 +42,9 @@ module Dopp
         "F#{@fonts.values.uniq.size}"
       end
 
-      # Append page and content.
-      def append_page
-        page = @root.append_page
+      # Add new page.
+      def add_page(opts = {})
+        page = @root.add_page(opts)
         @sections << page
         @sections << page.content
         page.content.canvas
