@@ -38,7 +38,7 @@ module Dopp
     end
 
     def test_ok_colors
-      COLORS.each do |name, value|
+      COLORS.each_value do |value|
         assert_match(/\A\h{6}\z/, value)
         assert_equal(true, value.frozen?)
       end

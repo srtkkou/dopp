@@ -15,8 +15,9 @@ module Dopp
       end
 
       def test_ok_render
-        ex = "%PDF-1.7\n%" +
-          [0xE2, 0xE3, 0xCF, 0xD3].pack('C*') + "\n"
+        ex = String.new("%PDF-1.7\n%")
+        ex << [0xE2, 0xE3, 0xCF, 0xD3].pack('C*')
+        ex << "\n"
         assert_equal(ex, Header.new('1.7').render)
       end
     end
