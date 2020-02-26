@@ -67,8 +67,6 @@ module Dopp
       # Render to string.
       # @return [String] Content.
       def render
-        check_is_a!(@id, Integer)
-        check_gt!(@id, 0)
         check_is_a!(@revision, Integer)
         check_gteq!(@revision, 0)
         # Render stream.
@@ -98,6 +96,17 @@ module Dopp
         return if @attributes[:Filter].include?(filter)
 
         @attributes[:Filter] << filter
+      end
+
+      # Set attributes from options.
+      def options_to_attributes(opts)
+        opts.each do |key, value|
+          setter = key.to_s.concat('=')
+          next if value.nil?
+          next unless self.class.public_method_defined?(setter)
+
+          self.__send__(setter, value)
+        end
       end
     end
   end

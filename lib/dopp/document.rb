@@ -1,11 +1,20 @@
 # frozen_string_literal: true
 
+require 'forwardable'
 require 'dopp/document/structure'
 require 'dopp/util'
 
 module Dopp
   # PDF document.
   class Document
+    extend Forwardable
+
+    def_delegators(
+      :@structure,
+      :title=, :mod_date=,
+      :page_layout=, :page_mode=
+    )
+
     # Initialize.
     def initialize(opts = {})
       @structure = Structure.new(self, opts)
@@ -27,8 +36,7 @@ module Dopp
     def inspect
       String.new('#<').concat(
         self.class.name, ':',
-        object_id.to_s, ' PDF-',
-        @structure.header.version, '>'
+        object_id.to_s, ' ', @structure.to_s, '>'
       )
     end
   end

@@ -8,10 +8,10 @@ module Dopp
     # PDF document section "pages".
     class Pages < Base
       # Initialize.
-      # @param [::Dopp::Document::Structure]
-      #   structure PDF document structure.
-      def initialize(structure)
-        super(structure)
+      # @param [::Dopp::Section::Catalog]
+      #   catalog PDF document catalog.
+      def initialize(catalog)
+        super(catalog.structure)
         # Initialize attributes.
         attributes[:Type] = :Pages
         # Initialize instance variables.

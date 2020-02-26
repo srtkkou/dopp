@@ -12,13 +12,13 @@ module Dopp
       # Initialize.
       # @param [::Dopp::Document::Structure]
       #   structure PDF document structure.
-      def initialize(structure, attrs = {})
+      def initialize(structure, opts = {})
         super(structure)
         # Initialize attributes.
+        options_to_attributes(opts)
         attributes[:Creator] = text(CREATOR)
         attributes[:Producer] = text(CREATOR)
         attributes[:CreationDate] = time(Time.now)
-        self.title = attrs[:title] if attrs[:title]
       end
 
       # Set title.

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'forwardable'
 require 'dopp/error'
 require 'dopp/font'
 require 'dopp/section'
@@ -8,10 +9,19 @@ module Dopp
   class Document
     # PDF document structure.
     class Structure
+      extend Forwardable
       include ::Dopp::Error
 
+      def_delegators(
+        :@info,
+        :title=, :mod_date=
+      )
+      def_delegators(
+        :@catalog,
+        :page_layout=, :page_mode=
+      )
+
       attr_reader :document
-      attr_reader :header
 
       # Initialize.
       def initialize(doc, opts = {})
@@ -22,11 +32,10 @@ module Dopp
         @fonts = {}
         # Initialize top sections.
         @header = ::Dopp::Section::Header.new
-        @info = ::Dopp::Section::Info.new(self)
-        @catalog = ::Dopp::Section::Catalog.new(self)
-        @root = ::Dopp::Section::Pages.new(self)
-        @catalog.pages = @root
-        @sections = [@info, @catalog, @root]
+        @info = ::Dopp::Section::Info.new(self, opts)
+        @catalog = ::Dopp::Section::Catalog.new(self, opts)
+        @pages_root = @catalog.pages_root
+        @sections = [@info, @catalog, @pages_root]
       end
 
       # Get unique section ID.
@@ -44,7 +53,7 @@ module Dopp
 
       # Add new page.
       def add_page(opts = {})
-        page = @root.add_page(opts)
+        page = @pages_root.add_page(opts)
         @sections << page
         @sections << page.content
         page.content.canvas
@@ -73,12 +82,18 @@ module Dopp
         buffer
       end
 
+      # Convert to string.
+      # @return [String] Content.
+      def to_s
+        String.new('PDF-').concat(@header.version)
+      end
+
       # Detailed description of this object.
       # @return [String] Descritption.
       def inspect
         String.new('#<').concat(
           self.class.name, ':',
-          object_id.to_s, ' PDF-', @header.version, '>'
+          object_id.to_s, ' ', to_s, '>'
         )
       end
 
