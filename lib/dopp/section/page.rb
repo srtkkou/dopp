@@ -8,6 +8,8 @@ module Dopp
   module Section
     # PDF document section "page".
     class Page < Base
+      include ::Dopp::Error
+
       attr_reader :media_width
       attr_reader :media_height
       attr_reader :content
@@ -19,25 +21,30 @@ module Dopp
         @parent = pages
         super(pages.structure)
         # Initialize attributes.
-        attributes[:Type] = :Page
-        attributes[:Parent] = @parent.ref
-        attributes[:Rotate] = 0
+        @attributes[:Type] = :Page
+        @attributes[:Parent] = @parent.ref
+        self.rotate = 0
         attributes[:Resources] = dict({})
         doc_size = opts[:page_size] || :A4
         media_box_by_size(doc_size, opts[:landscape])
         # Initialize instance variables.
         @content = ::Dopp::Section::Content.new(self)
-        attributes[kw(:Contents)] = list(
-          [@content].map(&:ref)
-        )
+        attributes[kw(:Contents)] = list([@content.ref])
+      end
+
+      # Set page rotation angle.
+      # @param [Integer] value Angle.
+      def rotate=(value)
+        check_include!(value, ::Dopp::ROTATE_ANGLES)
+        @attributes[:Rotate] = value
       end
 
       # Add font in resources.
       # @param [::Dopp::Section::Base] font Font section.
       def add_font(font)
         key = kw(font.alias)
-        attributes[:Resources][:Font] ||= dict({})
-        attributes[:Resources][:Font][key] = font.ref
+        @attributes[:Resources][:Font] ||= dict({})
+        @attributes[:Resources][:Font][key] = font.ref
       end
 
       # Render to string.
@@ -59,7 +66,7 @@ module Dopp
         @media_width = ::Dopp::Util.mm_to_pt(mm_x)
         @media_height = ::Dopp::Util.mm_to_pt(mm_y)
         box = [0.0, 0.0, @media_width, @media_height]
-        attributes[:MediaBox] = list(box)
+        @attributes[:MediaBox] = list(box)
       end
     end
   end

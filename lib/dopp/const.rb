@@ -45,6 +45,9 @@ module Dopp
     FullScreen UseOC UseAttachments
   ].freeze
 
+  # Page rotation angles.
+  ROTATE_ANGLES ||= [0, 90, 180, 270].freeze
+
   # Available colors.
   COLORS ||= {
     AliceBlue: 'f0f8ff',
