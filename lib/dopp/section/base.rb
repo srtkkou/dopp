@@ -12,6 +12,7 @@ module Dopp
       include ::Dopp::Type
 
       attr_reader :structure
+      attr_reader :document
       attr_reader :id
       attr_reader :revision
       attr_reader :attributes
@@ -23,6 +24,7 @@ module Dopp
       def initialize(structure)
         check_is_a!(structure, ::Dopp::Document::Structure)
         @structure = structure
+        @document = structure.document
         @id = @structure.unique_section_id
         @revision = 0
         @attributes = dict({})
