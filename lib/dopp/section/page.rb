@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'forwardable'
+require 'dopp/document/page_context'
 require 'dopp/section/base'
 require 'dopp/section/pages'
 require 'dopp/section/content'
@@ -8,10 +10,15 @@ module Dopp
   module Section
     # PDF document section "page".
     class Page < Base
+      extend Forwardable
       include ::Dopp::Error
 
-      attr_reader :media_width
-      attr_reader :media_height
+      def_delegators(
+        :@page_context,
+        :page_size, :landscape, :rotate,
+        :page_width, :page_height
+      )
+
       attr_reader :content
 
       # Initialize.
@@ -20,23 +27,19 @@ module Dopp
         check_is_a!(pages, ::Dopp::Section::Pages)
         @parent = pages
         super(pages.structure)
+        # Initialize page context.
+        opts = ::Dopp::Document::PageContext::DEFAULT_OPTS.dup.merge(opts)
+        @page_context = pages.structure.document.page_context.dup; p opts
+        self.page_size = opts[:page_size]
+        self.landscape = opts[:landscape]
+        self.rotate = opts[:rotate]
         # Initialize attributes.
         @attributes[:Type] = :Page
         @attributes[:Parent] = @parent.ref
-        self.rotate = 0
-        attributes[:Resources] = dict({})
-        doc_size = opts[:page_size] || :A4
-        media_box_by_size(doc_size, opts[:landscape])
+        @attributes[:Resources] = dict({})
         # Initialize instance variables.
         @content = ::Dopp::Section::Content.new(self)
         attributes[kw(:Contents)] = list([@content.ref])
-      end
-
-      # Set page rotation angle.
-      # @param [Integer] value Angle.
-      def rotate=(value)
-        check_include!(value, ::Dopp::ROTATE_ANGLES)
-        @attributes[:Rotate] = value
       end
 
       # Add font in resources.
@@ -47,26 +50,25 @@ module Dopp
         @attributes[:Resources][:Font][key] = font.ref
       end
 
-      # Render to string.
-      # @return [String] Content.
-      def render
-        super
+      # Set page size.
+      # @param [Symbol] value Page size.
+      def page_size=(value)
+        @page_context.page_size = value
+        @attributes[:MediaBox] = @page_context.media_box
       end
 
-      private
+      # Set page shape: portrait or landscape.
+      # @param [Bool] value True=landscape, false=portrait.
+      def landscape=(value)
+        @page_context.landscape = value
+        @attributes[:MediaBox] = @page_context.media_box
+      end
 
-      # Calculate media box by document size.
-      # @param [Symbol] name Document size name.
-      # @param [Bool] landscape Landscape flag.
-      def media_box_by_size(name, landscape = false)
-        check_include!(name, ::Dopp::PAGE_SIZES.keys)
-        mm_x, mm_y = ::Dopp::PAGE_SIZES[name]
-        # Swap x, y when landscape is true.
-        mm_x, mm_y = mm_y, mm_x if landscape
-        @media_width = ::Dopp::Util.mm_to_pt(mm_x)
-        @media_height = ::Dopp::Util.mm_to_pt(mm_y)
-        box = [0.0, 0.0, @media_width, @media_height]
-        @attributes[:MediaBox] = list(box)
+      # Set page rotation angle.
+      # @param [Integer] value Angle.
+      def rotate=(value)
+        @page_context.rotate = value
+        @attributes[:Rotate] = @page_context.rotate
       end
     end
   end

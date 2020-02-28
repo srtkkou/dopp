@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 require 'forwardable'
+require 'dopp/document/page_context'
 require 'dopp/document/structure'
-require 'dopp/util'
 
 module Dopp
   # PDF document.
@@ -10,13 +10,22 @@ module Dopp
     extend Forwardable
 
     def_delegators(
+      :@page_context,
+      :page_size=, :landscape=, :rotate=,
+      :page_size, :landscape, :rotate,
+      :page_width, :page_height
+    )
+    def_delegators(
       :@structure,
       :title=, :mod_date=,
       :page_layout=, :page_mode=
     )
 
+    attr_reader :page_context
+
     # Initialize.
     def initialize(opts = {})
+      @page_context = PageContext.new(opts)
       @structure = Structure.new(self, opts)
     end
 
