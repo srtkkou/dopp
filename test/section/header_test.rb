@@ -8,17 +8,22 @@ module Dopp
     class HeaderTest < Minitest::Test
       def test_ok_initialize
         assert_raises(::Dopp::Error::ApplicationError) do
-          Header.new('1.X')
+          Header.new(pdf_version: '1.X')
         end
-        assert_equal('1.4', Header.new.version)
-        assert_equal('1.7', Header.new('1.7').version)
+        h1 = Header.new
+        assert_equal('1.4', h1.pdf_version)
+        h1.pdf_version = '1.6'
+        assert_equal('1.6', h1.pdf_version)
+        h2 = Header.new(pdf_version: '1.7')
+        assert_equal('1.7', h2.pdf_version)
       end
 
       def test_ok_render
         ex = String.new("%PDF-1.7\n%")
         ex << [0xE2, 0xE3, 0xCF, 0xD3].pack('C*')
         ex << "\n"
-        assert_equal(ex, Header.new('1.7').render)
+        h1 = Header.new(pdf_version: '1.7')
+        assert_equal(ex, h1.render)
       end
     end
   end

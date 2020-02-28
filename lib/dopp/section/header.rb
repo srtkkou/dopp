@@ -13,20 +13,32 @@ module Dopp
         [0xE2, 0xE3, 0xCF, 0xD3].pack('c*')
       )
 
-      attr_reader :version
+      # Default optsions.
+      DEFAULT_OPTS ||= ::Dopp::Util.deep_freeze(
+        pdf_version: ::Dopp::DEFAULT_PDF_VERSION
+      )
+
+      attr_reader :pdf_version
 
       # Initialize.
       # @param [String] version PDF version.
-      def initialize(version = DEFAULT_PDF_VERSION)
-        check_matches!(version, /\A1\.\d+\z/)
-        @version = version
+      def initialize(opts = {})
+        opts = DEFAULT_OPTS.dup.merge(opts)
+        self.pdf_version = opts[:pdf_version]
+      end
+
+      # Set PDF version.
+      # @param [String] value PDF version.
+      def pdf_version=(value)
+        check_matches!(value, /\A1\.\d+\z/)
+        @pdf_version = value
       end
 
       # Render to string.
       # @return [String] Rendered string.
       def render
         String.new('%PDF-').concat(
-          @version, LF, '%', PDF_IDENTIFIER, LF
+          @pdf_version, LF, '%', PDF_IDENTIFIER, LF
         )
       end
     end

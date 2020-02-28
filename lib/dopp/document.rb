@@ -17,6 +17,7 @@ module Dopp
     )
     def_delegators(
       :@structure,
+      :pdf_version=,
       :title=, :mod_date=,
       :page_layout=, :page_mode=
     )

@@ -13,6 +13,10 @@ module Dopp
       include ::Dopp::Error
 
       def_delegators(
+        :@header,
+        :pdf_version=
+      )
+      def_delegators(
         :@info,
         :title=, :mod_date=
       )
@@ -31,7 +35,7 @@ module Dopp
         @section_id = 0
         @fonts = {}
         # Initialize top sections.
-        @header = ::Dopp::Section::Header.new
+        @header = ::Dopp::Section::Header.new(opts)
         @info = ::Dopp::Section::Info.new(self, opts)
         @catalog = ::Dopp::Section::Catalog.new(self, opts)
         @pages_root = @catalog.pages_root
