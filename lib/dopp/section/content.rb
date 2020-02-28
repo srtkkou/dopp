@@ -3,13 +3,14 @@
 require 'forwardable'
 require 'dopp/section/base'
 require 'dopp/canvas'
-require 'dopp/shape/text_area'
+require 'dopp/shape'
 
 module Dopp
   module Section
     # PDF document section "content stream".
     class Content < Base
       extend Forwardable
+      include ::Dopp::Shape
 
       def_delegators(
         :@page,
@@ -17,8 +18,6 @@ module Dopp
         :page_size, :landscape, :rotate,
         :page_width, :page_height
       )
-
-      ::Dopp::Shape::TextArea.define_methods(self)
 
       attr_reader :page
 

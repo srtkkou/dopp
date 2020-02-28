@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'dopp'
+require 'dopp/error'
 require 'dopp/type'
 
 module Dopp
@@ -9,17 +9,6 @@ module Dopp
     class TextArea
       include ::Dopp::Error
       include ::Dopp::Type
-
-      class << self
-        def define_methods(klass)
-          klass.define_method(
-            :text_area,
-            ->(text, opts = {}) do
-              TextArea.new(self, text, opts).render
-            end
-          )
-        end
-      end
 
       def initialize(content, text, opts = {})
         @content = content
