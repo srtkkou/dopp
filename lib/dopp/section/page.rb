@@ -38,7 +38,7 @@ module Dopp
         @attributes[:Parent] = @parent.ref
         @attributes[:Resources] = dict({})
         # Initialize instance variables.
-        @content = ::Dopp::Section::Content.new(self)
+        @content = ::Dopp::Section::Content.new(self, opts)
         attributes[kw(:Contents)] = list([@content.ref])
       end
 

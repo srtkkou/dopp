@@ -60,7 +60,7 @@ module Dopp
         page = @pages_root.add_page(opts)
         @sections << page
         @sections << page.content
-        page.content.canvas
+        page.content
       end
 
       # Render to string.

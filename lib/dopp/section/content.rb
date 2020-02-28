@@ -1,22 +1,33 @@
 # frozen_string_literal: true
 
+require 'forwardable'
 require 'dopp/section/base'
 require 'dopp/canvas'
+require 'dopp/shape/text_area'
 
 module Dopp
   module Section
     # PDF document section "content stream".
     class Content < Base
+      extend Forwardable
+
+      def_delegators(
+        :@page,
+        :page_size=, :landscape=, :rotate=,
+        :page_size, :landscape, :rotate,
+        :page_width, :page_height
+      )
+
+      ::Dopp::Shape::TextArea.define_methods(self)
+
       attr_reader :page
-      attr_reader :canvas
 
       # Initialize.
       # @param [::Dopp::Section::Page] page PDF page.
-      def initialize(page)
+      def initialize(page, opts = {})
         @page = page
         super(@page.structure)
         # Initialize instance variables.
-        @canvas = ::Dopp::Canvas.new(self)
         @font = nil
       end
 
@@ -27,13 +38,6 @@ module Dopp
         @font = @structure.find_or_initialize_font(name, opts)
         @page.add_font(@font)
         @font
-      end
-
-      # Render to string.
-      # @return [String] Content.
-      def render
-        @stream << @canvas.render
-        super
       end
     end
   end
