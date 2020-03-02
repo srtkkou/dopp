@@ -24,9 +24,9 @@ module Dopp
       # Initialize.
       def initialize(opts = {})
         opts = DEFAULT_OPTS.dup.merge(opts)
-        self.page_size = opts[:page_size]
-        self.landscape = opts[:landscape]
-        self.rotate = opts[:rotate]
+        DEFAULT_OPTS.keys.each do |key|
+          self.__send__("#{key}=", opts[key])
+        end
       end
 
       # Set page size. Calculate page width and height.

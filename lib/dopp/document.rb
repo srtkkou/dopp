@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'forwardable'
-require 'dopp/document/page_context'
+require 'dopp/document/context'
 require 'dopp/document/structure'
 
 module Dopp
@@ -10,10 +10,12 @@ module Dopp
     extend Forwardable
 
     def_delegators(
-      :@page_context,
+      :@context,
       :page_size=, :landscape=, :rotate=,
       :page_size, :landscape, :rotate,
-      :page_width, :page_height
+      :page_width, :page_height,
+      :fill_color=, :stroke_color=,
+      :fill_color, :stroke_color
     )
     def_delegators(
       :@structure,
@@ -22,11 +24,11 @@ module Dopp
       :page_layout=, :page_mode=
     )
 
-    attr_reader :page_context
+    attr_reader :context
 
     # Initialize.
     def initialize(opts = {})
-      @page_context = PageContext.new(opts)
+      @context = Context.new(opts)
       @structure = Structure.new(self, opts)
     end
 

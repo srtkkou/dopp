@@ -14,12 +14,13 @@ module Dopp
       include ::Dopp::Error
 
       def_delegators(
-        :@page_context,
+        :@context,
         :page_size, :landscape, :rotate,
         :page_width, :page_height
       )
 
       attr_reader :content
+      attr_reader :context
 
       # Initialize.
       # @param [::Dopp::Section::Pages] pages PDF pages.
@@ -28,11 +29,10 @@ module Dopp
         @parent = pages
         super(pages.structure)
         # Initialize page context.
-        opts = ::Dopp::Document::PageContext::DEFAULT_OPTS.dup.merge(opts)
-        @page_context = pages.structure.document.page_context.dup; p opts
-        self.page_size = opts[:page_size]
-        self.landscape = opts[:landscape]
-        self.rotate = opts[:rotate]
+        @context = pages.structure.document.context.dup
+        self.page_size = opts[:page_size] if opts[:page_size]
+        self.landscape = opts[:landscape] if opts[:landscape]
+        self.rotate = opts[:rotate] if opts[:rotate]
         # Initialize attributes.
         @attributes[:Type] = :Page
         @attributes[:Parent] = @parent.ref
@@ -53,22 +53,22 @@ module Dopp
       # Set page size.
       # @param [Symbol] value Page size.
       def page_size=(value)
-        @page_context.page_size = value
-        @attributes[:MediaBox] = @page_context.media_box
+        @context.page_size = value
+        @attributes[:MediaBox] = @context.media_box
       end
 
       # Set page shape: portrait or landscape.
       # @param [Bool] value True=landscape, false=portrait.
       def landscape=(value)
-        @page_context.landscape = value
-        @attributes[:MediaBox] = @page_context.media_box
+        @context.landscape = value
+        @attributes[:MediaBox] = @context.media_box
       end
 
       # Set page rotation angle.
       # @param [Integer] value Angle.
       def rotate=(value)
-        @page_context.rotate = value
-        @attributes[:Rotate] = @page_context.rotate
+        @context.rotate = value
+        @attributes[:Rotate] = @context.rotate
       end
     end
   end
