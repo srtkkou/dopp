@@ -10,8 +10,7 @@ module Dopp
     # PDF document section "content stream".
     class Content < Base
       extend Forwardable
-
-      ::Dopp::Shape.define_methods(self)
+      include ::Dopp::Shape
 
       def_delegators(
         :@page,
