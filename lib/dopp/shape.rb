@@ -7,7 +7,7 @@ module Dopp
   module Shape
     # Text area.
     def text_area(text, opts = {})
-      TextArea.new(self, text, opts).render
+      shapes << TextArea.new(self, text, opts)
     end
   end
 end

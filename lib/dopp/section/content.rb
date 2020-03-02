@@ -20,6 +20,7 @@ module Dopp
       )
 
       attr_reader :page
+      attr_reader :shapes
 
       # Initialize.
       # @param [::Dopp::Section::Page] page PDF page.
@@ -27,6 +28,7 @@ module Dopp
         @page = page
         super(@page.structure)
         # Initialize instance variables.
+        @shapes = []
         @font = nil
       end
 
@@ -37,6 +39,15 @@ module Dopp
         @font = @structure.find_or_initialize_font(name, opts)
         @page.add_font(@font)
         @font
+      end
+
+      # Render to string.
+      # @return [String] Content.
+      def render
+        @shapes.each do |shape|
+          @stream << shape.render
+        end
+        super
       end
     end
   end
