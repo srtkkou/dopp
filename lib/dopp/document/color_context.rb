@@ -28,9 +28,8 @@ module Dopp
       # @param [Hash] opts Options.
       def update(opts)
         DEFAULT_OPTS.keys.each do |key|
-          next unless opts[key].nil?
-
-          __send__("#{key}=", opts[key])
+          value = opts[key]
+          __send__("#{key}=", value) unless value.nil?
         end
       end
 

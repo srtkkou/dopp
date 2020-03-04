@@ -15,10 +15,14 @@ module Dopp
       attr_reader :rotate
       attr_reader :page_width
       attr_reader :page_height
+      attr_reader :media_box
+      attr_accessor :mm_x
+      attr_accessor :mm_y
 
       # Default options.
       DEFAULT_OPTS ||= ::Dopp::Util.deep_freeze(
-        page_size: :A4, landscape: false, rotate: 0
+        page_size: :A4, landscape: false, rotate: 0,
+        mm_x: 10, mm_y: 10
       )
 
       # Initialize.
@@ -30,9 +34,8 @@ module Dopp
       # @param [Hash] opts Options.
       def update(opts)
         DEFAULT_OPTS.keys.each do |key|
-          next unless opts[key].nil?
-
-          __send__("#{key}=", opts[key])
+          value = opts[key]
+          __send__("#{key}=", value) unless value.nil?
         end
       end
 
@@ -41,9 +44,7 @@ module Dopp
       def page_size=(value)
         check_include!(value, ::Dopp::PAGE_SIZES.keys)
         @page_size = value
-        mm_x, mm_y = ::Dopp::PAGE_SIZES[@page_size]
-        @page_width = ::Dopp::Util.mm_to_pt(mm_x)
-        @page_height = ::Dopp::Util.mm_to_pt(mm_y)
+        update_media_box
       end
 
       # Set page shape: portrait or landscape.
@@ -51,10 +52,7 @@ module Dopp
       def landscape=(value)
         check_include!(value, [true, false])
         @landscape = value
-        return unless @landscape
-        return if @page_width > @page_height
-
-        @page_width, @page_height = @page_height, @page_width
+        update_media_box
       end
 
       # Set page rotation angle.
@@ -64,10 +62,28 @@ module Dopp
         @rotate = value
       end
 
-      # Get media box parameter.
-      # @return [::Dopp::Type::List<Float>] Media box.
-      def media_box
-        list([0.0, 0.0, @page_width, @page_height])
+      # Get X position in pt.
+      # @return [Float] X position.
+      def x
+        ::Dopp::Util.mm_to_pt(@mm_x)
+      end
+
+      # Get Y position in pt.
+      # @return [Float] Y position.
+      def y
+        @page_height - ::Dopp::Util.mm_to_pt(@mm_y)
+      end
+
+      private
+
+      # Update media box by page size and landscape.
+      def update_media_box
+        box = ::Dopp::PAGE_SIZES[@page_size].dup.map do |mm|
+          ::Dopp::Util.mm_to_pt(mm)
+        end
+        box[0], box[1] = box[1], box[0] if @landscape
+        @page_width, @page_height = box[0], box[1]
+        @media_box = list([0.0, 0.0] + box)
       end
     end
   end

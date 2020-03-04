@@ -14,7 +14,8 @@ module Dopp
         :@page_context,
         :page_size=, :landscape=, :rotate=,
         :page_size, :landscape, :rotate,
-        :media_box, :page_width, :page_height
+        :media_box, :page_width, :page_height,
+        :x, :y
       )
       def_delegators(
         :@color_context,
@@ -39,7 +40,8 @@ module Dopp
       # @return [String] Content.
       def to_s
         attrs = %i[
-          page_size landscape rotate fill_color stroke_color
+          page_size landscape rotate x y
+          fill_color stroke_color
         ]
         attrs.map do |attr|
           attr.to_s.concat('=', __send__(attr).to_s)

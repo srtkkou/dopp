@@ -15,8 +15,7 @@ module Dopp
       def_delegators(
         :@page,
         :page_size=, :landscape=, :rotate=,
-        :page_size, :landscape, :rotate,
-        :page_width, :page_height
+        :page_size, :landscape, :rotate
       )
 
       attr_reader :page
