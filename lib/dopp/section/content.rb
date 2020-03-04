@@ -20,6 +20,7 @@ module Dopp
       )
 
       attr_reader :page
+      attr_reader :context
       attr_reader :shapes
 
       # Initialize.
@@ -27,6 +28,10 @@ module Dopp
       def initialize(page, opts = {})
         @page = page
         super(@page.structure)
+        @context = ::Dopp::Util.deep_copy(
+          @page.structure.document.context
+        )
+        @context.update(opts)
         # Initialize instance variables.
         @shapes = []
         @font = nil
