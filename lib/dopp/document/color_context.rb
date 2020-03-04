@@ -21,9 +21,16 @@ module Dopp
 
       # Initialize.
       def initialize(opts = {})
-        opts = DEFAULT_OPTS.dup.merge(opts)
+        update(DEFAULT_OPTS.dup.merge(opts))
+      end
+
+      # Update values by hash.
+      # @param [Hash] opts Options.
+      def update(opts)
         DEFAULT_OPTS.keys.each do |key|
-          self.__send__("#{key}=", opts[key])
+          next unless opts[key].nil?
+
+          __send__("#{key}=", opts[key])
         end
       end
 

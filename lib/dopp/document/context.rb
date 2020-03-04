@@ -28,6 +28,13 @@ module Dopp
         @color_context = ColorContext.new(opts)
       end
 
+      # Update values by hash.
+      # @param [Hash] opts Options.
+      def update(opts)
+        @page_context.update(opts)
+        @color_context.update(opts)
+      end
+
       # Convert to string.
       # @return [String] Content.
       def to_s
@@ -35,7 +42,7 @@ module Dopp
           page_size landscape rotate fill_color stroke_color
         ]
         attrs.map do |attr|
-          attr.to_s.concat('=', self.__send__(attr).to_s)
+          attr.to_s.concat('=', __send__(attr).to_s)
         end.join(', ')
       end
 
