@@ -32,7 +32,7 @@ module Dopp
     Letter: [215.9, 279.4]
   }.freeze.each_value(&:freeze)
 
-  # Page Layouts.
+  # Page layouts.
   PAGE_LAYOUTS ||= %i[
     SinglePage OneColumn
     TwoColumnLeft TwoColumnRight
