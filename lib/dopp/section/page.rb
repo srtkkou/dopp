@@ -11,6 +11,7 @@ module Dopp
       include ::Dopp::Error
 
       attr_reader :content
+      attr_reader :context
 
       # Initialize.
       # @param [::Dopp::Section::Pages] pages PDF pages.
@@ -18,13 +19,10 @@ module Dopp
         check_is_a!(pages, ::Dopp::Section::Pages)
         @parent = pages
         super(pages.structure)
-        # Initialize attributes.
-        @attributes[:Type] = :Page
-        @attributes[:Parent] = @parent.ref
-        @attributes[:Resources] = dict({})
         # Initialize instance variables.
         @content = ::Dopp::Section::Content.new(self, opts)
-        @attributes[kw(:Contents)] = list([@content.ref])
+        @context = @parent.structure.clone_context
+        update_attributes(opts)
       end
 
       # Add font in resources.
@@ -38,22 +36,37 @@ module Dopp
       # Set page size.
       # @param [Symbol] value Page size.
       def page_size=(value)
-        @content.context.page_size = value
+        @context.page_size = value
         @attributes[:MediaBox] = @context.media_box
       end
 
       # Set page shape: portrait or landscape.
       # @param [Bool] value True=landscape, false=portrait.
       def landscape=(value)
-        @content.context.landscape = value
+        @context.landscape = value
         @attributes[:MediaBox] = @context.media_box
       end
 
       # Set page rotation angle.
       # @param [Integer] value Angle.
       def rotate=(value)
-        @content.context.rotate = value
+        @context.rotate = value
         @attributes[:Rotate] = @context.rotate
+      end
+
+      private
+
+      # Update attributes.
+      # @param [Hash] opts Options.
+      def update_attributes(opts)
+        @attributes[:Type] = :Page
+        @attributes[:Parent] = @parent.ref
+        @attributes[:Resources] = dict({})
+        @attributes[:Contents] = list([@content.ref])
+        %i[page_size landscape rotate].each do |attr|
+          value = opts[attr]
+          __send__("#{attr}=", value) unless value.nil?
+        end
       end
     end
   end

@@ -63,6 +63,12 @@ module Dopp
         page.content
       end
 
+      # Clone context.
+      # @return [::Dopp::Document::Context] Context.
+      def clone_context
+        ::Dopp::Util.deep_copy(@document.context)
+      end
+
       # Render to string.
       # @return [String] Content.
       def render
