@@ -10,6 +10,7 @@ module Dopp
       include ::Dopp::Error
       include ::Dopp::Type
 
+      attr_reader :context
       attr_reader :page_size
       attr_reader :landscape
       attr_reader :rotate
@@ -26,7 +27,10 @@ module Dopp
       )
 
       # Initialize.
-      def initialize(opts = {})
+      # @param [::Dopp::Document::Context] context Context.
+      def initialize(context, opts = {})
+        check_is_a!(context, ::Dopp::Document::Context)
+        @context = context
         update(DEFAULT_OPTS.dup.merge(opts))
       end
 

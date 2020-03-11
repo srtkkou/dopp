@@ -25,8 +25,8 @@ module Dopp
 
       # Initialize.
       def initialize(opts = {})
-        @page_context = PageContext.new(opts)
-        @color_context = ColorContext.new(opts)
+        @page_context = PageContext.new(self, opts)
+        @color_context = ColorContext.new(self, opts)
       end
 
       # Update values by hash.

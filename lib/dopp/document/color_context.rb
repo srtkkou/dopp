@@ -10,6 +10,7 @@ module Dopp
       include ::Dopp::Error
       include ::Dopp::Type
 
+      attr_reader :context
       attr_reader :fill_color
       attr_reader :stroke_color
 
@@ -20,7 +21,10 @@ module Dopp
       )
 
       # Initialize.
-      def initialize(opts = {})
+      # @param [::Dopp::Document::Context] context Context.
+      def initialize(context, opts = {})
+        check_is_a!(context, ::Dopp::Document::Context)
+        @context = context
         update(DEFAULT_OPTS.dup.merge(opts))
       end
 
