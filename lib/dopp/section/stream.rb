@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 require 'zlib'
-require 'dopp'
+require 'dopp/const'
+require 'dopp/error'
 
 module Dopp
   module Section

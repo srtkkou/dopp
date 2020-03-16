@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-require 'dopp'
+require 'dopp/const'
+require 'dopp/error'
 require 'dopp/type'
 require 'dopp/section/stream'
 

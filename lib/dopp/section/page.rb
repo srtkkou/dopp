@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'dopp/section/base'
-require 'dopp/section/pages'
 require 'dopp/section/content'
 
 module Dopp
@@ -16,9 +15,8 @@ module Dopp
       # Initialize.
       # @param [::Dopp::Section::Pages] pages PDF pages.
       def initialize(pages, opts = {})
-        check_is_a!(pages, ::Dopp::Section::Pages)
         @parent = pages
-        super(pages.structure)
+        super(@parent.structure)
         # Initialize instance variables.
         @content = ::Dopp::Section::Content.new(self, opts)
         @context = @parent.structure.clone_context

@@ -15,6 +15,7 @@ module Dopp
         :page_size=, :landscape=, :rotate=,
         :page_size, :landscape, :rotate,
         :media_box, :page_width, :page_height,
+        :canvas_width, :canvas_height,
         :x, :y
       )
       def_delegators(

@@ -21,7 +21,7 @@ module Dopp
       # Add new page.
       # @return [::Dopp::Section::Page] page Page object.
       def add_page(opts = {})
-        page = Page.new(self, opts)
+        page = ::Dopp::Section::Page.new(self, opts)
         @pages << page
         page
       end
